@@ -28,9 +28,26 @@
             min-height: 100vh;
             position: relative;
             transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            padding: 15px 20px;
+            background-color: var(--container-light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .left-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            height: 30px;
+            margin-right: 10px;
         }
 
         .container {
@@ -41,6 +58,7 @@
             text-align: center;
             width: 90%;
             max-width: 300px;
+            margin: 20px auto;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
         }
@@ -98,16 +116,118 @@
             font-weight: bold;
         }
 
+        /* Estilos do menu hamburguer */
+        .menu-toggle {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--text-light);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            display: none;
+        }
+
+        .menu-content {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 250px;
+            height: 100%;
+            background: var(--container-light);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: left 0.3s ease;
+            padding: 20px 0;
+            z-index: 6;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .menu-content.active {
+            left: 0;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-footer {
+            margin-top: auto;
+            padding: 25px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-logout {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
                 color: var(--text-dark);
             }
 
+            .header,
             .container {
                 background: var(--container-dark);
                 box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
                 border: 1px solid var(--border-dark);
+            }
+
+            .menu-toggle span {
+                background-color: var(--text-dark);
+            }
+
+            .menu-content {
+                background: var(--container-dark);
+            }
+
+            .menu-footer {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .menu-item {
+                color: var(--text-dark);
+            }
+
+            .menu-item:hover {
+                background-color: rgba(255, 255, 255, 0.05);
             }
 
             .input-group input,
@@ -136,6 +256,20 @@
 </head>
 
 <body>
+    <div class="header">
+        <div class="left-header">
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <a href="dashboard" class="logo-container">
+                <img src="https://raw.githubusercontent.com/GanheSocial/ganhesocial.com/main/1744065809737.png"
+                    alt="Logo GanheSocial" class="logo">
+            </a>
+        </div>
+    </div>
+
     <div class="container">
         <h2>Comprar Seguidores TikTok</h2>
         <form id="orderForm">
@@ -173,6 +307,17 @@
         <p id="statusMessage" class="status-message"></p>
     </div>
 
+    <!-- Menu Overlay e Conteúdo -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-content" id="menuContent">
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="profile">Minha Conta</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
+        </div>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.add('loaded');
@@ -199,6 +344,36 @@
                 price = Math.max(5, price);
                 
                 priceDisplay.textContent = price.toFixed(2).replace('.', ',');
+            });
+
+            // Controle do menu hamburguer
+            const menuToggle = document.getElementById('menuToggle');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuContent = document.getElementById('menuContent');
+
+            menuToggle.addEventListener('click', function () {
+                menuContent.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+
+                const spans = menuToggle.querySelectorAll('span');
+                if (menuContent.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                }
+            });
+
+            menuOverlay.addEventListener('click', function () {
+                menuContent.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                const spans = menuToggle.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
             });
         });
 
@@ -241,6 +416,11 @@
                 statusMessage.style.color = "#d9534f";
             }
         });
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "https://ganhesocial.com";
+        }
     </script>
 </body>
 
