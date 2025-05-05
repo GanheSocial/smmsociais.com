@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Seguidores TikTok</title>
+    <style>
+        :root {
+            --bg-light: #ffffff;
+            --text-light: #24292e;
+            --container-light: #f6f8fa;
+            --button-light: #0366d6;
+            --link-color: #0366d6;
+            --bg-dark: #0d1117;
+            --text-dark: #c9d1d9;
+            --container-dark: #161b22;
+            --button-dark: #58a6ff;
+            --border-dark: #30363d;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: var(--container-light);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 300px;
+            transition: background 0.3s;
+            border: 1px solid #e1e4e8;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-group input, 
+        .input-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            height: 40px;
+            box-sizing: border-box;
+            transition: background-color 0.2s;
+            background-color: var(--button-light);
+        }
+
+        .button:hover {
+            background-color: #024fa1;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        .price-display {
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+            }
+
+            .container {
+                background: var(--container-dark);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--border-dark);
+            }
+
+            .input-group input,
+            .input-group select {
+                background-color: var(--container-dark);
+                color: var(--text-dark);
+                border-color: var(--border-dark);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 88%;
+                padding: 20px;
+            }
+        }
+
+        body {
+            visibility: hidden;
+        }
+
+        body.loaded {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Comprar Seguidores TikTok</h2>
+        <form id="orderForm">
+            <div class="input-group">
+                <label for="category">Categoria:</label>
+                <select id="category" disabled>
+                    <option value="tiktok" selected>TikTok</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="service">Serviço:</label>
+                <select id="service" disabled>
+                    <option value="tiktok-followers-fast" selected>Seguidores RÁPIDO no TikTok</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="link">Link do perfil:</label>
+                <input type="url" id="link" placeholder="https://tiktok.com/@seuusuario" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="quantity">Quantidade (50-1.000.000):</label>
+                <input type="number" id="quantity" min="50" max="1000000" value="100" required>
+            </div>
+            
+            <div class="price-display">
+                Preço: R$ <span id="price">5,00</span>
+            </div>
+            
+            <button type="submit" class="button">Finalizar Pedido</button>
+        </form>
+
+        <p id="statusMessage" class="status-message"></p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add('loaded');
+            
+            // Cálculo do preço baseado na quantidade
+            const quantityInput = document.getElementById('quantity');
+            const priceDisplay = document.getElementById('price');
+            
+            quantityInput.addEventListener('input', function() {
+                const quantity = parseInt(this.value);
+                let price = 0;
+                
+                if (quantity < 100) {
+                    price = quantity * 0.05; // R$ 0,05 por seguidor
+                } else if (quantity < 1000) {
+                    price = quantity * 0.04; // R$ 0,04 por seguidor
+                } else if (quantity < 10000) {
+                    price = quantity * 0.03; // R$ 0,03 por seguidor
+                } else {
+                    price = quantity * 0.02; // R$ 0,02 por seguidor para grandes quantidades
+                }
+                
+                // Garante o preço mínimo de R$ 5,00
+                price = Math.max(5, price);
+                
+                priceDisplay.textContent = price.toFixed(2).replace('.', ',');
+            });
+        });
+
+        document.getElementById("orderForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            
+            const link = document.getElementById("link").value.trim();
+            const quantity = document.getElementById("quantity").value;
+            const statusMessage = document.getElementById("statusMessage");
+            
+            if (!link) {
+                statusMessage.textContent = "Por favor, insira o link do perfil!";
+                statusMessage.style.color = "#d9534f";
+                return;
+            }
+            
+            if (quantity < 50 || quantity > 1000000) {
+                statusMessage.textContent = "Quantidade deve ser entre 50 e 1.000.000!";
+                statusMessage.style.color = "#d9534f";
+                return;
+            }
+            
+            // Simulação de envio do pedido
+            statusMessage.textContent = "Processando seu pedido...";
+            statusMessage.style.color = "#007BFF";
+            
+            // Aqui você faria a chamada para a API de pedidos
+            try {
+                // Simulando um delay de requisição
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                statusMessage.textContent = "Pedido realizado com sucesso!";
+                statusMessage.style.color = "#28a745";
+                
+                // Limpar formulário após sucesso
+                document.getElementById("link").value = "";
+                document.getElementById("quantity").value = "100";
+            } catch (error) {
+                statusMessage.textContent = "Erro ao processar pedido. Tente novamente.";
+                statusMessage.style.color = "#d9534f";
+            }
+        });
+    </script>
+</body>
+
+</html>
