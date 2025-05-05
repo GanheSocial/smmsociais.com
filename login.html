@@ -214,7 +214,7 @@
 
                 if (response.ok) {
                     localStorage.setItem("token", data.token);
-                    window.location.assign("/dashboard");
+                    window.location.assign("/painel");
                 } else {
                     statusMessage.textContent = data.error || "Erro ao fazer login";
                     statusMessage.style.color = "#d9534f";
