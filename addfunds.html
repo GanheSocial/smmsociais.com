@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Saldo via PIX</title>
+    <style>
+        :root {
+            --bg-light: #ffffff;
+            --text-light: #24292e;
+            --container-light: #f6f8fa;
+            --button-light: #0366d6;
+            --link-color: #0366d6;
+            --bg-dark: #0d1117;
+            --text-dark: #c9d1d9;
+            --container-dark: #161b22;
+            --button-dark: #58a6ff;
+            --border-dark: #30363d;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--container-light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .left-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            height: 32px;
+            margin-right: 10px;
+        }
+
+        .container {
+            background: var(--container-light);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 300px;
+            margin: 20px auto;
+            transition: background 0.3s;
+            border: 1px solid #e1e4e8;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            height: 40px;
+            box-sizing: border-box;
+            transition: background-color 0.2s;
+            background-color: var(--button-light);
+        }
+
+        .button:hover {
+            background-color: #024fa1;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        .price-display {
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .instructions {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        /* Estilos do menu hamburguer */
+        .menu-toggle {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--text-light);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            display: none;
+        }
+
+        .menu-content {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 250px;
+            height: 100%;
+            background: var(--container-light);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: left 0.3s ease;
+            padding: 20px 0;
+            z-index: 6;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .menu-content.active {
+            left: 0;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-footer {
+            margin-top: auto;
+            padding: 25px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-logout {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+            }
+
+            .header,
+            .container {
+                background: var(--container-dark);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--border-dark);
+            }
+
+            .menu-toggle span {
+                background-color: var(--text-dark);
+            }
+
+            .menu-content {
+                background: var(--container-dark);
+            }
+
+            .menu-footer {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .menu-item {
+                color: var(--text-dark);
+            }
+
+            .menu-item:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            .input-group input,
+            .input-group select {
+                background-color: var(--container-dark);
+                color: var(--text-dark);
+                border-color: var(--border-dark);
+            }
+
+            .instructions {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 88%;
+                padding: 20px;
+            }
+        }
+
+        body {
+            visibility: hidden;
+        }
+
+        body.loaded {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="left-header">
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <a href="painel" class="logo-container">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo smmsociais" class="logo">
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Adicionar Saldo via PIX</h2>
+        <form id="depositForm">
+            <div class="input-group">
+                <label for="paymentMethod">Método de pagamento:</label>
+                <select id="paymentMethod" disabled>
+                    <option value="pix" selected>PIX</option>
+                </select>
+            </div>
+
+            <div class="instructions">
+                <p><strong>Instruções:</strong></p>
+                <p>• Depósito Mínimo de R$1</p>
+                <p>• Depósito Máximo de R$1000</p>
+            </div>
+
+            <div class="input-group">
+                <label for="amount">Valor (R$):</label>
+                <input type="number" id="amount" min="1" max="1000" step="0.01" placeholder="10,00" required>
+            </div>
+
+            <button type="submit" class="button">Gerar Pagamento</button>
+        </form>
+
+        <p id="statusMessage" class="status-message"></p>
+    </div>
+
+    <!-- Menu Overlay e Conteúdo -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-content" id="menuContent">
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="orders">Histórico de Pedidos</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add('loaded');
+
+            // Controle do menu hamburguer
+            const menuToggle = document.getElementById('menuToggle');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuContent = document.getElementById('menuContent');
+
+            menuToggle.addEventListener('click', function () {
+                menuContent.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+
+                const spans = menuToggle.querySelectorAll('span');
+                if (menuContent.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                }
+            });
+
+            menuOverlay.addEventListener('click', function () {
+                menuContent.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                const spans = menuToggle.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            });
+        });
+
+        document.getElementById("depositForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const amount = parseFloat(document.getElementById("amount").value);
+            const statusMessage = document.getElementById("statusMessage");
+
+            if (isNaN(amount)) {
+                statusMessage.textContent = "Por favor, insira um valor válido!";
+                statusMessage.style.color = "#d9534f";
+                return;
+            }
+
+            if (amount < 1) {
+                statusMessage.textContent = "O valor mínimo é R$1,00!";
+                statusMessage.style.color = "#d9534f";
+                return;
+            }
+
+            if (amount > 1000) {
+                statusMessage.textContent = "O valor máximo é R$1000,00!";
+                statusMessage.style.color = "#d9534f";
+                return;
+            }
+
+            // Simulação de geração de PIX
+            statusMessage.textContent = "Gerando código PIX...";
+            statusMessage.style.color = "#007BFF";
+
+            // Aqui você faria a chamada para a API de pagamentos
+            try {
+                // Simulando um delay de requisição
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                statusMessage.textContent = "Pagamento gerado com sucesso!";
+                statusMessage.style.color = "#28a745";
+
+                // Em uma implementação real, aqui você mostraria o QR Code e dados do PIX
+                // e possivelmente redirecionaria para uma página de confirmação
+                
+            } catch (error) {
+                statusMessage.textContent = "Erro ao gerar pagamento. Tente novamente.";
+                statusMessage.style.color = "#d9534f";
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "https://smmsociais.com";
+        }
+    </script>
+</body>
+
+</html>
