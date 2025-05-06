@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordem em Massa - GanheSocial</title>
+    <style>
+        :root {
+            --bg-light: #ffffff;
+            --text-light: #24292e;
+            --container-light: #f6f8fa;
+            --button-light: #0366d6;
+            --link-color: #0366d6;
+            --bg-dark: #0d1117;
+            --text-dark: #c9d1d9;
+            --container-dark: #161b22;
+            --button-dark: #58a6ff;
+            --border-dark: #30363d;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--container-light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .left-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            height: 32px;
+            margin-right: 10px;
+        }
+
+        .container {
+            background: var(--container-light);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            transition: background 0.3s;
+            border: 1px solid #e1e4e8;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e1e4e8;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--button-light);
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.2);
+        }
+
+        .submit-btn {
+            padding: 12px 25px;
+            background-color: var(--button-light);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .bulk-instructions {
+            background-color: rgba(3, 102, 214, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--button-light);
+        }
+
+        .bulk-instructions h4 {
+            margin-top: 0;
+            color: var(--button-light);
+        }
+
+        .bulk-instructions ol {
+            padding-left: 20px;
+        }
+
+        .bulk-instructions li {
+            margin-bottom: 8px;
+        }
+
+        .example-text {
+            font-family: monospace;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        /* Estilos do menu hamburguer */
+        .menu-toggle {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--text-light);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            display: none;
+        }
+
+        .menu-content {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 250px;
+            height: 100%;
+            background: var(--container-light);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: left 0.3s ease;
+            padding: 20px 0;
+            z-index: 6;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .menu-content.active {
+            left: 0;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-footer {
+            margin-top: auto;
+            padding: 25px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-logout {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+            }
+
+            .header, .container {
+                background: var(--container-dark);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--border-dark);
+            }
+
+            .menu-toggle span {
+                background-color: var(--text-dark);
+            }
+
+            .menu-content {
+                background: var(--container-dark);
+            }
+
+            .menu-footer {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .menu-item {
+                color: var(--text-dark);
+            }
+
+            .menu-item:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            .form-control {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+                border: 1px solid var(--border-dark);
+            }
+
+            .form-control:focus {
+                border-color: var(--button-dark);
+                box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+            }
+
+            .submit-btn {
+                background-color: var(--button-dark);
+            }
+
+            .bulk-instructions {
+                background-color: rgba(88, 166, 255, 0.1);
+                border-left: 4px solid var(--button-dark);
+            }
+
+            .bulk-instructions h4 {
+                color: var(--button-dark);
+            }
+
+            .example-text {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+
+        body {
+            visibility: hidden;
+        }
+
+        body.loaded {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="left-header">
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <a href="painel" class="logo-container">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo smmsociais" class="logo">
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Ordem em Massa - Envio de Seguidores</h2>
+        
+        <div class="success-message" id="successMessage">
+            Pedidos enviados com sucesso! Você será redirecionado em breve.
+        </div>
+
+        <div class="bulk-instructions">
+            <h4>Instruções para Ordem em Massa:</h4>
+            <ol>
+                <li>Insira os dados no formato: <span class="example-text">ID do serviço | Link do perfil | Quantidade</span></li>
+                <li>Cada pedido deve estar em uma linha separada</li>
+                <li>Exemplo válido: <span class="example-text">1254 | https://tiktok.com/@usuario | 1000</span></li>
+                <li>Quantidade mínima por pedido: 50 seguidores</li>
+                <li>Máximo de 50 pedidos por envio</li>
+            </ol>
+        </div>
+
+        <form id="bulkOrderForm">
+            <div class="form-group">
+                <label for="bulkOrders" class="form-label">Pedidos (um por linha):</label>
+                <textarea id="bulkOrders" class="form-control" rows="10" placeholder="Exemplo:&#10;1254 | https://tiktok.com/@usuario | 1000&#10;1255 | https://tiktok.com/@outrousuario | 500" required></textarea>
+                <div class="error-message" id="bulkOrdersError"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">Enviar Pedidos em Massa</button>
+        </form>
+    </div>
+
+    <!-- Menu Overlay e Conteúdo -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-content" id="menuContent">
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="orders">Histórico de Pedidos</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add('loaded');
+
+            // Controle do menu hamburguer
+            const menuToggle = document.getElementById('menuToggle');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuContent = document.getElementById('menuContent');
+
+            menuToggle.addEventListener('click', function () {
+                menuContent.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+
+                const spans = menuToggle.querySelectorAll('span');
+                if (menuContent.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                }
+            });
+
+            menuOverlay.addEventListener('click', function () {
+                menuContent.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                const spans = menuToggle.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            });
+
+            // Validação do formulário de ordem em massa
+            const bulkOrderForm = document.getElementById('bulkOrderForm');
+            const bulkOrdersTextarea = document.getElementById('bulkOrders');
+            const bulkOrdersError = document.getElementById('bulkOrdersError');
+            const successMessage = document.getElementById('successMessage');
+
+            bulkOrderForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                bulkOrdersError.style.display = 'none';
+                
+                const ordersText = bulkOrdersTextarea.value.trim();
+                if (!ordersText) {
+                    showError('Por favor, insira pelo menos um pedido.');
+                    return;
+                }
+
+                const orders = ordersText.split('\n');
+                if (orders.length > 50) {
+                    showError('Máximo de 50 pedidos por envio.');
+                    return;
+                }
+
+                const invalidOrders = [];
+                const validOrders = [];
+
+                orders.forEach((order, index) => {
+                    const parts = order.split('|').map(part => part.trim());
+                    if (parts.length !== 3) {
+                        invalidOrders.push(`Linha ${index + 1}: Formato inválido. Use "ID | Link | Quantidade"`);
+                        return;
+                    }
+
+                    const [serviceId, profileUrl, quantity] = parts;
+                    
+                    // Validar ID do serviço
+                    if (!/^\d+$/.test(serviceId)) {
+                        invalidOrders.push(`Linha ${index + 1}: ID do serviço deve ser numérico`);
+                        return;
+                    }
+
+                    // Validar URL do perfil
+                    if (!isValidUrl(profileUrl)) {
+                        invalidOrders.push(`Linha ${index + 1}: URL do perfil inválida`);
+                        return;
+                    }
+
+                    // Validar quantidade
+                    const quantityNum = parseInt(quantity);
+                    if (isNaN(quantityNum)) {
+                        invalidOrders.push(`Linha ${index + 1}: Quantidade deve ser um número`);
+                        return;
+                    }
+
+                    if (quantityNum < 50) {
+                        invalidOrders.push(`Linha ${index + 1}: Quantidade mínima é 50`);
+                        return;
+                    }
+
+                    validOrders.push({
+                        serviceId,
+                        profileUrl,
+                        quantity: quantityNum
+                    });
+                });
+
+                if (invalidOrders.length > 0) {
+                    showError(invalidOrders.join('<br>'));
+                    return;
+                }
+
+                // Se chegou aqui, todos os pedidos são válidos
+                console.log('Pedidos válidos:', validOrders);
+                
+                // Simular envio bem-sucedido
+                successMessage.style.display = 'block';
+                bulkOrderForm.reset();
+                
+                // Redirecionar após 3 segundos
+                setTimeout(() => {
+                    window.location.href = 'orders';
+                }, 3000);
+            });
+
+            function showError(message) {
+                bulkOrdersError.innerHTML = message;
+                bulkOrdersError.style.display = 'block';
+            }
+
+            function isValidUrl(url) {
+                try {
+                    new URL(url);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "https://ganhesocial.com";
+        }
+    </script>
+</body>
+
+</html>
