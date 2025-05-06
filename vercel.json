@@ -4,7 +4,7 @@
       { "source": "/painel", "destination": "/painel.html" },
       { "source": "/login", "destination": "/login.html" },
       { "source": "/signup", "destination": "/signup.html" }, 
-      { "source": "/profile", "destination": "/profile.html" },
+      { "source": "/orders", "destination": "/orders.html" },
       { "source": "/recover-password", "destination": "/recover-password.html" },
       { "source": "/reset-password", "destination": "/reset-password.html" }  
       
