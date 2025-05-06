@@ -46,7 +46,7 @@
         }
 
         .logo {
-            height: 30px;
+            height: 32px;
             margin-right: 10px;
         }
 
@@ -98,7 +98,8 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #e1e4e8;
@@ -272,7 +273,8 @@
                 background-color: var(--container-dark);
             }
 
-            th, td {
+            th,
+            td {
                 border-bottom: 1px solid var(--border-dark);
             }
 
@@ -286,16 +288,17 @@
                 width: 95%;
                 padding: 15px;
             }
-            
-            th, td {
+
+            th,
+            td {
                 padding: 8px 10px;
                 font-size: 14px;
             }
-            
+
             .filter-buttons {
                 gap: 5px;
             }
-            
+
             .filter-button {
                 padding: 8px 10px;
                 font-size: 12px;
@@ -320,16 +323,16 @@
                 <span></span>
                 <span></span>
             </div>
-            <a href="dashboard" class="logo-container">
-                <img src="https://raw.githubusercontent.com/GanheSocial/ganhesocial.com/main/1744065809737.png"
-                    alt="Logo GanheSocial" class="logo">
+            <a href="painel" class="logo-container">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo smmsociais" class="logo">
             </a>
         </div>
     </div>
 
     <div class="container">
         <h2>Histórico de Pedidos</h2>
-        
+
         <div class="filter-buttons">
             <a href="historico_pedidos?status=todos" class="filter-button active">Tudo</a>
             <a href="historico_pedidos?status=pending" class="filter-button">Pendente</a>
@@ -337,7 +340,7 @@
             <a href="historico_pedidos?status=completed" class="filter-button">Concluído</a>
             <a href="historico_pedidos?status=cancelled" class="filter-button">Cancelado</a>
         </div>
-        
+
         <table>
             <thead>
                 <tr>
@@ -426,17 +429,17 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.add('loaded');
-            
+
             // Ativar botão de filtro correspondente ao status atual
             const urlParams = new URLSearchParams(window.location.search);
             const status = urlParams.get('status');
-            
+
             if (status) {
                 const buttons = document.querySelectorAll('.filter-button');
                 buttons.forEach(button => button.classList.remove('active'));
-                
+
                 let activeButton;
-                switch(status) {
+                switch (status) {
                     case 'pending':
                         activeButton = document.querySelector('.filter-buttons a[href*="pending"]');
                         break;
@@ -452,7 +455,7 @@
                     default:
                         activeButton = document.querySelector('.filter-buttons a[href*="todos"]');
                 }
-                
+
                 if (activeButton) {
                     activeButton.classList.add('active');
                 }
