@@ -399,25 +399,36 @@
                 return;
             }
 
-            // Simulação de envio do pedido
-            statusMessage.textContent = "Processando seu pedido...";
-            statusMessage.style.color = "#007BFF";
+            const token = localStorage.getItem("token");
 
-            // Aqui você faria a chamada para a API de pedidos
-            try {
-                // Simulando um delay de requisição
-                await new Promise(resolve => setTimeout(resolve, 1500));
+const response = await fetch("/api/criar_acao", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({
+        rede: "tiktok",
+        tipo: "seguidores",
+        nome: "Seguidores RÁPIDO no TikTok",
+        valor: parseFloat(priceDisplay.textContent.replace(",", ".")), // valor da ação
+        link: link
+    })
+});
 
-                statusMessage.textContent = "Pedido realizado com sucesso!";
-                statusMessage.style.color = "#28a745";
+const data = await response.json();
 
-                // Limpar formulário após sucesso
-                document.getElementById("link").value = "";
-                document.getElementById("quantity").value = "100";
-            } catch (error) {
-                statusMessage.textContent = "Erro ao processar pedido. Tente novamente.";
-                statusMessage.style.color = "#d9534f";
-            }
+if (response.ok) {
+    statusMessage.textContent = "Pedido realizado com sucesso!";
+    statusMessage.style.color = "#28a745";
+    document.getElementById("link").value = "";
+    document.getElementById("quantity").value = "100";
+    priceDisplay.textContent = "5,00";
+} else {
+    statusMessage.textContent = data.error || "Erro ao processar pedido.";
+    statusMessage.style.color = "#d9534f";
+}
+
         });
 
         function logout() {
