@@ -322,32 +322,30 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.body.classList.add('loaded');
+const priceDisplay = document.getElementById("price");
 
-            // Cálculo do preço baseado na quantidade
-            const quantityInput = document.getElementById('quantity');
-            const priceDisplay = document.getElementById('price');
+document.addEventListener("DOMContentLoaded", function () {
+    document.body.classList.add('loaded');
 
-            quantityInput.addEventListener('input', function () {
-                const quantity = parseInt(this.value);
-                let price = 0;
+    const quantityInput = document.getElementById('quantity');
 
-                if (quantity < 100) {
-                    price = quantity * 0.05; // R$ 0,05 por seguidor
-                } else if (quantity < 1000) {
-                    price = quantity * 0.04; // R$ 0,04 por seguidor
-                } else if (quantity < 10000) {
-                    price = quantity * 0.03; // R$ 0,03 por seguidor
-                } else {
-                    price = quantity * 0.02; // R$ 0,02 por seguidor para grandes quantidades
-                }
+    quantityInput.addEventListener('input', function () {
+        const quantity = parseInt(this.value);
+        let price = 0;
 
-                // Garante o preço mínimo de R$ 5,00
-                price = Math.max(5, price);
+        if (quantity < 100) {
+            price = quantity * 0.05;
+        } else if (quantity < 1000) {
+            price = quantity * 0.04;
+        } else if (quantity < 10000) {
+            price = quantity * 0.03;
+        } else {
+            price = quantity * 0.02;
+        }
 
-                priceDisplay.textContent = price.toFixed(2).replace('.', ',');
-            });
+        price = Math.max(5, price);
+        priceDisplay.textContent = price.toFixed(2).replace('.', ',');
+    });
 
             // Controle do menu hamburguer
             const menuToggle = document.getElementById('menuToggle');
