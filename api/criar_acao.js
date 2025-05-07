@@ -1,7 +1,6 @@
 import connectDB from "./db.js";
 import { User } from "./User.js";
 import { Action } from "./Action.js";
-import jwt from "jsonwebtoken";
 
 const handler = async (req, res) => {
     if (req.method !== "POST") {
@@ -19,11 +18,10 @@ const handler = async (req, res) => {
         }
 
         const token = authorization.split(" ")[1];
-        let payload;
-        try {
-            payload = jwt.verify(token, process.env.JWT_SECRET);
-        } catch (err) {
-            return res.status(401).json({ error: "Token inválido" });
+        const usuario = await User.findOne({ token });
+
+        if (!usuario) {
+            return res.status(401).json({ error: "Token inválido ou usuário não encontrado!" });
         }
 
         const { rede, tipo, nome, valor, link } = req.body;
@@ -32,12 +30,7 @@ const handler = async (req, res) => {
             return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
         }
 
-        console.log("🔍 Buscando usuário...");
-        const usuario = await User.findById(payload.id);
-        if (!usuario) {
-            return res.status(400).json({ error: "Usuário não encontrado!" });
-        }
-
+        console.log("🔍 Criando nova ação...");
         const novaAcao = new Action({
             userId: usuario._id,
             rede,
