@@ -355,56 +355,6 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>#1254</td>
-                    <td>15/05/2023 14:30</td>
-                    <td>tiktok.com/@usuario1</td>
-                    <td>R$ 25,00</td>
-                    <td>500</td>
-                    <td>Seguidores RÁPIDO</td>
-                    <td><span class="status status-completed">Concluído</span></td>
-                    <td>0</td>
-                </tr>
-                <tr>
-                    <td>#1253</td>
-                    <td>14/05/2023 09:15</td>
-                    <td>tiktok.com/@usuario2</td>
-                    <td>R$ 120,00</td>
-                    <td>3,000</td>
-                    <td>Seguidores RÁPIDO</td>
-                    <td><span class="status status-progress">Em Progresso</span></td>
-                    <td>1,250</td>
-                </tr>
-                <tr>
-                    <td>#1252</td>
-                    <td>13/05/2023 18:45</td>
-                    <td>tiktok.com/@usuario3</td>
-                    <td>R$ 50,00</td>
-                    <td>1,000</td>
-                    <td>Seguidores RÁPIDO</td>
-                    <td><span class="status status-pending">Pendente</span></td>
-                    <td>1,000</td>
-                </tr>
-                <tr>
-                    <td>#1251</td>
-                    <td>12/05/2023 11:20</td>
-                    <td>tiktok.com/@usuario4</td>
-                    <td>R$ 80,00</td>
-                    <td>2,000</td>
-                    <td>Seguidores RÁPIDO</td>
-                    <td><span class="status status-cancelled">Cancelado</span></td>
-                    <td>2,000</td>
-                </tr>
-                <tr>
-                    <td>#1250</td>
-                    <td>11/05/2023 16:10</td>
-                    <td>tiktok.com/@usuario5</td>
-                    <td>R$ 15,00</td>
-                    <td>300</td>
-                    <td>Seguidores RÁPIDO</td>
-                    <td><span class="status status-completed">Concluído</span></td>
-                    <td>0</td>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -494,32 +444,32 @@
             window.location.href = "https://ganhesocial.com";
         }
 
-    async function carregarHistoricoPedidos() {
-        const token = localStorage.getItem("token");
-        const statusParam = new URLSearchParams(window.location.search).get("status") || "todos";
+        async function carregarHistoricoPedidos() {
+            const token = localStorage.getItem("token");
+            const statusParam = new URLSearchParams(window.location.search).get("status") || "todos";
 
-        try {
-            const response = await fetch("/api/historico_pedidos?status=" + statusParam, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            try {
+                const response = await fetch("/api/historico_pedidos?status=" + statusParam, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (response.ok) {
-                const tbody = document.querySelector("tbody");
-                tbody.innerHTML = ""; // Limpa o conteúdo atual
+                if (response.ok) {
+                    const tbody = document.querySelector("tbody");
+                    tbody.innerHTML = ""; // Limpa o conteúdo atual
 
-                if (data.acoes.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Nenhum pedido encontrado.</td></tr>`;
-                }
+                    if (data.acoes.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Nenhum pedido encontrado.</td></tr>`;
+                    }
 
-                data.acoes.forEach((acao, index) => {
-                    const tr = document.createElement("tr");
-                    const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
+                    data.acoes.forEach((acao, index) => {
+                        const tr = document.createElement("tr");
+                        const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
 
-                    tr.innerHTML = `
+                        tr.innerHTML = `
                         <td>#${index + 1}</td>
                         <td>${dataCriacao}</td>
                         <td>${acao.link}</td>
@@ -530,18 +480,18 @@
                         <td>-</td>
                     `;
 
-                    tbody.appendChild(tr);
-                });
-            } else {
-                alert(data.error || "Erro ao carregar histórico.");
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    alert(data.error || "Erro ao carregar histórico.");
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao carregar pedidos.");
             }
-        } catch (error) {
-            console.error("Erro:", error);
-            alert("Erro ao carregar pedidos.");
         }
-    }
 
-    document.addEventListener("DOMContentLoaded", carregarHistoricoPedidos);
+        document.addEventListener("DOMContentLoaded", carregarHistoricoPedidos);
 
     </script>
 </body>
