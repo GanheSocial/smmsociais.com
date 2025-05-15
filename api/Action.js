@@ -6,6 +6,7 @@ const actionSchema = new mongoose.Schema({
     tipo: String,
     nome: String,
     valor: Number,
+    quantidade: Number,
     link: String,
     status: { type: String, default: "disponível" },
     dataCriacao: { type: Date, default: Date.now }
