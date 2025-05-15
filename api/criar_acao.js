@@ -24,9 +24,9 @@ const handler = async (req, res) => {
             return res.status(401).json({ error: "Token inválido ou usuário não encontrado!" });
         }
 
-        const { rede, tipo, nome, valor, link } = req.body;
+        const { rede, tipo, nome, valor, quantidade, link } = req.body;
 
-        if (!rede || !tipo || !nome || !valor || !link) {
+        if (!rede || !tipo || !nome || !valor|| !quantidade || !link) {
             return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
         }
 
@@ -37,8 +37,9 @@ const handler = async (req, res) => {
             tipo,
             nome,
             valor,
+            quantidade,
             link,
-            status: "disponível", // status inicial da ação
+            status: "pendente", // status inicial da ação
             dataCriacao: new Date()
         });
 
