@@ -322,30 +322,30 @@
     </div>
 
     <script>
-const priceDisplay = document.getElementById("price");
+        const priceDisplay = document.getElementById("price");
 
-document.addEventListener("DOMContentLoaded", function () {
-    document.body.classList.add('loaded');
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add('loaded');
 
-    const quantityInput = document.getElementById('quantity');
+            const quantityInput = document.getElementById('quantity');
 
-    quantityInput.addEventListener('input', function () {
-        const quantity = parseInt(this.value);
-        let price = 0;
+            quantityInput.addEventListener('input', function () {
+                const quantity = parseInt(this.value);
+                let price = 0;
 
-        if (quantity < 100) {
-            price = quantity * 0.05;
-        } else if (quantity < 1000) {
-            price = quantity * 0.04;
-        } else if (quantity < 10000) {
-            price = quantity * 0.03;
-        } else {
-            price = quantity * 0.02;
-        }
+                if (quantity < 100) {
+                    price = quantity * 0.05;
+                } else if (quantity < 1000) {
+                    price = quantity * 0.04;
+                } else if (quantity < 10000) {
+                    price = quantity * 0.03;
+                } else {
+                    price = quantity * 0.02;
+                }
 
-        price = Math.max(5, price);
-        priceDisplay.textContent = price.toFixed(2).replace('.', ',');
-    });
+                price = Math.max(5, price);
+                priceDisplay.textContent = price.toFixed(2).replace('.', ',');
+            });
 
             // Controle do menu hamburguer
             const menuToggle = document.getElementById('menuToggle');
@@ -399,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const token = localStorage.getItem("token");
 
-const response = await fetch("/api/criar_acao", {
+            const response = await fetch("/api/criar_acao", {
     method: "POST",
     headers: {
         "Content-Type": "application/json",
@@ -409,23 +409,24 @@ const response = await fetch("/api/criar_acao", {
         rede: "tiktok",
         tipo: "seguidores",
         nome: "Seguidores RÁPIDO no TikTok",
-        valor: parseFloat(priceDisplay.textContent.replace(",", ".")), // valor da ação
-        link: link
+        valor: parseFloat(priceDisplay.textContent.replace(",", ".")),
+        link: link,
+        quantidade: parseInt(quantity)
     })
 });
 
-const data = await response.json();
+            const data = await response.json();
 
-if (response.ok) {
-    statusMessage.textContent = "Pedido realizado com sucesso!";
-    statusMessage.style.color = "#28a745";
-    document.getElementById("link").value = "";
-    document.getElementById("quantity").value = "100";
-    priceDisplay.textContent = "5,00";
-} else {
-    statusMessage.textContent = data.error || "Erro ao processar pedido.";
-    statusMessage.style.color = "#d9534f";
-}
+            if (response.ok) {
+                statusMessage.textContent = "Pedido realizado com sucesso!";
+                statusMessage.style.color = "#28a745";
+                document.getElementById("link").value = "";
+                document.getElementById("quantity").value = "100";
+                priceDisplay.textContent = "5,00";
+            } else {
+                statusMessage.textContent = data.error || "Erro ao processar pedido.";
+                statusMessage.style.color = "#d9534f";
+            }
 
         });
 
