@@ -26,8 +26,16 @@ const handler = async (req, res) => {
 
         const { rede, tipo, nome, valor, quantidade, link } = req.body;
 
-        if (!rede || !tipo || !nome || !valor|| !quantidade || !link) {
+        if (!rede || !tipo || !nome || !valor || !quantidade || !link) {
             return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
+        }
+
+        if (!Number.isInteger(quantidade) || quantidade < 50 || quantidade > 1000000) {
+            return res.status(400).json({ error: "A quantidade deve ser um número entre 50 e 1.000.000!" });
+        }
+
+        if (typeof valor !== "number" || valor < 0.01) {
+            return res.status(400).json({ error: "O valor deve ser um número válido e positivo!" });
         }
 
         console.log("🔍 Criando nova ação...");
@@ -39,7 +47,7 @@ const handler = async (req, res) => {
             valor,
             quantidade,
             link,
-            status: "pendente", // status inicial da ação
+            status: "pendente",
             dataCriacao: new Date()
         });
 
