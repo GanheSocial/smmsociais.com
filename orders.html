@@ -414,6 +414,9 @@
     <div class="menu-content" id="menuContent">
         <a class="menu-item" href="painel">Novo Pedido</a>
         <a class="menu-item" href="orders">Histórico de Pedidos</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
 
         <div class="menu-footer">
             <a class="menu-logout" onclick="logout()">Sair</a>
@@ -490,6 +493,56 @@
             localStorage.removeItem("token");
             window.location.href = "https://ganhesocial.com";
         }
+
+    async function carregarHistoricoPedidos() {
+        const token = localStorage.getItem("token");
+        const statusParam = new URLSearchParams(window.location.search).get("status") || "todos";
+
+        try {
+            const response = await fetch("/api/historico_pedidos?status=" + statusParam, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                const tbody = document.querySelector("tbody");
+                tbody.innerHTML = ""; // Limpa o conteúdo atual
+
+                if (data.acoes.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Nenhum pedido encontrado.</td></tr>`;
+                }
+
+                data.acoes.forEach((acao, index) => {
+                    const tr = document.createElement("tr");
+                    const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
+
+                    tr.innerHTML = `
+                        <td>#${index + 1}</td>
+                        <td>${dataCriacao}</td>
+                        <td>${acao.link}</td>
+                        <td>R$ ${parseFloat(acao.valor).toFixed(2)}</td>
+                        <td>-</td>
+                        <td>${acao.nome}</td>
+                        <td><span class="status status-${acao.status}">${acao.status.charAt(0).toUpperCase() + acao.status.slice(1)}</span></td>
+                        <td>-</td>
+                    `;
+
+                    tbody.appendChild(tr);
+                });
+            } else {
+                alert(data.error || "Erro ao carregar histórico.");
+            }
+        } catch (error) {
+            console.error("Erro:", error);
+            alert("Erro ao carregar pedidos.");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarHistoricoPedidos);
+
     </script>
 </body>
 
