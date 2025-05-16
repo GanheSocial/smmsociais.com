@@ -1,8 +1,7 @@
 import connectDB from "./db.js";
-import { User } from "./User.js";
 import { Action } from "./Action.js";
 
-const API_KEY = process.env.SMM_API_KEY; // Armazene isso em variável de ambiente
+const API_KEY = process.env.SMM_API_KEY;
 
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
@@ -17,8 +16,12 @@ export default async function handler(req, res) {
     try {
         await connectDB();
 
-        // Busca a primeira ação disponível
-        const acao = await Action.findOne({ status: 'pendente' }).sort({ dataCriacao: 1 });
+        // Busca e atualiza uma ação disponível de forma atômica
+        const acao = await Action.findOneAndUpdate(
+            { status: 'pendente' },
+            { status: 'reservada' },
+            { sort: { dataCriacao: 1 }, new: true }
+        );
 
         if (!acao) {
             return res.json({ status: 'NAO_ENCONTRADA' });
