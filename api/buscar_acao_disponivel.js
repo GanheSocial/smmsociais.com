@@ -16,23 +16,15 @@ export default async function handler(req, res) {
     try {
         await connectDB();
 
-        // Busca uma ação que ainda pode ser executada (não excedeu a quantidade)
+        // Busca e atualiza uma ação disponível de forma atômica
         const acao = await Action.findOneAndUpdate(
-            {
-                status: 'pendente',
-                $expr: { $lt: ["$quantidadeExecutada", "$quantidade"] }
-            },
-            { $inc: { quantidadeExecutada: 1 } },
+            { status: 'pendente' },
+            { status: 'reservada' },
             { sort: { dataCriacao: 1 }, new: true }
         );
 
         if (!acao) {
             return res.json({ status: 'NAO_ENCONTRADA' });
-        }
-
-        // Se atingiu o limite após o incremento, marca como concluída
-        if (acao.quantidadeExecutada + 1 >= acao.quantidade) {
-            await Action.updateOne({ _id: acao._id }, { status: 'concluida' });
         }
 
         return res.json({
@@ -44,11 +36,9 @@ export default async function handler(req, res) {
             nome: acao.nome,
             valor: acao.valor,
             quantidade: acao.quantidade,
-            quantidadeExecutada: acao.quantidadeExecutada + 1,
             link: acao.link,
             dataCriacao: acao.dataCriacao
         });
-
     } catch (error) {
         console.error('Erro ao buscar ação disponível:', error);
         return res.status(500).json({ error: 'Erro interno' });
