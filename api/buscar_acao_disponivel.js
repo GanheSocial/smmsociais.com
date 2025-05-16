@@ -16,25 +16,18 @@ export default async function handler(req, res) {
     try {
         await connectDB();
 
-        // Busca uma ação que ainda pode ser executada (não excedeu a quantidade)
-        const acao = await Action.findOneAndUpdate(
-            {
-                status: 'pendente',
-                $expr: { $lt: ["$quantidadeExecutada", "$quantidade"] }
-            },
-            { $inc: { quantidadeExecutada: 1 } },
-            { sort: { dataCriacao: 1 }, new: true }
+        // Busca a próxima ação com status pendente (sem verificar quantidadeExecutada)
+        const acao = await Action.findOne(
+            { status: 'pendente' },
+            null,
+            { sort: { dataCriacao: 1 } }
         );
 
         if (!acao) {
             return res.json({ status: 'NAO_ENCONTRADA' });
         }
 
-        // Se atingiu o limite após o incremento, marca como concluída
-        if (acao.quantidadeExecutada + 1 >= acao.quantidade) {
-            await Action.updateOne({ _id: acao._id }, { status: 'concluida' });
-        }
-
+        // Retorna os dados da ação SEM alterar a quantidadeExecutada
         return res.json({
             status: 'ENCONTRADA',
             _id: acao._id,
@@ -44,7 +37,7 @@ export default async function handler(req, res) {
             nome: acao.nome,
             valor: acao.valor,
             quantidade: acao.quantidade,
-            quantidadeExecutada: acao.quantidadeExecutada + 1,
+            quantidadeExecutada: acao.quantidadeExecutada,
             link: acao.link,
             dataCriacao: acao.dataCriacao
         });
