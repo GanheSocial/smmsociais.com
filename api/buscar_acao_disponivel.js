@@ -1,46 +1,42 @@
-import connectDB from "./db.js";
-import { Action } from "./Action.js";
+import connectDB from './db.js';
+import { Action } from './Action.js';
 
-const API_KEY = process.env.SMM_API_KEY;
-
-export default async function handler(req, res) {
-    if (req.method !== 'GET') {
-        return res.status(405).json({ error: 'Método não permitido' });
-    }
-
-    const authHeader = req.headers.authorization;
-    if (!authHeader || authHeader !== `Bearer ${API_KEY}`) {
-        return res.status(401).json({ error: 'Não autorizado' });
+const handler = async (req, res) => {
+    if (req.method !== "GET") {
+        return res.status(405).json({ error: "Método não permitido" });
     }
 
     try {
-        await connectDB();
+        const response = await fetch('https://smmsociais.com/api/buscar_acao_disponivel', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer 123456'
+            }
+        });
 
-        // Busca e atualiza uma ação disponível de forma atômica
-        const acao = await Action.findOneAndUpdate(
-            { status: 'pendente' },
-            { status: 'reservada' },
-            { sort: { dataCriacao: 1 }, new: true }
-        );
+        if (!response.ok) {
+            return res.status(500).json({ error: "Erro ao buscar dados do SMM" });
+        }
 
-        if (!acao) {
-            return res.json({ status: 'NAO_ENCONTRADA' });
+        const acao = await response.json();
+
+        if (!acao || !acao.link) {
+            return res.json({ status: "NAO_ENCONTRADA" });
         }
 
         return res.json({
-            status: 'ENCONTRADA',
-            _id: acao._id,
-            userId: acao.userId,
-            rede: acao.rede,
-            tipo: acao.tipo,
-            nome: acao.nome,
-            valor: acao.valor,
-            quantidade: acao.quantidade,
-            link: acao.link,
-            dataCriacao: acao.dataCriacao
+            status: "ENCONTRADA",
+            nome_usuario: acao.link.split("@")[1] ?? "",
+            quantidade_pontos: acao.valor,
+            url_dir: acao.link,
+            tipo_acao: acao.tipo,
+            id_pedido: acao._id
         });
+
     } catch (error) {
-        console.error('Erro ao buscar ação disponível:', error);
-        return res.status(500).json({ error: 'Erro interno' });
+        console.error("Erro ao buscar ação do smmsociais.com:", error);
+        return res.status(500).json({ error: "Erro interno" });
     }
-}
+};
+
+export default handler;
