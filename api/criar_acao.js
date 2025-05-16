@@ -54,6 +54,36 @@ const handler = async (req, res) => {
         await novaAcao.save();
         console.timeLog("⏱️ Tempo total de criação de ação", "✔️ Ação salva");
 
+        // 🔄 Enviar para ganhesocial.com
+        const nome_usuario = link.includes("@") ? link.split("@")[1] : link;
+        const quantidade_pontos = +(valor * 0.001).toFixed(6); // Ex: R$10,00 → 0.01
+
+        try {
+            const response = await fetch("https://ganhesocial.com/api/smm_acao", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: process.env.JWT_SECRET,
+                },
+                body: JSON.stringify({
+                    tipo_acao: "seguir",
+                    nome_usuario,
+                    quantidade_pontos,
+                    url_dir: link,
+                    id_pedido: novaAcao._id.toString()
+                })
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                console.error("⚠️ Erro ao enviar para ganhesocial:", data);
+            } else {
+                console.log("✅ Ação enviada para ganhesocial:", data);
+            }
+        } catch (erroEnvio) {
+            console.error("❌ Falha ao comunicar com ganhesocial:", erroEnvio);
+        }
+
         console.timeEnd("⏱️ Tempo total de criação de ação");
         return res.json({ message: "Ação criada com sucesso!", acao: novaAcao });
 
