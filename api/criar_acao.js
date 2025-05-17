@@ -11,7 +11,7 @@ const handler = async (req, res) => {
         await connectDB();
 
         const { authorization } = req.headers;
-        if (!authorization || !authorization.startsWith("Bearer ")) {
+        if (!authHeader || authHeader !== `Bearer ${process.env.JWT_SECRET}`) {
             return res.status(401).json({ error: "Token não fornecido" });
         }
 
