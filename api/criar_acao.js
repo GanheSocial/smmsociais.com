@@ -21,7 +21,7 @@ console.log("Chave esperada:", `Bearer ${process.env.SMM_API_KEY}`);
         // ✅ Coletar dados
         const { rede, tipo, nome, valor, quantidade, link, userId } = req.body;
 
-        if (!rede || !tipo || !nome || !valor || !quantidade || !link || !userId) {
+        if (!rede || !tipo || !nome || !valor || !quantidade || !link) {
             return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
         }
 
@@ -38,7 +38,6 @@ console.log("Chave esperada:", `Bearer ${process.env.SMM_API_KEY}`);
 
         console.log("🔍 Criando nova ação...");
         const novaAcao = new Action({
-            userId,
             rede,
             tipo,
             nome,
