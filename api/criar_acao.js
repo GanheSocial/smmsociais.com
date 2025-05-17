@@ -1,6 +1,10 @@
 import connectDB from "./db.js";
 import { Action } from "./Action.js";
 
+const gerarIdPedido = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString(); // Gera número entre 100000 e 999999
+};
+
 const handler = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
@@ -59,6 +63,8 @@ const handler = async (req, res) => {
     if (tipoLower === "seguidores") tipo_acao = "Seguir";
     else if (tipoLower === "curtidas") tipo_acao = "Curtir";
 
+    const id_pedido = gerarIdPedido();
+
     const payloadGanheSocial = {
       tipo_acao,
       nome_usuario,
@@ -66,7 +72,7 @@ const handler = async (req, res) => {
       quantidade: quantidadeNum,
       valor: valorNum,
       url_dir: link,
-      id_pedido: novaAcao._id // 🔍 Enviar como ObjectId diretamente
+      id_pedido
     };
 
     console.log("➡️ Enviando para ganhesocial.com:", payloadGanheSocial);
