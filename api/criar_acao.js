@@ -8,9 +8,7 @@ const handler = async (req, res) => {
     }
 
     try {
-        console.time("⏱️ Tempo total de criação de ação");
         await connectDB();
-        console.timeLog("⏱️ Tempo total de criação de ação", "✔️ Conectado ao MongoDB");
 
         const { authorization } = req.headers;
         if (!authorization || !authorization.startsWith("Bearer ")) {
@@ -56,7 +54,6 @@ const handler = async (req, res) => {
         });
 
         await novaAcao.save();
-        console.timeLog("⏱️ Tempo total de criação de ação", "✔️ Ação salva");
 
         // Preparando dados para enviar para ganhesocial.com
         const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
@@ -70,6 +67,8 @@ const handler = async (req, res) => {
         } else {
             tipo_acao = "Outro";
         }
+
+console.log("➡️ Enviando ação para ganhesocial.com", { tipo_acao, nome_usuario, quantidade_pontos, id_pedido: novaAcao._id.toString() });        
 
         try {
             const response = await fetch("https://ganhesocial.com/api/smm_acao", {
@@ -87,9 +86,10 @@ const handler = async (req, res) => {
                     url_dir: link,
                     id_pedido: novaAcao._id.toString()
                 })
-            });
+            });         
 
             const data = await response.json();
+            console.log("⬅️ Resposta ganhesocial:", response.status);
             if (!response.ok) {
                 console.error("⚠️ Erro ao enviar para ganhesocial:", data);
             } else {
