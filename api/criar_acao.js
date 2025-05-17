@@ -11,7 +11,7 @@ const handler = async (req, res) => {
         await connectDB();
 
 const { authorization } = req.headers;
-if (!authorization || authorization !== `Bearer ${process.env.JWT_SECRET}`) {
+if (!authorization || authorization !== `Bearer ${process.env.SMM_API_KEY}`) {
     return res.status(401).json({ error: "Token não fornecido" });
 }
 
