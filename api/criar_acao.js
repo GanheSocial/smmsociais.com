@@ -73,12 +73,14 @@ try {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: process.env.JWT_SECRET,
+            Authorization: `Bearer ${process.env.JWT_SECRET}`, // aqui
         },
         body: JSON.stringify({
             tipo_acao,
             nome_usuario,
             quantidade_pontos,
+            quantidade,
+            valor,
             url_dir: link,
             id_pedido: novaAcao._id.toString()
         })
