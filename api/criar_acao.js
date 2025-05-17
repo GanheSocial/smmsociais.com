@@ -30,11 +30,15 @@ const handler = async (req, res) => {
             return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
         }
 
-        if (!Number.isInteger(quantidade) || quantidade < 50 || quantidade > 1000000) {
+        // Convertendo para número
+        const valorNum = Number(valor);
+        const quantidadeNum = Number(quantidade);
+
+        if (!Number.isInteger(quantidadeNum) || quantidadeNum < 50 || quantidadeNum > 1000000) {
             return res.status(400).json({ error: "A quantidade deve ser um número entre 50 e 1.000.000!" });
         }
 
-        if (typeof valor !== "number" || valor < 0.01) {
+        if (isNaN(valorNum) || valorNum < 0.01) {
             return res.status(400).json({ error: "O valor deve ser um número válido e positivo!" });
         }
 
@@ -44,8 +48,8 @@ const handler = async (req, res) => {
             rede,
             tipo,
             nome,
-            valor,
-            quantidade,
+            valor: valorNum,
+            quantidade: quantidadeNum,
             link,
             status: "pendente",
             dataCriacao: new Date()
@@ -54,47 +58,48 @@ const handler = async (req, res) => {
         await novaAcao.save();
         console.timeLog("⏱️ Tempo total de criação de ação", "✔️ Ação salva");
 
-// 🔄 Enviar para ganhesocial.com
-const nome_usuario = link.includes("@") ? link.split("@")[1] : link;
-const quantidade_pontos = +(valor * 0.001).toFixed(6); // Ex: R$10,00 → 0.01
+        // Preparando dados para enviar para ganhesocial.com
+        const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
+        const quantidade_pontos = +(valorNum * 0.001).toFixed(6);
 
-// Mapear tipo para tipo_acao
-let tipo_acao;
-if (tipo.toLowerCase() === "seguidores") {
-    tipo_acao = "Seguir";
-} else if (tipo.toLowerCase() === "curtidas") {
-    tipo_acao = "Curtir";
-} else {
-    tipo_acao = "Outro"; // fallback, se quiser evitar enviar valores não mapeados
-}
+        let tipo_acao;
+        if (tipo.toLowerCase() === "seguidores") {
+            tipo_acao = "Seguir";
+        } else if (tipo.toLowerCase() === "curtidas") {
+            tipo_acao = "Curtir";
+        } else {
+            tipo_acao = "Outro";
+        }
 
-try {
-    const response = await fetch("https://ganhesocial.com/api/smm_acao", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.JWT_SECRET}`, // aqui
-        },
-        body: JSON.stringify({
-            tipo_acao,
-            nome_usuario,
-            quantidade_pontos,
-            quantidade,
-            valor,
-            url_dir: link,
-            id_pedido: novaAcao._id.toString()
-        })
-    });
+        try {
+            const response = await fetch("https://ganhesocial.com/api/smm_acao", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.JWT_SECRET}`,
+                },
+                body: JSON.stringify({
+                    tipo_acao,
+                    nome_usuario,
+                    quantidade_pontos,
+                    quantidade: quantidadeNum,
+                    valor: valorNum,
+                    url_dir: link,
+                    id_pedido: novaAcao._id.toString()
+                })
+            });
 
-    const data = await response.json();
-    if (!response.ok) {
-        console.error("⚠️ Erro ao enviar para ganhesocial:", data);
-    } else {
-        console.log("✅ Ação enviada para ganhesocial:", data);
-    }
-} catch (erroEnvio) {
-    console.error("❌ Falha ao comunicar com ganhesocial:", erroEnvio);
-}
+            const data = await response.json();
+            if (!response.ok) {
+                console.error("⚠️ Erro ao enviar para ganhesocial:", data);
+            } else {
+                console.log("✅ Ação enviada para ganhesocial:", data);
+            }
+        } catch (erroEnvio) {
+            console.error("❌ Falha ao comunicar com ganhesocial:", erroEnvio);
+        }
+
+        return res.status(201).json({ message: "Ação criada com sucesso" });
 
     } catch (error) {
         console.error("❌ Erro ao criar ação:", error);
