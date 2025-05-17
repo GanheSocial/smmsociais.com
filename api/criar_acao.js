@@ -1,5 +1,4 @@
 import connectDB from "./db.js";
-import { User } from "./User.js";
 import { Action } from "./Action.js";
 
 const handler = async (req, res) => {
@@ -10,25 +9,19 @@ const handler = async (req, res) => {
     try {
         await connectDB();
 
-const { authorization } = req.headers;
-if (!authorization || authorization !== `Bearer ${process.env.JWT_SECRET}`) {
-    return res.status(401).json({ error: "Token não fornecido" });
-}
-
-        const token = authorization.split(" ")[1];
-        const usuario = await User.findOne({ token });
-
-        if (!usuario) {
-            return res.status(401).json({ error: "Token inválido ou usuário não encontrado!" });
+        // ✅ Validar chave da API
+        const { authorization } = req.headers;
+        if (!authorization || authorization !== `Bearer ${process.env.SMM_API_KEY}`) {
+            return res.status(401).json({ error: "Não autorizado" });
         }
 
-        const { rede, tipo, nome, valor, quantidade, link } = req.body;
+        // ✅ Coletar dados
+        const { rede, tipo, nome, valor, quantidade, link, userId } = req.body;
 
-        if (!rede || !tipo || !nome || !valor || !quantidade || !link) {
+        if (!rede || !tipo || !nome || !valor || !quantidade || !link || !userId) {
             return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
         }
 
-        // Convertendo para número
         const valorNum = Number(valor);
         const quantidadeNum = Number(quantidade);
 
@@ -42,7 +35,7 @@ if (!authorization || authorization !== `Bearer ${process.env.JWT_SECRET}`) {
 
         console.log("🔍 Criando nova ação...");
         const novaAcao = new Action({
-            userId: usuario._id,
+            userId,
             rede,
             tipo,
             nome,
@@ -55,41 +48,40 @@ if (!authorization || authorization !== `Bearer ${process.env.JWT_SECRET}`) {
 
         await novaAcao.save();
 
-        // Preparando dados para enviar para ganhesocial.com
+        // ✅ Preparar envio
         const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
         const quantidade_pontos = +(valorNum * 0.001).toFixed(6);
 
-        let tipo_acao;
-        if (tipo.toLowerCase() === "seguidores") {
-            tipo_acao = "Seguir";
-        } else if (tipo.toLowerCase() === "curtidas") {
-            tipo_acao = "Curtir";
-        } else {
-            tipo_acao = "Outro";
-        }
+        let tipo_acao = "Outro";
+        if (tipo.toLowerCase() === "seguidores") tipo_acao = "Seguir";
+        else if (tipo.toLowerCase() === "curtidas") tipo_acao = "Curtir";
 
-console.log("➡️ Enviando ação para ganhesocial.com", { tipo_acao, nome_usuario, quantidade_pontos, id_pedido: novaAcao._id.toString() });        
+        console.log("➡️ Enviando ação para ganhesocial.com", {
+            tipo_acao,
+            nome_usuario,
+            quantidade_pontos,
+            id_pedido: novaAcao._id.toString()
+        });
 
         try {
             const response = await fetch("https://ganhesocial.com/api/smm_acao", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${process.env.JWT_SECRET}`,
+                    Authorization: `Bearer ${process.env.SMM_API_KEY}`,
                 },
                 body: JSON.stringify({
                     tipo_acao,
                     nome_usuario,
                     quantidade_pontos,
-                    quantidade: quantidadeNum,
-                    valor: valorNum,
+                    quantidade,
+                    valor,
                     url_dir: link,
                     id_pedido: novaAcao._id.toString()
                 })
-            });         
+            });
 
             const data = await response.json();
-            console.log("⬅️ Resposta ganhesocial:", response.status);
             if (!response.ok) {
                 console.error("⚠️ Erro ao enviar para ganhesocial:", data);
             } else {
