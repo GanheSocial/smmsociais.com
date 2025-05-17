@@ -62,7 +62,7 @@ console.log("Chave esperada:", `Bearer ${process.env.SMM_API_KEY}`);
             tipo_acao,
             nome_usuario,
             quantidade_pontos,
-            id_pedido: novaAcao._id.toString()
+            id_pedido: novaAcao._id
         });
 
         try {
