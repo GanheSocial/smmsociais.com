@@ -391,7 +391,7 @@
                 return;
             }
 
-            if (quantity < 50 || quantity > 1000000) {
+            if (quantity < 10 || quantity > 1000000) {
                 statusMessage.textContent = "Quantidade deve ser entre 50 e 1.000.000!";
                 statusMessage.style.color = "#d9534f";
                 return;
@@ -400,20 +400,20 @@
             const token = localStorage.getItem("token");
 
             const response = await fetch("/api/criar_acao", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({
-        rede: "tiktok",
-        tipo: "seguidores",
-        nome: "Seguidores RÁPIDO no TikTok",
-        valor: parseFloat(priceDisplay.textContent.replace(",", ".")),
-        link: link,
-        quantidade: parseInt(quantity)
-    })
-});
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer 123456"
+                },
+                body: JSON.stringify({
+                    rede: "tiktok",
+                    tipo: "seguidores",
+                    nome: "Seguidores RÁPIDO no TikTok",
+                    valor: parseFloat(priceDisplay.textContent.replace(",", ".")),
+                    link: link,
+                    quantidade: parseInt(quantity)
+                })
+            });
 
             const data = await response.json();
 
