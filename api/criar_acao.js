@@ -10,7 +10,10 @@ const handler = async (req, res) => {
         await connectDB();
 
         // ✅ Validar chave da API
-        const { authorization } = req.headers;
+const { authorization } = req.headers;
+console.log("Authorization recebido:", authorization);
+console.log("Chave esperada:", `Bearer ${process.env.SMM_API_KEY}`);
+
         if (!authorization || authorization !== `Bearer ${process.env.SMM_API_KEY}`) {
             return res.status(401).json({ error: "Não autorizado" });
         }
