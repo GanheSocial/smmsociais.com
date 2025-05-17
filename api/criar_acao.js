@@ -10,10 +10,10 @@ const handler = async (req, res) => {
     try {
         await connectDB();
 
-        const { authorization } = req.headers;
-        if (!authHeader || authHeader !== `Bearer ${process.env.JWT_SECRET}`) {
-            return res.status(401).json({ error: "Token não fornecido" });
-        }
+const { authorization } = req.headers;
+if (!authorization || authorization !== `Bearer ${process.env.JWT_SECRET}`) {
+    return res.status(401).json({ error: "Token não fornecido" });
+}
 
         const token = authorization.split(" ")[1];
         const usuario = await User.findOne({ token });
