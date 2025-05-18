@@ -1,10 +1,6 @@
 import connectDB from "./db.js";
 import { Action } from "./Action.js";
 
-const gerarIdPedido = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString(); // Gera número entre 100000 e 999999
-};
-
 const handler = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
@@ -52,7 +48,7 @@ const handler = async (req, res) => {
       dataCriacao: new Date()
     });
 
-await novaAcao.save();
+    await novaAcao.save();
 
     // 🔗 Preparação dos dados para envio ao GanhSocial
     const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
@@ -63,7 +59,8 @@ await novaAcao.save();
     if (tipoLower === "seguidores") tipo_acao = "Seguir";
     else if (tipoLower === "curtidas") tipo_acao = "Curtir";
 
-    const id_pedido = gerarIdPedido();
+    // Agora usamos o _id como identificador do pedido
+    const id_pedido = novaAcao._id.toString();
 
     const payloadGanheSocial = {
       tipo_acao,
