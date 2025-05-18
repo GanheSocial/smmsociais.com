@@ -50,7 +50,10 @@ const handler = async (req, res) => {
 
     await novaAcao.save();
 
-    // 🔗 Preparação dos dados para envio ao GanhSocial
+    // 🆔 Usar o _id do MongoDB como identificador universal
+    const id_pedido = novaAcao._id.toString();
+
+    // 🔗 Preparação dos dados para envio ao GanheSocial
     const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
     const quantidade_pontos = +(valorNum * 0.001).toFixed(6);
 
@@ -59,9 +62,6 @@ const handler = async (req, res) => {
     if (tipoLower === "seguidores") tipo_acao = "Seguir";
     else if (tipoLower === "curtidas") tipo_acao = "Curtir";
 
-    // Agora usamos o _id como identificador do pedido
-    const id_pedido = novaAcao._id.toString();
-
     const payloadGanheSocial = {
       tipo_acao,
       nome_usuario,
@@ -69,7 +69,7 @@ const handler = async (req, res) => {
       quantidade: quantidadeNum,
       valor: valorNum,
       url_dir: link,
-      id_pedido
+      id_pedido // ✅ Agora é o _id real do Mongo
     };
 
     console.log("➡️ Enviando para ganhesocial.com:", payloadGanheSocial);
@@ -96,7 +96,7 @@ const handler = async (req, res) => {
       console.error("❌ Falha na comunicação com ganhesocial:", erroEnvio);
     }
 
-    return res.status(201).json({ message: "Ação criada com sucesso" });
+    return res.status(201).json({ message: "Ação criada com sucesso", id_pedido });
 
   } catch (error) {
     console.error("❌ Erro interno ao criar ação:", error);
