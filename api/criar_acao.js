@@ -54,9 +54,6 @@ const handler = async (req, res) => {
 
 await novaAcao.save();
 
-// Remove o _id antes de preparar o payload
-const { _id, ...acaoLimpa } = novaAcao._doc;
-
     // 🔗 Preparação dos dados para envio ao GanhSocial
     const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
     const quantidade_pontos = +(valorNum * 0.001).toFixed(6);
