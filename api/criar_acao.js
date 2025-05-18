@@ -52,7 +52,10 @@ const handler = async (req, res) => {
       dataCriacao: new Date()
     });
 
-    await novaAcao.save();
+await novaAcao.save();
+
+// Remove o _id antes de preparar o payload
+const { _id, ...acaoLimpa } = novaAcao._doc;
 
     // 🔗 Preparação dos dados para envio ao GanhSocial
     const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
