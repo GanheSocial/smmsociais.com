@@ -337,7 +337,8 @@
         <div class="bulk-instructions">
             <h4>Instruções para Ordem em Massa:</h4>
             <ol>
-                <li>Insira os dados no formato: <span class="example-text">ID do serviço Link do perfil Quantidade</span></li>
+                <li>Insira os dados no formato: <span class="example-text">ID do serviço Link do perfil
+                        Quantidade</span></li>
                 <li>Cada pedido deve estar em uma linha separada</li>
                 <li>Exemplo válido: <span class="example-text">1254 https://tiktok.com/@usuario 1000</span></li>
                 <li>Quantidade mínima por pedido: 50 seguidores</li>
@@ -365,6 +366,7 @@
         <a class="menu-item" href="orders">Histórico de Pedidos</a>
         <a class="menu-item" href="services">Serviços</a>
         <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
 
         <div class="menu-footer">
             <a class="menu-logout" onclick="logout()">Sair</a>
@@ -433,7 +435,7 @@
                 orders.forEach((order, index) => {
                     // Usar regex para dividir por espaços, mas preservar URLs com espaços
                     const parts = order.split(/\s+/).filter(part => part.trim() !== '');
-                    
+
                     // Verificar se temos pelo menos 3 partes (ID, URL e quantidade)
                     if (parts.length < 3) {
                         invalidOrders.push(`Linha ${index + 1}: Formato inválido. Use "ID Link Quantidade"`);
@@ -482,31 +484,31 @@
 
                 // Enviar para a API
                 fetch('https://smmsociais.com/api/massorder', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer 123456"
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer 123456"
                     },
                     body: JSON.stringify({ orders: validOrders })
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao enviar pedidos');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Pedidos válidos:', validOrders);
-                    successMessage.style.display = 'block';
-                    bulkOrderForm.reset();
-                    
-                    setTimeout(() => {
-                        window.location.href = 'orders';
-                    }, 3000);
-                })
-                .catch(error => {
-                    showError('Erro ao enviar pedidos: ' + error.message);
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro ao enviar pedidos');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Pedidos válidos:', validOrders);
+                        successMessage.style.display = 'block';
+                        bulkOrderForm.reset();
+
+                        setTimeout(() => {
+                            window.location.href = 'orders';
+                        }, 3000);
+                    })
+                    .catch(error => {
+                        showError('Erro ao enviar pedidos: ' + error.message);
+                    });
             });
 
             function showError(message) {
