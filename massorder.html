@@ -337,10 +337,9 @@
         <div class="bulk-instructions">
             <h4>Instruções para Ordem em Massa:</h4>
             <ol>
-                <li>Insira os dados no formato: <span class="example-text">ID do serviço | Link do perfil |
-                        Quantidade</span></li>
+                <li>Insira os dados no formato: <span class="example-text">ID do serviço Link do perfil Quantidade</span></li>
                 <li>Cada pedido deve estar em uma linha separada</li>
-                <li>Exemplo válido: <span class="example-text">1254 | https://tiktok.com/@usuario | 1000</span></li>
+                <li>Exemplo válido: <span class="example-text">1254 https://tiktok.com/@usuario 1000</span></li>
                 <li>Quantidade mínima por pedido: 50 seguidores</li>
                 <li>Máximo de 50 pedidos por envio</li>
             </ol>
@@ -350,7 +349,7 @@
             <div class="form-group">
                 <label for="bulkOrders" class="form-label">Pedidos (um por linha):</label>
                 <textarea id="bulkOrders" class="form-control" rows="10"
-                    placeholder="Exemplo:&#10;1254 | https://tiktok.com/@usuario | 1000&#10;1255 | https://tiktok.com/@outrousuario | 500"
+                    placeholder="Exemplo:&#10;1254 https://tiktok.com/@usuario 1000&#10;1255 https://tiktok.com/@outrousuario 500"
                     required></textarea>
                 <div class="error-message" id="bulkOrdersError"></div>
             </div>
@@ -412,115 +411,123 @@
             const bulkOrdersError = document.getElementById('bulkOrdersError');
             const successMessage = document.getElementById('successMessage');
 
-        bulkOrderForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            bulkOrdersError.style.display = 'none';
+            bulkOrderForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                bulkOrdersError.style.display = 'none';
 
-            const ordersText = bulkOrdersTextarea.value.trim();
-            if (!ordersText) {
-                showError('Por favor, insira pelo menos um pedido.');
-                return;
-            }
-
-            const orders = ordersText.split('\n');
-            if (orders.length > 50) {
-                showError('Máximo de 50 pedidos por envio.');
-                return;
-            }
-
-            const invalidOrders = [];
-            const validOrders = [];
-
-            orders.forEach((order, index) => {
-                const parts = order.split('|').map(part => part.trim());
-                if (parts.length !== 3) {
-                    invalidOrders.push(`Linha ${index + 1}: Formato inválido. Use "ID | Link | Quantidade"`);
+                const ordersText = bulkOrdersTextarea.value.trim();
+                if (!ordersText) {
+                    showError('Por favor, insira pelo menos um pedido.');
                     return;
                 }
 
-                const [serviceId, profileUrl, quantity] = parts;
-
-                if (!/^\d+$/.test(serviceId)) {
-                    invalidOrders.push(`Linha ${index + 1}: ID do serviço deve ser numérico`);
+                const orders = ordersText.split('\n');
+                if (orders.length > 50) {
+                    showError('Máximo de 50 pedidos por envio.');
                     return;
                 }
 
-                if (!isValidUrl(profileUrl)) {
-                    invalidOrders.push(`Linha ${index + 1}: URL do perfil inválida`);
+                const invalidOrders = [];
+                const validOrders = [];
+
+                orders.forEach((order, index) => {
+                    // Usar regex para dividir por espaços, mas preservar URLs com espaços
+                    const parts = order.split(/\s+/).filter(part => part.trim() !== '');
+                    
+                    // Verificar se temos pelo menos 3 partes (ID, URL e quantidade)
+                    if (parts.length < 3) {
+                        invalidOrders.push(`Linha ${index + 1}: Formato inválido. Use "ID Link Quantidade"`);
+                        return;
+                    }
+
+                    // O ID é a primeira parte
+                    const serviceId = parts[0];
+                    // A quantidade é a última parte
+                    const quantity = parts[parts.length - 1];
+                    // A URL é tudo entre a primeira e a última parte
+                    const profileUrl = parts.slice(1, -1).join(' ');
+
+                    if (!/^\d+$/.test(serviceId)) {
+                        invalidOrders.push(`Linha ${index + 1}: ID do serviço deve ser numérico`);
+                        return;
+                    }
+
+                    if (!isValidUrl(profileUrl)) {
+                        invalidOrders.push(`Linha ${index + 1}: URL do perfil inválida`);
+                        return;
+                    }
+
+                    const quantityNum = parseInt(quantity);
+                    if (isNaN(quantityNum)) {
+                        invalidOrders.push(`Linha ${index + 1}: Quantidade deve ser um número`);
+                        return;
+                    }
+
+                    if (quantityNum < 50) {
+                        invalidOrders.push(`Linha ${index + 1}: Quantidade mínima é 50`);
+                        return;
+                    }
+
+                    validOrders.push({
+                        serviceId,
+                        profileUrl,
+                        quantity: quantityNum
+                    });
+                });
+
+                if (invalidOrders.length > 0) {
+                    showError(invalidOrders.join('<br>'));
                     return;
                 }
 
-                const quantityNum = parseInt(quantity);
-                if (isNaN(quantityNum)) {
-                    invalidOrders.push(`Linha ${index + 1}: Quantidade deve ser um número`);
-                    return;
-                }
-
-                if (quantityNum < 50) {
-                    invalidOrders.push(`Linha ${index + 1}: Quantidade mínima é 50`);
-                    return;
-                }
-
-                validOrders.push({
-                    serviceId,
-                    profileUrl,
-                    quantity: quantityNum
+                // Enviar para a API
+                fetch('https://smmsociais.com/api/massorder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({ orders: validOrders })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao enviar pedidos');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Pedidos válidos:', validOrders);
+                    successMessage.style.display = 'block';
+                    bulkOrderForm.reset();
+                    
+                    setTimeout(() => {
+                        window.location.href = 'orders';
+                    }, 3000);
+                })
+                .catch(error => {
+                    showError('Erro ao enviar pedidos: ' + error.message);
                 });
             });
 
-            if (invalidOrders.length > 0) {
-                showError(invalidOrders.join('<br>'));
-                return;
+            function showError(message) {
+                bulkOrdersError.innerHTML = message;
+                bulkOrdersError.style.display = 'block';
             }
 
-            // Enviar para a API
-            fetch('https://smmsociais.com/api/massorder', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem("token")
-                },
-                body: JSON.stringify({ orders: validOrders })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao enviar pedidos');
+            function isValidUrl(url) {
+                try {
+                    new URL(url);
+                    return true;
+                } catch (e) {
+                    return false;
                 }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Pedidos válidos:', validOrders); // Adicionei o log aqui
-                successMessage.style.display = 'block';
-                bulkOrderForm.reset();
-                
-                setTimeout(() => {
-                    window.location.href = 'orders';
-                }, 3000);
-            })
-            .catch(error => {
-                showError('Erro ao enviar pedidos: ' + error.message);
-            });
-        });
-
-        function showError(message) {
-            bulkOrdersError.innerHTML = message;
-            bulkOrdersError.style.display = 'block';
-        }
-
-        function isValidUrl(url) {
-            try {
-                new URL(url);
-                return true;
-            } catch (e) {
-                return false;
             }
-        }
 
-        function logout() {
-            localStorage.removeItem("token");
-            window.location.href = "https://smmsociais.com";
-        }
-    });
+            function logout() {
+                localStorage.removeItem("token");
+                window.location.href = "https://smmsociais.com";
+            }
+        });
     </script>
 </body>
 
