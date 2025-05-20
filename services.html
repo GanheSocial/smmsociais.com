@@ -434,11 +434,11 @@
                     return;
                 }
 
-const response = await fetch(`https://smmsociais.com/api/servico`, {
-    headers: {
-        'Authorization': `Bearer ${token}`
-    }
-});
+                const response = await fetch(`https://smmsociais.com/api/servico`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
 
                 if (!response.ok) {
                     throw new Error('Erro ao carregar serviços');
@@ -458,22 +458,22 @@ const response = await fetch(`https://smmsociais.com/api/servico`, {
 
             services.forEach(service => {
                 const row = document.createElement('tr');
-                
+
                 row.innerHTML = `
                     <td>${service._id}</td>
                     <td class="service-name">${service.nome}</td>
-                    <td>R$ ${service.precoPorMil.toFixed(2)}</td>
+                    <td>R$ ${service.preco_1000.toFixed(2)}</td>
                     <td>${service.minimo}</td>
                     <td>${service.maximo || 'N/A'}</td>
                     <td><button class="order-btn" data-id="${service._id}">Pedir</button></td>
                 `;
-                
+
                 tableBody.appendChild(row);
             });
 
             // Adiciona eventos aos botões de pedido
             document.querySelectorAll('.order-btn').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const serviceId = this.getAttribute('data-id');
                     window.location.href = `painel?service=${serviceId}`;
                 });
