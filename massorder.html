@@ -412,7 +412,7 @@
             const bulkOrdersError = document.getElementById('bulkOrdersError');
             const successMessage = document.getElementById('successMessage');
 
-            bulkOrderForm.addEventListener('submit', function (e) {
+           bulkOrderForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 bulkOrdersError.style.display = 'none';
 
@@ -440,19 +440,16 @@
 
                     const [serviceId, profileUrl, quantity] = parts;
 
-                    // Validar ID do serviço
                     if (!/^\d+$/.test(serviceId)) {
                         invalidOrders.push(`Linha ${index + 1}: ID do serviço deve ser numérico`);
                         return;
                     }
 
-                    // Validar URL do perfil
                     if (!isValidUrl(profileUrl)) {
                         invalidOrders.push(`Linha ${index + 1}: URL do perfil inválida`);
                         return;
                     }
 
-                    // Validar quantidade
                     const quantityNum = parseInt(quantity);
                     if (isNaN(quantityNum)) {
                         invalidOrders.push(`Linha ${index + 1}: Quantidade deve ser um número`);
@@ -475,6 +472,34 @@
                     showError(invalidOrders.join('<br>'));
                     return;
                 }
+
+                // Enviar para a API
+                fetch('https://smmsociais.com/api/massorder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({ orders: validOrders })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao enviar pedidos');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    successMessage.style.display = 'block';
+                    bulkOrderForm.reset();
+                    
+                    setTimeout(() => {
+                        window.location.href = 'orders';
+                    }, 3000);
+                })
+                .catch(error => {
+                    showError('Erro ao enviar pedidos: ' + error.message);
+                });
+            });
 
                 // Se chegou aqui, todos os pedidos são válidos
                 console.log('Pedidos válidos:', validOrders);
@@ -502,7 +527,6 @@
                     return false;
                 }
             }
-        });
 
         function logout() {
             localStorage.removeItem("token");
