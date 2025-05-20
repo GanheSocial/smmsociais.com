@@ -1,54 +1,119 @@
-import { conectarAoBanco } from '@/utils/mongodb';
-import jwt from 'jsonwebtoken';
+import connectDB from "./db.js";
+import { Action } from "./Action.js";
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ erro: 'Método não permitido' });
-  }
-
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ erro: 'Não autorizado' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  let usuarioId;
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    usuarioId = decoded.id;
-  } catch (error) {
-    return res.status(401).json({ erro: 'Token inválido' });
-  }
-
-  const { pedidos } = req.body;
-
-  if (!Array.isArray(pedidos) || pedidos.length === 0) {
-    return res.status(400).json({ erro: 'Nenhum pedido enviado' });
+const handler = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Método não permitido" });
   }
 
   try {
-    const { db } = await conectarAoBanco();
-    const colecaoAcoes = db.collection('acoes');
+    await connectDB();
 
-    const documentos = pedidos.map(p => {
-      return {
-        id_usuario: usuarioId,
-        id_servico: p.serviceId,
-        link: p.profileUrl,
-        quantidade: p.quantity,
-        quantidade_restante: p.quantity,
-        status: 'disponivel',
-        data_criacao: new Date()
+    // 🔐 Validação da chave da API
+    const { authorization } = req.headers;
+    const chaveEsperada = `Bearer ${process.env.SMM_API_KEY}`;
+
+    if (!authorization || authorization !== chaveEsperada) {
+      console.warn("🔒 Chave inválida:", authorization);
+      return res.status(401).json({ error: "Não autorizado" });
+    }
+
+    // 📦 Verifica se a requisição contém um array de pedidos
+    const { pedidos } = req.body;
+
+    if (!Array.isArray(pedidos) || pedidos.length === 0) {
+      return res.status(400).json({ error: "Nenhum pedido enviado." });
+    }
+
+    const resultados = [];
+
+    for (const pedido of pedidos) {
+      const { rede, tipo, nome, valor, quantidade, link } = pedido;
+
+      // ✅ Validação básica
+      if (!rede || !tipo || !nome || !valor || !quantidade || !link) {
+        resultados.push({ erro: "Campos ausentes no pedido", pedido });
+        continue;
+      }
+
+      const valorNum = Number(valor);
+      const quantidadeNum = Number(quantidade);
+
+      if (!Number.isInteger(quantidadeNum) || quantidadeNum < 50 || quantidadeNum > 1000000) {
+        resultados.push({ erro: "Quantidade fora do intervalo permitido", pedido });
+        continue;
+      }
+
+      if (isNaN(valorNum) || valorNum < 0.01) {
+        resultados.push({ erro: "Valor inválido", pedido });
+        continue;
+      }
+
+      // 🆕 Criação da ação no MongoDB
+      const novaAcao = new Action({
+        rede,
+        tipo,
+        nome,
+        valor: valorNum,
+        quantidade: quantidadeNum,
+        link,
+        status: "pendente",
+        dataCriacao: new Date()
+      });
+
+      await novaAcao.save();
+
+      const id_pedido = novaAcao._id.toString();
+
+      // 🔗 Preparar e enviar para ganhesocial.com
+      const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
+      const quantidade_pontos = +(valorNum * 0.001).toFixed(6);
+
+      let tipo_acao = "Outro";
+      const tipoLower = tipo.toLowerCase();
+      if (tipoLower === "seguidores") tipo_acao = "Seguir";
+      else if (tipoLower === "curtidas") tipo_acao = "Curtir";
+
+      const payloadGanheSocial = {
+        tipo_acao,
+        nome_usuario,
+        quantidade_pontos,
+        quantidade: quantidadeNum,
+        valor: valorNum,
+        url_dir: link,
+        id_pedido
       };
-    });
 
-    await colecaoAcoes.insertMany(documentos);
+      try {
+        const response = await fetch("https://ganhesocial.com/api/smm_acao", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: chaveEsperada
+          },
+          body: JSON.stringify(payloadGanheSocial)
+        });
 
-    return res.status(200).json({ sucesso: true });
-  } catch (erro) {
-    console.error('Erro ao criar pedidos em massa:', erro);
-    return res.status(500).json({ erro: 'Erro interno do servidor' });
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error("⚠️ Erro ao enviar ação:", data);
+          resultados.push({ erro: "Erro ao enviar ao ganhesocial", id_pedido, motivo: data });
+        } else {
+          resultados.push({ sucesso: true, id_pedido });
+        }
+      } catch (erroEnvio) {
+        console.error("❌ Erro de rede:", erroEnvio);
+        resultados.push({ erro: "Erro de rede ao enviar ao ganhesocial", id_pedido });
+      }
+    }
+
+    return res.status(200).json({ resultados });
+
+  } catch (error) {
+    console.error("❌ Erro interno:", error);
+    return res.status(500).json({ error: "Erro ao processar pedidos" });
   }
-}
+};
+
+export default handler;
