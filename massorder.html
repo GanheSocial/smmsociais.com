@@ -482,10 +482,10 @@
 
                 // Enviar para a API
                 fetch('https://smmsociais.com/api/massorder', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem("token")
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer 123456"
                     },
                     body: JSON.stringify({ orders: validOrders })
                 })
