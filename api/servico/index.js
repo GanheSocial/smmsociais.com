@@ -1,5 +1,5 @@
 import connectDB from '../db.js';
-import { Servico } from '../Servico.js';
+import Servico from '../Servico.js';
 
 export default async function handler(req, res) {
   await connectDB();
