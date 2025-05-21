@@ -25,15 +25,11 @@ const handler = async (req, res) => {
       return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
     }
 
-    const valorNum = Number(valor);
+    const valorNum = 7; // 🔒 valor fixo
     const quantidadeNum = Number(quantidade);
 
     if (!Number.isInteger(quantidadeNum) || quantidadeNum < 50 || quantidadeNum > 1000000) {
       return res.status(400).json({ error: "A quantidade deve ser um número entre 50 e 1.000.000!" });
-    }
-
-    if (isNaN(valorNum) || valorNum < 0.01) {
-      return res.status(400).json({ error: "O valor deve ser um número válido e positivo!" });
     }
 
     // 🆕 Criação da ação no banco
