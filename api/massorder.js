@@ -1,6 +1,9 @@
 import connectDB from "./db.js";
 import { Action } from "./Action.js";
 
+// Recomendado: usar uma lib como 'axios' ou 'node-fetch' para evitar dependência implícita de fetch
+import fetch from "node-fetch";
+
 const handler = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
@@ -18,7 +21,6 @@ const handler = async (req, res) => {
       return res.status(401).json({ error: "Não autorizado" });
     }
 
-    // 📦 Verifica se a requisição contém um array de pedidos
     const { pedidos } = req.body;
 
     if (!Array.isArray(pedidos) || pedidos.length === 0) {
@@ -55,27 +57,26 @@ const handler = async (req, res) => {
       });
 
       await novaAcao.save();
-
       const id_pedido = novaAcao._id.toString();
 
-// 🔗 Preparar e enviar para ganhesocial.com
-const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
-const quantidade_pontos = 0.007; // 🔒 valor fixo
+      // 🔗 Preparar dados para envio ao ganhesocial.com
+      const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
+      const quantidade_pontos = 0.007;
 
-let tipo_acao = "Outro";
-const tipoLower = tipo.toLowerCase();
-if (tipoLower === "seguidores") tipo_acao = "Seguir";
-else if (tipoLower === "curtidas") tipo_acao = "Curtir";
+      let tipo_acao = "Outro";
+      const tipoLower = tipo.toLowerCase();
+      if (tipoLower === "seguidores") tipo_acao = "Seguir";
+      else if (tipoLower === "curtidas") tipo_acao = "Curtir";
 
-const payloadGanheSocial = {
-  tipo_acao,
-  nome_usuario,
-  quantidade_pontos,
-  quantidade: quantidadeNum,
-  valor: valorNum,
-  url_dir: link,
-  id_pedido
-};
+      const payloadGanheSocial = {
+        tipo_acao,
+        nome_usuario,
+        quantidade_pontos,
+        quantidade: quantidadeNum,
+        url_dir: link,
+        id_pedido,
+        valor: 0.01 // ✅ ADICIONADO para não causar erro de "Dados incompletos"
+      };
 
       try {
         const response = await fetch("https://ganhesocial.com/api/smm_acao", {
