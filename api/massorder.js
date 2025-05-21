@@ -48,7 +48,6 @@ const handler = async (req, res) => {
         rede,
         tipo,
         nome,
-        valor: valorNum,
         quantidade: quantidadeNum,
         link,
         status: "pendente",
