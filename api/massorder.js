@@ -28,24 +28,18 @@ const handler = async (req, res) => {
     const resultados = [];
 
     for (const pedido of pedidos) {
-      const { rede, tipo, nome, valor, quantidade, link } = pedido;
+      const { rede, tipo, nome, quantidade, link } = pedido;
 
       // ✅ Validação básica
-      if (!rede || !tipo || !nome || !valor || !quantidade || !link) {
+      if (!rede || !tipo || !nome || !quantidade || !link) {
         resultados.push({ erro: "Campos ausentes no pedido", pedido });
         continue;
       }
 
-      const valorNum = Number(valor);
       const quantidadeNum = Number(quantidade);
 
       if (!Number.isInteger(quantidadeNum) || quantidadeNum < 50 || quantidadeNum > 1000000) {
         resultados.push({ erro: "Quantidade fora do intervalo permitido", pedido });
-        continue;
-      }
-
-      if (isNaN(valorNum) || valorNum < 0.01) {
-        resultados.push({ erro: "Valor inválido", pedido });
         continue;
       }
 
@@ -65,24 +59,23 @@ const handler = async (req, res) => {
 
       const id_pedido = novaAcao._id.toString();
 
-      // 🔗 Preparar e enviar para ganhesocial.com
-      const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
-      const quantidade_pontos = +(valorNum * 0.001).toFixed(6);
+// 🔗 Preparar e enviar para ganhesocial.com
+const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
+const quantidade_pontos = 0.007; // 🔒 valor fixo
 
-      let tipo_acao = "Outro";
-      const tipoLower = tipo.toLowerCase();
-      if (tipoLower === "seguidores") tipo_acao = "Seguir";
-      else if (tipoLower === "curtidas") tipo_acao = "Curtir";
+let tipo_acao = "Outro";
+const tipoLower = tipo.toLowerCase();
+if (tipoLower === "seguidores") tipo_acao = "Seguir";
+else if (tipoLower === "curtidas") tipo_acao = "Curtir";
 
-      const payloadGanheSocial = {
-        tipo_acao,
-        nome_usuario,
-        quantidade_pontos,
-        quantidade: quantidadeNum,
-        valor: valorNum,
-        url_dir: link,
-        id_pedido
-      };
+const payloadGanheSocial = {
+  tipo_acao,
+  nome_usuario,
+  quantidade_pontos,
+  quantidade: quantidadeNum,
+  url_dir: link,
+  id_pedido
+};
 
       try {
         const response = await fetch("https://ganhesocial.com/api/smm_acao", {
