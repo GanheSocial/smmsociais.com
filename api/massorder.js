@@ -72,6 +72,7 @@ const payloadGanheSocial = {
   nome_usuario,
   quantidade_pontos,
   quantidade: quantidadeNum,
+  valor: valorNum,
   url_dir: link,
   id_pedido
 };
