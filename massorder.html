@@ -374,6 +374,32 @@
     </div>
 
     <script>
+
+let allServices = {};
+
+async function fetchServices() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "https://ganhesocial.com";
+        return;
+    }
+
+    const response = await fetch("https://smmsociais.com/api/servico", {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+        const services = await response.json();
+        services.forEach(service => {
+            allServices[service._id] = service;
+        });
+    } else {
+        alert("Erro ao carregar lista de serviços");
+    }
+}
+
+fetchServices(); // chama no início da página
+
         document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.add('loaded');
 
@@ -411,105 +437,109 @@
             const bulkOrderForm = document.getElementById('bulkOrderForm');
             const bulkOrdersTextarea = document.getElementById('bulkOrders');
             const bulkOrdersError = document.getElementById('bulkOrdersError');
-            const successMessage = document.getElementById('successMessage');
+            const successMessage = document.getElementById('successMessage');            
 
-            bulkOrderForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                bulkOrdersError.style.display = 'none';
+bulkOrderForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    bulkOrdersError.style.display = 'none';
 
-                const ordersText = bulkOrdersTextarea.value.trim();
-                if (!ordersText) {
-                    showError('Por favor, insira pelo menos um pedido.');
-                    return;
-                }
+    const ordersText = bulkOrdersTextarea.value.trim();
+    if (!ordersText) {
+        showError('Por favor, insira pelo menos um pedido.');
+        return;
+    }
 
-                const orders = ordersText.split('\n');
-                if (orders.length > 50) {
-                    showError('Máximo de 50 pedidos por envio.');
-                    return;
-                }
+    const orders = ordersText.split('\n');
+    if (orders.length > 50) {
+        showError('Máximo de 50 pedidos por envio.');
+        return;
+    }
 
-                const invalidOrders = [];
-                const validOrders = [];
+    const invalidOrders = [];
+    const validOrders = [];
 
-                orders.forEach((order, index) => {
-                    // Usar regex para dividir por espaços, mas preservar URLs com espaços
-                    const parts = order.split(/\s+/).filter(part => part.trim() !== '');
+    for (let i = 0; i < orders.length; i++) {
+        const order = orders[i];
+        const parts = order.split(/\s+/).filter(part => part.trim() !== '');
 
-                    // Verificar se temos pelo menos 3 partes (ID, URL e quantidade)
-                    if (parts.length < 3) {
-                        invalidOrders.push(`Linha ${index + 1}: Formato inválido. Use "ID Link Quantidade"`);
-                        return;
-                    }
+        if (parts.length < 3) {
+            invalidOrders.push(`Linha ${i + 1}: Formato inválido. Use "ID Link Quantidade"`);
+            continue;
+        }
 
-                    // O ID é a primeira parte
-                    const serviceId = parts[0];
-                    // A quantidade é a última parte
-                    const quantity = parts[parts.length - 1];
-                    // A URL é tudo entre a primeira e a última parte
-                    const profileUrl = parts.slice(1, -1).join(' ');
+        const serviceId = parts[0];
+        const quantity = parts[parts.length - 1];
+        const profileUrl = parts.slice(1, -1).join(' ');
 
-                    if (!/^\d+$/.test(serviceId)) {
-                        invalidOrders.push(`Linha ${index + 1}: ID do serviço deve ser numérico`);
-                        return;
-                    }
+        if (!/^\d+$/.test(serviceId)) {
+            invalidOrders.push(`Linha ${i + 1}: ID do serviço deve ser numérico`);
+            continue;
+        }
 
-                    if (!isValidUrl(profileUrl)) {
-                        invalidOrders.push(`Linha ${index + 1}: URL do perfil inválida`);
-                        return;
-                    }
+        if (!isValidUrl(profileUrl)) {
+            invalidOrders.push(`Linha ${i + 1}: URL do perfil inválida`);
+            continue;
+        }
 
-                    const quantityNum = parseInt(quantity);
-                    if (isNaN(quantityNum)) {
-                        invalidOrders.push(`Linha ${index + 1}: Quantidade deve ser um número`);
-                        return;
-                    }
+        const quantityNum = parseInt(quantity);
+        if (isNaN(quantityNum)) {
+            invalidOrders.push(`Linha ${i + 1}: Quantidade deve ser um número`);
+            continue;
+        }
 
-                    if (quantityNum < 50) {
-                        invalidOrders.push(`Linha ${index + 1}: Quantidade mínima é 50`);
-                        return;
-                    }
+        if (quantityNum < 50) {
+            invalidOrders.push(`Linha ${i + 1}: Quantidade mínima é 50`);
+            continue;
+        }
 
-                    validOrders.push({
-                        serviceId,
-                        profileUrl,
-                        quantity: quantityNum
-                    });
-                });
+        const service = allServices[serviceId];
+        if (!service) {
+            invalidOrders.push(`Linha ${i + 1}: Serviço com ID ${serviceId} não encontrado`);
+            continue;
+        }
 
-                if (invalidOrders.length > 0) {
-                    showError(invalidOrders.join('<br>'));
-                    return;
-                }
+        validOrders.push({
+            rede: service.rede || 'TikTok',
+            tipo: service.tipo || 'seguidores',
+            nome: service.nome,
+            valor: service.precoPorMil,
+            quantidade: quantityNum,
+            link: profileUrl
+        });
+    }
 
-                // Enviar para a API
-                fetch('https://smmsociais.com/api/massorder', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer 123456"
-                    },
-                    body: JSON.stringify({ pedidos: validOrders })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro ao enviar pedidos');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Pedidos válidos:', validOrders);
-                        successMessage.style.display = 'block';
-                        bulkOrderForm.reset();
+    if (invalidOrders.length > 0) {
+        showError(invalidOrders.join('<br>'));
+        return;
+    }
 
-                        setTimeout(() => {
-                            window.location.href = 'orders';
-                        }, 3000);
-                    })
-                    .catch(error => {
-                        showError('Erro ao enviar pedidos: ' + error.message);
-                    });
-            });
+    fetch('https://smmsociais.com/api/massorder', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer 123456"
+        },
+        body: JSON.stringify({ pedidos: validOrders })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao enviar pedidos');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Pedidos válidos enviados:', data);
+        successMessage.style.display = 'block';
+        bulkOrderForm.reset();
+
+        setTimeout(() => {
+            window.location.href = 'orders';
+        }, 3000);
+    })
+    .catch(error => {
+        showError('Erro ao enviar pedidos: ' + error.message);
+    });
+});
 
             function showError(message) {
                 bulkOrdersError.innerHTML = message;
