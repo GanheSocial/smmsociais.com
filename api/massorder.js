@@ -1,9 +1,6 @@
 import connectDB from "./db.js";
 import { Action } from "./Action.js";
 
-// Recomendado: usar uma lib como 'axios' ou 'node-fetch' para evitar dependência implícita de fetch
-import fetch from "node-fetch";
-
 const handler = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
