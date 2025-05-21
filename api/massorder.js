@@ -72,7 +72,7 @@ const handler = async (req, res) => {
         quantidade: quantidadeNum,
         url_dir: link,
         id_pedido,
-        valor: 0.007
+        valor: 7
       };
 
       try {
