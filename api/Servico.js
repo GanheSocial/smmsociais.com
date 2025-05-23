@@ -9,6 +9,10 @@ const ServicoSchema = new mongoose.Schema({
     type: String, // Ex: "🚀 Seguidores RÁPIDO no TikTok"
     required: true
   },
+   tipo: {
+    type: String, // Ex: "seguindores"
+    required: true
+  },
   preco_1000: {
     type: Number, // Ex: 10.00
     required: true
