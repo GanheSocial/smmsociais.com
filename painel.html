@@ -379,14 +379,14 @@
                     serviceSelect.innerHTML = "";
                     const tiktokServices = data.filter(s => s.categoria === "tiktok");
 
-                    tiktokServices.forEach(servico => {
-                        const option = document.createElement("option");
-                        option.value = servico._id;
-                        option.dataset.nome = servico.nome;
-                        option.dataset.valorUnitario = servico.precoUnitario || 0.05;
-                        option.textContent = servico.nome;
-                        serviceSelect.appendChild(option);
-                    });
+tiktokServices.forEach(servico => {
+    const option = document.createElement("option");
+    option.value = servico._id;
+    option.dataset.nome = servico.nome;
+    option.dataset.valorUnitario = (parseFloat(servico.preco_1000) / 1000) || 0.05;
+    option.textContent = servico.nome;
+    serviceSelect.appendChild(option);
+});
 
                     serviceSelect.dispatchEvent(new Event("change"));
                 })
