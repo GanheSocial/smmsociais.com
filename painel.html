@@ -404,56 +404,61 @@ fetch("/api/servico")
     });
         });
 
-        document.getElementById("orderForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
+document.getElementById("orderForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-            const link = document.getElementById("link").value.trim();
-            const quantity = parseInt(quantityInput.value);
-            const statusMessage = document.getElementById("statusMessage");
+    const link = document.getElementById("link").value.trim();
+    const quantity = parseInt(document.getElementById("quantity").value);
+    const statusMessage = document.getElementById("statusMessage");
+    const selectedOption = serviceSelect.selectedOptions[0];
 
-            if (!link) {
-                statusMessage.textContent = "Por favor, insira o link do perfil!";
-                statusMessage.style.color = "#d9534f";
-                return;
-            }
+    if (!link) {
+        statusMessage.textContent = "Por favor, insira o link do perfil!";
+        statusMessage.style.color = "#d9534f";
+        return;
+    }
 
-            if (quantity < 50 || quantity > 1000000) {
-                statusMessage.textContent = "Quantidade deve ser entre 50 e 1.000.000!";
-                statusMessage.style.color = "#d9534f";
-                return;
-            }
+    if (quantity < 50 || quantity > 1000000) {
+        statusMessage.textContent = "Quantidade deve ser entre 50 e 1.000.000!";
+        statusMessage.style.color = "#d9534f";
+        return;
+    }
 
-            const token = localStorage.getItem("token");
+    const nomeServico = selectedOption.dataset.nome || "Serviço TikTok";
+    const valorUnitario = parseFloat(selectedOption.dataset.valorUnitario || "0.05");
+    const valorTotal = Math.max(5, quantity * valorUnitario); // mínimo R$5,00
 
-            const response = await fetch("/api/criar_acao", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer 123456`
-                },
-                body: JSON.stringify({
-                    rede: "tiktok",
-                    tipo: "seguidores",
-                    nome: "Seguidores RÁPIDO no TikTok",
-                    valor: parseFloat(priceDisplay.textContent.replace(",", ".")),
-                    link: link,
-                    quantidade: quantity
-                })
-            });
+    const token = localStorage.getItem("token");
 
-            const data = await response.json();
+    const response = await fetch("/api/criar_acao", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            rede: "tiktok",
+            tipo: "seguidores",
+            nome: nomeServico,
+            valor: parseFloat(valorTotal.toFixed(2)),
+            link: link,
+            quantidade: quantity
+        })
+    });
 
-            if (response.ok) {
-                statusMessage.textContent = "Pedido realizado com sucesso!";
-                statusMessage.style.color = "#28a745";
-                document.getElementById("link").value = "";
-                quantityInput.value = "100";
-                priceDisplay.textContent = "5,00";
-            } else {
-                statusMessage.textContent = data.error || "Erro ao processar pedido.";
-                statusMessage.style.color = "#d9534f";
-            }
-        });
+    const data = await response.json();
+
+    if (response.ok) {
+        statusMessage.textContent = "Pedido realizado com sucesso!";
+        statusMessage.style.color = "#28a745";
+        document.getElementById("link").value = "";
+        document.getElementById("quantity").value = "100";
+        priceDisplay.textContent = "5,00";
+    } else {
+        statusMessage.textContent = data.error || "Erro ao processar pedido.";
+        statusMessage.style.color = "#d9534f";
+    }
+});
 
         function logout() {
             localStorage.removeItem("token");
