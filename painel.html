@@ -252,7 +252,7 @@
         body.loaded {
             visibility: visible;
         }
-    </style>
+</style>
 </head>
 
 <body>
@@ -265,7 +265,7 @@
             </div>
             <a href="painel" class="logo-container">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                    alt="Logo smmsociais" class="logo">
+                     alt="Logo smmsociais" class="logo">
             </a>
         </div>
     </div>
@@ -282,8 +282,8 @@
 
             <div class="input-group">
                 <label for="service">Serviço:</label>
-                <select id="service" disabled>
-                    <option value="tiktok-followers-fast" selected>Seguidores RÁPIDO no TikTok</option>
+                <select id="service">
+                    <option value="" disabled selected>Carregando serviços...</option>
                 </select>
             </div>
 
@@ -323,36 +323,31 @@
 
     <script>
         const priceDisplay = document.getElementById("price");
+        const serviceSelect = document.getElementById("service");
+        const quantityInput = document.getElementById("quantity");
 
-        document.addEventListener("DOMContentLoaded", function () {
+        function atualizarPreco() {
+            const quantity = parseInt(quantityInput.value);
+            const selectedService = serviceSelect.selectedOptions[0];
+            const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
+
+            let preco = quantity * valorUnitario;
+            preco = Math.max(5, preco);
+            priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
             document.body.classList.add('loaded');
 
-            const quantityInput = document.getElementById('quantity');
+            quantityInput.addEventListener('input', atualizarPreco);
+            serviceSelect.addEventListener('change', atualizarPreco);
 
-            quantityInput.addEventListener('input', function () {
-                const quantity = parseInt(this.value);
-                let price = 0;
-
-                if (quantity < 100) {
-                    price = quantity * 0.05;
-                } else if (quantity < 1000) {
-                    price = quantity * 0.04;
-                } else if (quantity < 10000) {
-                    price = quantity * 0.03;
-                } else {
-                    price = quantity * 0.02;
-                }
-
-                price = Math.max(5, price);
-                priceDisplay.textContent = price.toFixed(2).replace('.', ',');
-            });
-
-            // Controle do menu hamburguer
+            // Menu hambúrguer
             const menuToggle = document.getElementById('menuToggle');
             const menuOverlay = document.getElementById('menuOverlay');
             const menuContent = document.getElementById('menuContent');
 
-            menuToggle.addEventListener('click', function () {
+            menuToggle.addEventListener('click', () => {
                 menuContent.classList.toggle('active');
                 menuOverlay.classList.toggle('active');
 
@@ -368,7 +363,7 @@
                 }
             });
 
-            menuOverlay.addEventListener('click', function () {
+            menuOverlay.addEventListener('click', () => {
                 menuContent.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 const spans = menuToggle.querySelectorAll('span');
@@ -376,13 +371,36 @@
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
             });
+
+            // Carregar serviços
+            fetch("/api/servico")
+                .then(response => response.json())
+                .then(data => {
+                    serviceSelect.innerHTML = "";
+                    const tiktokServices = data.filter(s => s.categoria === "tiktok");
+
+                    tiktokServices.forEach(servico => {
+                        const option = document.createElement("option");
+                        option.value = servico._id;
+                        option.dataset.nome = servico.nome;
+                        option.dataset.valorUnitario = servico.precoUnitario || 0.05;
+                        option.textContent = servico.nome;
+                        serviceSelect.appendChild(option);
+                    });
+
+                    serviceSelect.dispatchEvent(new Event("change"));
+                })
+                .catch(error => {
+                    console.error("Erro ao carregar serviços:", error);
+                    serviceSelect.innerHTML = "<option>Erro ao carregar</option>";
+                });
         });
 
         document.getElementById("orderForm").addEventListener("submit", async function (event) {
             event.preventDefault();
 
             const link = document.getElementById("link").value.trim();
-            const quantity = document.getElementById("quantity").value;
+            const quantity = parseInt(quantityInput.value);
             const statusMessage = document.getElementById("statusMessage");
 
             if (!link) {
@@ -391,7 +409,7 @@
                 return;
             }
 
-            if (quantity < 10 || quantity > 1000000) {
+            if (quantity < 50 || quantity > 1000000) {
                 statusMessage.textContent = "Quantidade deve ser entre 50 e 1.000.000!";
                 statusMessage.style.color = "#d9534f";
                 return;
@@ -403,7 +421,7 @@
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: "Bearer 123456"
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     rede: "tiktok",
@@ -411,7 +429,7 @@
                     nome: "Seguidores RÁPIDO no TikTok",
                     valor: parseFloat(priceDisplay.textContent.replace(",", ".")),
                     link: link,
-                    quantidade: parseInt(quantity)
+                    quantidade: quantity
                 })
             });
 
@@ -421,13 +439,12 @@
                 statusMessage.textContent = "Pedido realizado com sucesso!";
                 statusMessage.style.color = "#28a745";
                 document.getElementById("link").value = "";
-                document.getElementById("quantity").value = "100";
+                quantityInput.value = "100";
                 priceDisplay.textContent = "5,00";
             } else {
                 statusMessage.textContent = data.error || "Erro ao processar pedido.";
                 statusMessage.style.color = "#d9534f";
             }
-
         });
 
         function logout() {
@@ -436,5 +453,4 @@
         }
     </script>
 </body>
-
 </html>
