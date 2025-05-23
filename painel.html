@@ -322,25 +322,25 @@
     </div>
 
     <script>
-        const priceDisplay = document.getElementById("price");
-        const serviceSelect = document.getElementById("service");
-        const quantityInput = document.getElementById("quantity");
+const priceDisplay = document.getElementById("price");
+const serviceSelect = document.getElementById("service"); // <-- corrigido para "service"
+const quantityInput = document.getElementById("quantity");
 
-        function atualizarPreco() {
-            const quantity = parseInt(quantityInput.value);
-            const selectedService = serviceSelect.selectedOptions[0];
-            const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
+function atualizarPreco() {
+    const quantity = parseInt(quantityInput.value);
+    const selectedService = serviceSelect.selectedOptions[0];
+    const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
 
-            let preco = quantity * valorUnitario;
-            preco = Math.max(5, preco);
-            priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
-        }
+    let preco = quantity * valorUnitario;
+    preco = Math.max(5, preco);
+    priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
+}
 
-        document.addEventListener("DOMContentLoaded", () => {
-            document.body.classList.add('loaded');
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add('loaded');
 
-            quantityInput.addEventListener('input', atualizarPreco);
-            serviceSelect.addEventListener('change', atualizarPreco);
+    quantityInput.addEventListener('input', atualizarPreco);
+    serviceSelect.addEventListener('change', atualizarPreco);
 
             // Menu hambúrguer
             const menuToggle = document.getElementById('menuToggle');
