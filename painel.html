@@ -252,7 +252,7 @@
         body.loaded {
             visibility: visible;
         }
-</style>
+    </style>
 </head>
 
 <body>
@@ -265,7 +265,7 @@
             </div>
             <a href="painel" class="logo-container">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                     alt="Logo smmsociais" class="logo">
+                    alt="Logo smmsociais" class="logo">
             </a>
         </div>
     </div>
@@ -376,8 +376,8 @@
 fetch("/api/servico")
     .then(response => response.json())
     .then(data => {
-        console.log("Serviços recebidos:", data); // 👈 Verifique no console
-        serviceSelect.innerHTML = ""; // limpa o loading
+        console.log("Serviços recebidos:", data);
+        serviceSelect.innerHTML = "";
 
         const tiktokServices = data.filter(s => s.categoria?.toLowerCase() === "tiktok");
 
@@ -390,8 +390,11 @@ fetch("/api/servico")
             const option = document.createElement("option");
             option.value = servico._id;
             option.dataset.nome = servico.nome;
-            option.dataset.valorUnitario = servico.preco_1000 / 1000; // já é double
-            option.textContent = servico.nome;
+            option.dataset.valorUnitario = servico.preco_1000 / 1000;
+            option.dataset.tipo = servico.tipo;
+            option.dataset.categoria = servico.categoria;
+            option.dataset.minimo = servico.minimo;
+            option.dataset.maximo = servico.maximo;
             serviceSelect.appendChild(option);
         });
 
@@ -402,9 +405,10 @@ fetch("/api/servico")
         console.error("Erro ao carregar serviços:", error);
         serviceSelect.innerHTML = "<option>Erro ao carregar</option>";
     });
+
         });
 
-document.getElementById("orderForm").addEventListener("submit", async function (event) {
+ document.getElementById("orderForm").addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const link = document.getElementById("link").value.trim();
@@ -412,21 +416,24 @@ document.getElementById("orderForm").addEventListener("submit", async function (
     const statusMessage = document.getElementById("statusMessage");
     const selectedOption = serviceSelect.selectedOptions[0];
 
+    const minimo = parseInt(selectedOption.dataset.minimo || "50");
+    const maximo = parseInt(selectedOption.dataset.maximo || "1000000");
+
     if (!link) {
         statusMessage.textContent = "Por favor, insira o link do perfil!";
         statusMessage.style.color = "#d9534f";
         return;
     }
 
-    if (quantity < 50 || quantity > 1000000) {
-        statusMessage.textContent = "Quantidade deve ser entre 50 e 1.000.000!";
+    if (quantity < minimo || quantity > maximo) {
+        statusMessage.textContent = `Quantidade deve ser entre ${minimo.toLocaleString()} e ${maximo.toLocaleString()}!`;
         statusMessage.style.color = "#d9534f";
         return;
     }
 
-    const nomeServico = selectedOption.dataset.nome || "Serviço TikTok";
-    const valorUnitario = parseFloat(selectedOption.dataset.valorUnitario || "0.05");
-    const valorTotal = Math.max(5, quantity * valorUnitario); // mínimo R$5,00
+    const nomeServico = selectedOption.dataset.nome;
+    const valorUnitario = parseFloat(selectedOption.dataset.valorUnitario);
+    const valorTotal = Math.max(5, quantity * valorUnitario);
 
     const token = localStorage.getItem("token");
 
@@ -434,11 +441,11 @@ document.getElementById("orderForm").addEventListener("submit", async function (
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer 123456`
+            Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-            rede: "tiktok",
-            tipo: "seguidores",
+            rede: selectedOption.dataset.categoria.toLowerCase(), // ex: "tiktok"
+            tipo: selectedOption.dataset.tipo,
             nome: nomeServico,
             valor: parseFloat(valorTotal.toFixed(2)),
             link: link,
@@ -459,11 +466,11 @@ document.getElementById("orderForm").addEventListener("submit", async function (
         statusMessage.style.color = "#d9534f";
     }
 });
-
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "https://smmsociais.com";
         }
     </script>
 </body>
+
 </html>
