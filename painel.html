@@ -371,7 +371,7 @@
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
             });
-
+const serviceSelect = document.getElementById("service");
             // Carregar serviços
 fetch("/api/servico")
     .then(response => response.json())
