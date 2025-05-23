@@ -373,27 +373,35 @@
             });
 
             // Carregar serviços
-            fetch("/api/servico")
-                .then(response => response.json())
-                .then(data => {
-                    serviceSelect.innerHTML = "";
-                    const tiktokServices = data.filter(s => s.categoria === "tiktok");
+fetch("/api/servico")
+    .then(response => response.json())
+    .then(data => {
+        console.log("Serviços recebidos:", data); // 👈 Verifique no console
+        serviceSelect.innerHTML = ""; // limpa o loading
 
-tiktokServices.forEach(servico => {
-    const option = document.createElement("option");
-    option.value = servico._id;
-    option.dataset.nome = servico.nome;
-    option.dataset.valorUnitario = (parseFloat(servico.preco_1000) / 1000) || 0.05;
-    option.textContent = servico.nome;
-    serviceSelect.appendChild(option);
-});
+        const tiktokServices = data.filter(s => s.categoria?.toLowerCase() === "tiktok");
 
-                    serviceSelect.dispatchEvent(new Event("change"));
-                })
-                .catch(error => {
-                    console.error("Erro ao carregar serviços:", error);
-                    serviceSelect.innerHTML = "<option>Erro ao carregar</option>";
-                });
+        if (tiktokServices.length === 0) {
+            serviceSelect.innerHTML = "<option>Nenhum serviço disponível</option>";
+            return;
+        }
+
+        tiktokServices.forEach(servico => {
+            const option = document.createElement("option");
+            option.value = servico._id;
+            option.dataset.nome = servico.nome;
+            option.dataset.valorUnitario = servico.preco_1000 / 1000; // já é double
+            option.textContent = servico.nome;
+            serviceSelect.appendChild(option);
+        });
+
+        // Dispara evento para atualizar preço
+        serviceSelect.dispatchEvent(new Event("change"));
+    })
+    .catch(error => {
+        console.error("Erro ao carregar serviços:", error);
+        serviceSelect.innerHTML = "<option>Erro ao carregar</option>";
+    });
         });
 
         document.getElementById("orderForm").addEventListener("submit", async function (event) {
