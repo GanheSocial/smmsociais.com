@@ -323,7 +323,7 @@
 
     <script>
 const priceDisplay = document.getElementById("price");
-const serviceSelect = document.getElementById("service"); // <-- corrigido para "service"
+const serviceSelect = document.getElementById("service");
 const quantityInput = document.getElementById("quantity");
 
 function atualizarPreco() {
@@ -371,7 +371,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
             });
-const serviceSelect = document.getElementById("service");
             // Carregar serviços
 fetch("/api/servico")
     .then(response => response.json())
