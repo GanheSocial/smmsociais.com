@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const ServicoSchema = new mongoose.Schema({
-  _id: {
+    id_service: {
     type: String, // Ex: "1254"
     required: true
   },
