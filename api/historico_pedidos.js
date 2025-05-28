@@ -1,7 +1,7 @@
 import connectDB from "./db.js";
 import { User } from "./User.js";
 import { Action } from "./Action.js";
-import { Servico } from "./Servico.js"; // ✅ Importar o modelo de serviço
+import Servico from "./Servico.js";
 
 const handler = async (req, res) => {
     if (req.method !== "GET") {
