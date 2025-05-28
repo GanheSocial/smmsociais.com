@@ -470,7 +470,7 @@
                         const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
 
 tr.innerHTML = `
-    <td>#${acao.servicoDetalhes?.id_servico || "-"}</td>
+    <td>#${acao.id_servico || "-"}</td>
     <td>${dataCriacao}</td>
     <td>${acao.link}</td>
     <td>R$ ${parseFloat(acao.valor).toFixed(2)}</td>
