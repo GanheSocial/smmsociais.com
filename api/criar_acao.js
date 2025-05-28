@@ -34,6 +34,7 @@ const handler = async (req, res) => {
 
     // 🆕 Criação da ação no banco
     const novaAcao = new Action({
+      userId: usuario._id,
       rede,
       tipo,
       nome,
