@@ -40,18 +40,18 @@ const handler = async (req, res) => {
       return res.status(400).json({ error: "A quantidade deve ser um número entre 50 e 1.000.000!" });
     }
 
-    const novaAcao = new Action({
-      userId: usuario._id,
-      id_servico: id_servico ? String(id_servico) : undefined,
-      rede,
-      tipo,
-      nome,
-      valor: valorNum,
-      quantidade: quantidadeNum,
-      link,
-      status: "pendente",
-      dataCriacao: new Date()
-    });
+const novaAcao = new Action({
+  userId: usuario._id,
+  id_servico: mongoose.Types.ObjectId.isValid(id_servico) ? new mongoose.Types.ObjectId(id_servico) : undefined,
+  rede,
+  tipo,
+  nome,
+  valor: valorNum,
+  quantidade: quantidadeNum,
+  link,
+  status: "pendente",
+  dataCriacao: new Date()
+});
 
     await novaAcao.save();
 
