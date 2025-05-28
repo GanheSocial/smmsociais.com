@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const actionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  id_servico: String,
+  id_servico: { type: mongoose.Schema.Types.ObjectId, ref: "Servico" }, // Aqui como ObjectId referenciando 'Servico'
   rede: String,
   tipo: String,
   nome: String,
-  valor: String,
+  valor: Number, // Recomendo alterar para Number, já que no criar_acao você usa parseFloat
   quantidade: { type: Number, required: true },
   quantidadeExecutada: { type: Number, default: 0 },
   link: String,
