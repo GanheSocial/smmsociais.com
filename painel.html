@@ -403,13 +403,27 @@
                 const valorUnitario = parseFloat(selectedOption?.dataset.valorUnitario || 0.05);
                 const valorTotal = quantity * valorUnitario;
                 const token = localStorage.getItem("token");
+if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
+    statusMessage.textContent = "Preencha todos os campos corretamente.";
+    statusMessage.style.color = "#d9534f";
+    return;
+}
 
-                if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
-                    statusMessage.textContent = "Preencha todos os campos corretamente.";
-                    statusMessage.style.color = "#d9534f";
-                    return;
-                }
+// Validação do link com base no tipo de serviço
+const tipo = selectedOption.dataset.tipo;
+let linkValido = false;
 
+if (tipo === "seguidores") {
+    linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/?$/.test(link);
+} else if (tipo === "curtidas") {
+    linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/video\/\d+\/?$/.test(link);
+}
+
+if (!linkValido) {
+    statusMessage.textContent = `O link fornecido não é válido para o serviço do tipo "${tipo}".`;
+    statusMessage.style.color = "#d9534f";
+    return;
+}
                 try {
                     const response = await fetch("/api/criar_acao", {
                         method: "POST",
