@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const actionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  id_servico: String,
   rede: String,
   tipo: String,
   nome: String,
