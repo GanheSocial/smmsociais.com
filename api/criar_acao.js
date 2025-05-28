@@ -20,7 +20,7 @@ const handler = async (req, res) => {
     }
 
     // 📦 Extração e validação dos dados
-const { rede, tipo, nome, valor, quantidade, link, userId } = req.body;
+const { rede, tipo, nome, valor, quantidade, link, userId, id_servico } = req.body;
 
 const usuario = await User.findById(userId);
 if (!usuario) {
@@ -38,17 +38,18 @@ if (isNaN(valorNum) || valorNum <= 0) {
     }
 
     // 🆕 Criação da ação no banco
-    const novaAcao = new Action({
-      userId: usuario._id,
-      rede,
-      tipo,
-      nome,
-      valor: valorNum,
-      quantidade: quantidadeNum,
-      link,
-      status: "pendente",
-      dataCriacao: new Date()
-    });
+const novaAcao = new Action({
+  userId: usuario._id,
+  id_servico, // ← Aqui está o novo campo
+  rede,
+  tipo,
+  nome,
+  valor: valorNum,
+  quantidade: quantidadeNum,
+  link,
+  status: "pendente",
+  dataCriacao: new Date()
+});
 
     await novaAcao.save();
 
