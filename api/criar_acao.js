@@ -26,9 +26,9 @@ const handler = async (req, res) => {
       return res.status(400).json({ error: "Usuário não encontrado!" });
     }
 
-    if (id_servico && !mongoose.Types.ObjectId.isValid(id_servico)) {
-      return res.status(400).json({ error: "id_servico inválido" });
-    }
+if (id_servico && typeof id_servico !== "string") {
+  return res.status(400).json({ error: "id_servico inválido" });
+}
 
     const valorNum = parseFloat(valor);
     if (isNaN(valorNum) || valorNum <= 0) {
