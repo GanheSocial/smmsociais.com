@@ -27,7 +27,10 @@ if (!usuario) {
   return res.status(400).json({ error: "Usuário não encontrado!" });
 }
 
-    const valorNum = 7; // 🔒 valor fixo
+const valorNum = parseFloat(valor);
+if (isNaN(valorNum) || valorNum <= 0) {
+  return res.status(400).json({ error: "Valor inválido" });
+}
     const quantidadeNum = Number(quantidade);
 
     if (!Number.isInteger(quantidadeNum) || quantidadeNum < 50 || quantidadeNum > 1000000) {
