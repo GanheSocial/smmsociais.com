@@ -355,8 +355,6 @@
                     }
 
                     tiktokServices.forEach(servico => {
-                        const option = document.createElement("option");
-                        option.value = servico._id;
 option.dataset.nome = servico.nome;
 option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
 option.dataset.tipo = servico.tipo;
@@ -364,7 +362,6 @@ option.dataset.categoria = servico.categoria;
 option.dataset.minimo = servico.minimo;
 option.dataset.maximo = servico.maximo;
 option.dataset.id_servico = servico.id_servico; // ← necessário!
-                        serviceSelect.appendChild(option);
                     });
 
                     quantityInput.disabled = false;
