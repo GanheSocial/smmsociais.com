@@ -338,7 +338,7 @@ function atualizarPreco() {
     const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
 
     let preco = quantity * valorUnitario;
-    preco = Math.max(5, preco);
+    preco = Math.max(0, preco);
     priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
 }
 
@@ -411,7 +411,7 @@ quantityInput.disabled = true; // Bloqueia input até carregar serviços
 
                 const nomeServico = selectedOption.dataset.nome;
                 const valorUnitario = parseFloat(selectedOption.dataset.valorUnitario);
-                const valorTotal = Math.max(5, quantity * valorUnitario);
+                const valorTotal = Math.max(0, quantity * valorUnitario);
 
                 const token = localStorage.getItem("token");
 
