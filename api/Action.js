@@ -2,15 +2,14 @@ import mongoose from "mongoose";
 
 const actionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  id_servico: { type: mongoose.Schema.Types.ObjectId, ref: "Servico" }, // Aqui como ObjectId referenciando 'Servico'
-  rede: String,
-  tipo: String,
-  nome: String,
-  valor: Number, // Recomendo alterar para Number, já que no criar_acao você usa parseFloat
+  id_servico: { type: String }, // <- Certifique-se que este campo existe aqui
+  rede: { type: String, required: true },
+  tipo: { type: String, required: true },
+  nome: { type: String, required: true },
+  valor: { type: Number, required: true },
   quantidade: { type: Number, required: true },
-  quantidadeExecutada: { type: Number, default: 0 },
-  link: String,
-  status: { type: String, enum: ["pendente", "reservada", "concluida"], default: "pendente" },
+  link: { type: String, required: true },
+  status: { type: String, default: "pendente" },
   dataCriacao: { type: Date, default: Date.now }
 });
 
