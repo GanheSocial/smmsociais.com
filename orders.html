@@ -475,7 +475,7 @@
         <td>${acao.link}</td>
         <td>R$ ${parseFloat(acao.valor).toFixed(2)}</td>
         <td>${acao.quantidade}</td>
-        <td>${acao.id_servico ? acao.id_servico.nome : acao.nome}</td>
+        <td>${acao.servicoDetalhes ? acao.servicoDetalhes.nome : acao.nome}</td>
         <td><span class="status status-${acao.status}">${acao.status.charAt(0).toUpperCase() + acao.status.slice(1)}</span></td>
         <td>-</td>
     `;
