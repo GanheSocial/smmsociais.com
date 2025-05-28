@@ -324,6 +324,7 @@
             const serviceSelect = document.getElementById("service");
             const quantityInput = document.getElementById("quantity");
             const statusMessage = document.getElementById("statusMessage");
+                document.body.classList.add('loaded');
 
             function atualizarPreco() {
                 const quantity = parseInt(quantityInput.value) || 0;
