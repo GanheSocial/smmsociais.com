@@ -1,5 +1,6 @@
 import connectDB from "./db.js";
 import { Action } from "./Action.js";
+import { User } from "./User.js";
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
