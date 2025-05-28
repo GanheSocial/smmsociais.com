@@ -252,7 +252,7 @@
         body.loaded {
             visibility: visible;
         }
-    </style>
+   </style>
 </head>
 
 <body>
@@ -268,6 +268,8 @@
                     alt="Logo smmsociais" class="logo">
             </a>
         </div>
+    </div>
+
     <div class="container">
         <h2>Comprar Seguidores TikTok</h2>
         <form id="orderForm">
@@ -287,12 +289,12 @@
 
             <div class="input-group">
                 <label for="link">Link:</label>
-                <input type="url" id="link" required>
+                <input type="url" id="link">
             </div>
 
             <div class="input-group">
-                <label for="quantity">Quantidade:</label>
-                <input type="number" id="quantity" value="100" required>
+                <label for="quantity">Quantidade (50-1.000.000):</label>
+                <input type="number" id="quantity" min="50" max="1000000" value="100" required>
             </div>
 
             <div class="price-display">
@@ -304,6 +306,7 @@
 
         <p id="statusMessage" class="status-message"></p>
     </div>
+
     <!-- Menu Overlay e Conteúdo -->
     <div class="menu-overlay" id="menuOverlay"></div>
     <div class="menu-content" id="menuContent">
@@ -318,13 +321,15 @@
         </div>
     </div>
 
-   <script>
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // Variáveis globais referenciando os elementos
             const priceDisplay = document.getElementById("price");
             const serviceSelect = document.getElementById("service");
             const quantityInput = document.getElementById("quantity");
-            const statusMessage = document.getElementById("statusMessage");
-                document.body.classList.add('loaded');
+
+            // Marca a página como carregada (se você usa isso em CSS)
+            document.body.classList.add('loaded');
 
             function atualizarPreco() {
                 const quantity = parseInt(quantityInput.value) || 0;
