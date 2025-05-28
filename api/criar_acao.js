@@ -42,7 +42,7 @@ const handler = async (req, res) => {
 
 const novaAcao = new Action({
   userId: usuario._id,
-  id_servico: mongoose.Types.ObjectId.isValid(id_servico) ? new mongoose.Types.ObjectId(id_servico) : undefined,
+  id_servico: id_servico ? String(id_servico) : undefined,
   rede,
   tipo,
   nome,
