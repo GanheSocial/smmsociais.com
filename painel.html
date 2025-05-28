@@ -293,8 +293,8 @@
             </div>
 
             <div class="input-group">
-                <label for="quantity">Quantidade (50-1.000.000):</label>
-                <input type="number" id="quantity" min="50" max="1000000" value="100" required>
+                <label for="quantity">Quantidade:</label>
+                <input type="number" id="quantity" value="100" required>
             </div>
 
             <div class="price-display">
@@ -321,109 +321,101 @@
         </div>
     </div>
 
-    <script>
+   <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Variáveis globais referenciando os elementos
             const priceDisplay = document.getElementById("price");
             const serviceSelect = document.getElementById("service");
             const quantityInput = document.getElementById("quantity");
+            const statusMessage = document.getElementById("statusMessage");
 
-            // Marca a página como carregada (se você usa isso em CSS)
-            document.body.classList.add('loaded');
+            function atualizarPreco() {
+                const quantity = parseInt(quantityInput.value) || 0;
+                const selectedService = serviceSelect.selectedOptions[0];
+                const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
+                let preco = quantity * valorUnitario;
+                preco = Math.max(0, preco);
+                priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
+            }
 
-            // Função para atualizar o preço
-function atualizarPreco() {
-    const quantity = parseInt(quantityInput.value) || 0;
-    const selectedService = serviceSelect.selectedOptions[0];
-    const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
+            ["input", "change", "keyup"].forEach(evt =>
+                quantityInput.addEventListener(evt, atualizarPreco)
+            );
+            serviceSelect.addEventListener('change', atualizarPreco);
 
-    let preco = quantity * valorUnitario;
-    preco = Math.max(0, preco);
-    priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
-}
+            fetch("/api/servico")
+                .then(response => response.json())
+                .then(data => {
+                    serviceSelect.innerHTML = "";
+                    const tiktokServices = data.filter(s => s.categoria?.toLowerCase() === "tiktok");
 
-["input", "change", "keyup"].forEach(evt => quantityInput.addEventListener(evt, atualizarPreco));
-serviceSelect.addEventListener('change', atualizarPreco);
+                    if (tiktokServices.length === 0) {
+                        serviceSelect.innerHTML = "<option>Nenhum serviço disponível</option>";
+                        return;
+                    }
 
-fetch("/api/servico")
-    .then(response => response.json())
-    .then(data => {
-        serviceSelect.innerHTML = "";
-        const tiktokServices = data.filter(s => s.categoria?.toLowerCase() === "tiktok");
+                    tiktokServices.forEach(servico => {
+                        const option = document.createElement("option");
+                        option.value = servico._id;
+                        option.dataset.nome = servico.nome;
+                        option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
+                        option.dataset.tipo = servico.tipo;
+                        option.dataset.categoria = servico.categoria;
+                        option.dataset.minimo = servico.minimo;
+                        option.dataset.maximo = servico.maximo;
+                        option.textContent = servico.nome;
+                        serviceSelect.appendChild(option);
+                    });
 
-        if (tiktokServices.length === 0) {
-            serviceSelect.innerHTML = "<option>Nenhum serviço disponível</option>";
-            return;
-        }
+                    quantityInput.disabled = false;
 
-tiktokServices.forEach(servico => {
-    const option = document.createElement("option");
-    option.value = servico._id;
-    option.dataset.nome = servico.nome;
-    option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
-    option.dataset.tipo = servico.tipo;
-    option.dataset.categoria = servico.categoria;
-    option.dataset.minimo = servico.minimo;
-    option.dataset.maximo = servico.maximo;
-    option.textContent = servico.nome;
-    serviceSelect.appendChild(option);
-});
+                    serviceSelect.addEventListener("change", () => {
+                        const selectedService = serviceSelect.selectedOptions[0];
+                        const minimo = parseInt(selectedService.dataset.minimo || "50");
+                        const maximo = parseInt(selectedService.dataset.maximo || "1000000");
 
-        quantityInput.disabled = false;
-        atualizarPreco();
-    })
-    .catch(error => {
-        console.error("Erro ao carregar serviços:", error);
-        serviceSelect.innerHTML = "<option>Erro ao carregar</option>";
-    });
+                        quantityInput.min = minimo;
+                        quantityInput.max = maximo;
 
-quantityInput.disabled = true; // Bloqueia input até carregar serviços
+                        if (parseInt(quantityInput.value) < minimo) quantityInput.value = minimo;
+                        if (parseInt(quantityInput.value) > maximo) quantityInput.value = maximo;
 
-            // Evento do submit do formulário de pedido
-            document.getElementById("orderForm").addEventListener("submit", async function (event) {
-                event.preventDefault();
+                        const quantityLabel = document.querySelector("label[for='quantity']");
+                        if (quantityLabel) {
+                            quantityLabel.textContent = `Quantidade (${minimo.toLocaleString()} - ${maximo.toLocaleString()}):`;
+                        }
 
-                const link = document.getElementById("link").value.trim();
-                const quantity = parseInt(document.getElementById("quantity").value);
-                const statusMessage = document.getElementById("statusMessage");
+                        atualizarPreco();
+                    });
+
+                    serviceSelect.dispatchEvent(new Event("change"));
+                });
+
+            document.getElementById("orderForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
                 const selectedOption = serviceSelect.selectedOptions[0];
-
-                if (!selectedOption) {
-                    statusMessage.textContent = "Selecione um serviço válido!";
-                    statusMessage.style.color = "#d9534f";
-                    return;
-                }
-
-                const minimo = parseInt(selectedOption.dataset.minimo || "50");
-                const maximo = parseInt(selectedOption.dataset.maximo || "1000000");
-
-                if (!link) {
-                    statusMessage.textContent = "Por favor, insira o link do perfil!";
-                    statusMessage.style.color = "#d9534f";
-                    return;
-                }
-
-                if (quantity < minimo || quantity > maximo) {
-                    statusMessage.textContent = `Quantidade deve ser entre ${minimo.toLocaleString()} e ${maximo.toLocaleString()}!`;
-                    statusMessage.style.color = "#d9534f";
-                    return;
-                }
-
-                const nomeServico = selectedOption.dataset.nome;
-                const valorUnitario = parseFloat(selectedOption.dataset.valorUnitario);
-                const valorTotal = Math.max(0, quantity * valorUnitario);
-
+                const nomeServico = selectedOption?.dataset.nome;
+                const link = document.getElementById("link").value.trim();
+                const quantity = parseInt(quantityInput.value);
+                const valorUnitario = parseFloat(selectedOption?.dataset.valorUnitario || 0.05);
+                const valorTotal = quantity * valorUnitario;
                 const token = localStorage.getItem("token");
+
+                if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
+                    statusMessage.textContent = "Preencha todos os campos corretamente.";
+                    statusMessage.style.color = "#d9534f";
+                    return;
+                }
 
                 try {
                     const response = await fetch("/api/criar_acao", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: `Bearer 123456`
+                            Authorization: `Bearer ${token}`
                         },
                         body: JSON.stringify({
-                            rede: selectedOption.dataset.categoria.toLowerCase(), // ex: "tiktok"
+                            rede: selectedOption.dataset.categoria.toLowerCase(),
                             tipo: selectedOption.dataset.tipo,
                             nome: nomeServico,
                             valor: parseFloat(valorTotal.toFixed(2)),
@@ -438,7 +430,8 @@ quantityInput.disabled = true; // Bloqueia input até carregar serviços
                         statusMessage.textContent = "Pedido realizado com sucesso!";
                         statusMessage.style.color = "#28a745";
                         document.getElementById("link").value = "";
-                        document.getElementById("quantity").value = "100";
+                        quantityInput.value = quantityInput.min;
+                        atualizarPreco();
                     } else {
                         statusMessage.textContent = data.error || "Erro ao processar pedido.";
                         statusMessage.style.color = "#d9534f";
@@ -450,18 +443,16 @@ quantityInput.disabled = true; // Bloqueia input até carregar serviços
                 }
             });
 
-            // Função logout
             window.logout = function () {
                 localStorage.removeItem("token");
                 window.location.href = "https://smmsociais.com";
             };
 
-            // Código do menu hambúrguer
             const menuToggle = document.getElementById('menuToggle');
             const menuOverlay = document.getElementById('menuOverlay');
             const menuContent = document.getElementById('menuContent');
 
-            menuToggle.addEventListener('click', () => {
+            menuToggle?.addEventListener('click', () => {
                 menuContent.classList.toggle('active');
                 menuOverlay.classList.toggle('active');
 
@@ -477,7 +468,7 @@ quantityInput.disabled = true; // Bloqueia input até carregar serviços
                 }
             });
 
-            menuOverlay.addEventListener('click', () => {
+            menuOverlay?.addEventListener('click', () => {
                 menuContent.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 const spans = menuToggle.querySelectorAll('span');
