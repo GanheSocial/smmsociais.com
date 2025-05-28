@@ -19,11 +19,12 @@ const handler = async (req, res) => {
     }
 
     // 📦 Extração e validação dos dados
-    const { rede, tipo, nome, valor, quantidade, link } = req.body;
+const { rede, tipo, nome, valor, quantidade, link, userId } = req.body;
 
-    if (!rede || !tipo || !nome || !valor || !quantidade || !link) {
-      return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
-    }
+const usuario = await User.findById(userId);
+if (!usuario) {
+  return res.status(400).json({ error: "Usuário não encontrado!" });
+}
 
     const valorNum = 7; // 🔒 valor fixo
     const quantidadeNum = Number(quantidade);
