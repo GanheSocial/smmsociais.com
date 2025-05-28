@@ -1,6 +1,7 @@
 import connectDB from "./db.js";
 import { Action } from "./Action.js";
 import { User } from "./User.js";
+import mongoose from "mongoose";
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
@@ -10,7 +11,6 @@ const handler = async (req, res) => {
   try {
     await connectDB();
 
-    // 🔐 Validação da chave da API
     const { authorization } = req.headers;
     const chaveEsperada = `Bearer ${process.env.SMM_API_KEY}`;
     
@@ -19,44 +19,44 @@ const handler = async (req, res) => {
       return res.status(401).json({ error: "Não autorizado" });
     }
 
-    // 📦 Extração e validação dos dados
-const { rede, tipo, nome, valor, quantidade, link, userId, id_servico } = req.body;
+    const { rede, tipo, nome, valor, quantidade, link, userId, id_servico } = req.body;
 
-const usuario = await User.findById(userId);
-if (!usuario) {
-  return res.status(400).json({ error: "Usuário não encontrado!" });
-}
+    const usuario = await User.findById(userId);
+    if (!usuario) {
+      return res.status(400).json({ error: "Usuário não encontrado!" });
+    }
 
-const valorNum = parseFloat(valor);
-if (isNaN(valorNum) || valorNum <= 0) {
-  return res.status(400).json({ error: "Valor inválido" });
-}
+    if (id_servico && !mongoose.Types.ObjectId.isValid(id_servico)) {
+      return res.status(400).json({ error: "id_servico inválido" });
+    }
+
+    const valorNum = parseFloat(valor);
+    if (isNaN(valorNum) || valorNum <= 0) {
+      return res.status(400).json({ error: "Valor inválido" });
+    }
+
     const quantidadeNum = Number(quantidade);
-
     if (!Number.isInteger(quantidadeNum) || quantidadeNum < 50 || quantidadeNum > 1000000) {
       return res.status(400).json({ error: "A quantidade deve ser um número entre 50 e 1.000.000!" });
     }
 
-    // 🆕 Criação da ação no banco
-const novaAcao = new Action({
-  userId: usuario._id,
-  id_servico, // ← Aqui está o novo campo
-  rede,
-  tipo,
-  nome,
-  valor: valorNum,
-  quantidade: quantidadeNum,
-  link,
-  status: "pendente",
-  dataCriacao: new Date()
-});
+    const novaAcao = new Action({
+      userId: usuario._id,
+      id_servico: id_servico ? String(id_servico) : undefined,
+      rede,
+      tipo,
+      nome,
+      valor: valorNum,
+      quantidade: quantidadeNum,
+      link,
+      status: "pendente",
+      dataCriacao: new Date()
+    });
 
     await novaAcao.save();
 
-    // 🆔 Usar o _id do MongoDB como identificador universal
     const id_pedido = novaAcao._id.toString();
 
-    // 🔗 Preparação dos dados para envio ao GanheSocial
     const nome_usuario = link.includes("@") ? link.split("@")[1].trim() : link.trim();
     const quantidade_pontos = +(valorNum * 0.001).toFixed(6);
 
@@ -72,12 +72,11 @@ const novaAcao = new Action({
       quantidade: quantidadeNum,
       valor: valorNum,
       url_dir: link,
-      id_pedido // ✅ Agora é o _id real do Mongo
+      id_pedido
     };
 
     console.log("➡️ Enviando para ganhesocial.com:", payloadGanheSocial);
 
-    // 📡 Envio para GanheSocial
     try {
       const response = await fetch("https://ganhesocial.com/api/smm_acao", {
         method: "POST",
