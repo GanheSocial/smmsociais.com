@@ -51,6 +51,7 @@ const novaAcao = new Action({
   validadas: 0,
   link,
   status: "pendente",
+  id_acao_smm,
   dataCriacao: new Date()
 });
 
@@ -73,7 +74,8 @@ const novaAcao = new Action({
       quantidade: quantidadeNum,
       valor: valorNum,
       url_dir: link,
-      id_pedido
+      id_pedido,
+      id_acao_smm,
     };
 
     console.log("➡️ Enviando para ganhesocial.com:", payloadGanheSocial);
