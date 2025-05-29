@@ -19,7 +19,7 @@ const handler = async (req, res) => {
       return res.status(401).json({ error: "Não autorizado" });
     }
 
-    const { rede, tipo, nome, valor, quantidade, link, userId, id_servico } = req.body;
+    const { rede, tipo, nome, valor, quantidade, link, userId, id_servico, id_acao_smm } = req.body;
 
     const usuario = await User.findById(userId);
     if (!usuario) {
