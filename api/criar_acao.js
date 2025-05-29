@@ -48,6 +48,7 @@ const novaAcao = new Action({
   nome,
   valor: valorNum,
   quantidade: quantidadeNum,
+  validadas: 0,
   link,
   status: "pendente",
   dataCriacao: new Date()
