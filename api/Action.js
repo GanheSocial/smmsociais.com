@@ -8,6 +8,7 @@ const actionSchema = new mongoose.Schema({
   nome: { type: String, required: true },
   valor: { type: Number, required: true },
   quantidade: { type: Number, required: true },
+  validadas: { type: Number, default: 0 },
   link: { type: String, required: true },
   status: { type: String, default: "pendente" },
   dataCriacao: { type: Date, default: Date.now }
