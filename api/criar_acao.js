@@ -19,7 +19,7 @@ const handler = async (req, res) => {
       return res.status(401).json({ error: "Não autorizado" });
     }
 
-    const { rede, tipo, nome, valor, quantidade, link, userId, id_servico, id_acao_smm } = req.body;
+    const { rede, tipo, nome, valor, quantidade, link, userId, id_servico } = req.body;
 
     const usuario = await User.findById(userId);
     if (!usuario) {
@@ -51,7 +51,6 @@ const novaAcao = new Action({
   validadas: 0,
   link,
   status: "pendente",
-  id_acao_smm,
   dataCriacao: new Date()
 });
 
@@ -75,7 +74,6 @@ const novaAcao = new Action({
       valor: valorNum,
       url_dir: link,
       id_pedido,
-      id_acao_smm,
     };
 
     console.log("➡️ Enviando para ganhesocial.com:", payloadGanheSocial);
