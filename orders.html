@@ -334,11 +334,11 @@
         <h2>Histórico de Pedidos</h2>
 
         <div class="filter-buttons">
-            <a href="historico_pedidos?status=todos" class="filter-button active">Tudo</a>
-            <a href="historico_pedidos?status=pending" class="filter-button">Pendente</a>
-            <a href="historico_pedidos?status=progress" class="filter-button">Em Progresso</a>
-            <a href="historico_pedidos?status=completed" class="filter-button">Concluído</a>
-            <a href="historico_pedidos?status=cancelled" class="filter-button">Cancelado</a>
+            <a href="orders" class="filter-button active">Tudo</a>
+            <a href="orders?status=pending" class="filter-button">Pendente</a>
+            <a href="orders?status=progress" class="filter-button">Em Progresso</a>
+            <a href="orders?status=completed" class="filter-button">Concluído</a>
+            <a href="orders?status=cancelled" class="filter-button">Cancelado</a>
         </div>
 
         <table>
@@ -465,11 +465,11 @@
                         tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Nenhum pedido encontrado.</td></tr>`;
                     }
 
-data.acoes.forEach((acao, index) => {
-    const tr = document.createElement("tr");
-    const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
+                    data.acoes.forEach((acao, index) => {
+                        const tr = document.createElement("tr");
+                        const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
 
-    tr.innerHTML = `
+                        tr.innerHTML = `
 <td>#${acao.id_servico || "-"}</td>
 <td>${dataCriacao}</td>
 <td>${acao.link}</td>
@@ -480,8 +480,8 @@ data.acoes.forEach((acao, index) => {
 <td>${(acao.quantidade || 0) - (acao.validadas || 0)}</td>
 `;
 
-    tbody.appendChild(tr);
-});
+                        tbody.appendChild(tr);
+                    });
 
                 } else {
                     alert(data.error || "Erro ao carregar histórico.");
