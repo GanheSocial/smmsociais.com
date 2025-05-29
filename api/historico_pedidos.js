@@ -29,6 +29,8 @@ const filtro = { userId: usuario._id };
 if (status && status !== "todos") {
   if (status === "pending") {
     filtro.validadas = 0;
+  } else if (status === "progress") {
+    filtro.validadas = { $gt: 0 };
   } else {
     filtro.status = status;
   }
