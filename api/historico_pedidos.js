@@ -23,32 +23,44 @@ const handler = async (req, res) => {
       return res.status(401).json({ error: "Token inválido ou usuário não encontrado!" });
     }
 
+    // 🔄 Atualizar status automaticamente:
+    // De "pendente" para "progress" se validadas > 0
+    await Action.updateMany(
+      { status: "pendente", validadas: { $gt: 0 } },
+      { $set: { status: "progress" } }
+    );
+
+    // De "pendente" ou "progress" para "completed" se validadas === quantidade
+    await Action.updateMany(
+      { status: { $in: ["pendente", "progress"] }, $expr: { $eq: ["$validadas", "$quantidade"] } },
+      { $set: { status: "completed" } }
+    );
+
+    // 🔎 Filtro dinâmico conforme status da query
     const status = req.query.status;
-    const match = { userId: usuario._id };
+    const filtro = { userId: usuario._id };
 
     if (status && status !== "todos") {
       if (status === "pending") {
-        match.validadas = 0;
+        filtro.validadas = 0;
       } else if (status === "progress") {
-        match.$expr = { $and: [ { $gt: ["$validadas", 0] }, { $lt: ["$validadas", "$quantidade"] } ] };
-      } else if (status === "completed") {
-        match.$expr = { $eq: ["$validadas", "$quantidade"] };
+        filtro.validadas = { $gt: 0 };
+        filtro.status = "progress";
       } else {
-        match.status = status;
+        filtro.status = status;
       }
     }
 
-    const acoes = await Action.aggregate([
-      { $match: match },
-      { $sort: { dataCriacao: -1 } }
-    ]);
+    // 🔍 Buscar ações do usuário
+    const acoes = await Action.find(filtro).sort({ dataCriacao: -1 });
 
-    // Busca serviços relacionados
+    // 🔗 Buscar os serviços relacionados
     const idsServico = [...new Set(acoes.map(a => a.id_servico))];
     const servicos = await Servico.find({ id_servico: { $in: idsServico } });
 
+    // 🧩 Anexar detalhes dos serviços a cada ação
     const acoesComDetalhes = acoes.map(acao => {
-      const obj = acao;
+      const obj = acao.toObject();
       obj.servicoDetalhes = servicos.find(s => s.id_servico === obj.id_servico) || null;
       return obj;
     });
