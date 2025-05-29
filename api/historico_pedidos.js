@@ -24,10 +24,15 @@ const handler = async (req, res) => {
     }
 
     const status = req.query.status;
-    const filtro = { userId: usuario._id };
-    if (status && status !== "todos") {
-      filtro.status = status;
-    }
+const filtro = { userId: usuario._id };
+
+if (status && status !== "todos") {
+  if (status === "pending") {
+    filtro.validadas = 0;
+  } else {
+    filtro.status = status;
+  }
+}
 
     // Busca ações (id_servico é string)
     const acoes = await Action.find(filtro).sort({ dataCriacao: -1 });
