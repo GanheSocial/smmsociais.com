@@ -94,6 +94,11 @@ const novaAcao = new Action({
         console.error("⚠️ Erro na resposta do ganhesocial:", data);
       } else {
         console.log("✅ Ação registrada no ganhesocial:", data);
+
+        // ⬇️ Atualiza a ação local com o id_acao_smm recebido
+        if (data.id_acao_smm) {
+          await Action.findByIdAndUpdate(novaAcao._id, { id_acao_smm: data.id_acao_smm });
+        }
       }
     } catch (erroEnvio) {
       console.error("❌ Falha na comunicação com ganhesocial:", erroEnvio);
