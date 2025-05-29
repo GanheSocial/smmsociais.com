@@ -11,7 +11,10 @@ const actionSchema = new mongoose.Schema({
   validadas: { type: Number, default: 0 },
   link: { type: String, required: true },
   status: { type: String, default: "pendente" },
-  dataCriacao: { type: Date, default: Date.now }
+  dataCriacao: { type: Date, default: Date.now },
+
+  // 👇 Novo campo para vincular à actionhistory
+  id_acao_smm: { type: mongoose.Schema.Types.ObjectId, ref: "actionhistories", required: false }
 });
 
 // 👇 Força o Mongoose a recriar o modelo se ele já existir (evita cache em dev)
