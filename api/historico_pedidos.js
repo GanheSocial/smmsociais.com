@@ -24,28 +24,31 @@ const handler = async (req, res) => {
     }
 
     const status = req.query.status;
-const filtro = { userId: usuario._id };
+    const match = { userId: usuario._id };
 
-if (status && status !== "todos") {
-  if (status === "pending") {
-    filtro.validadas = 0;
-  } else if (status === "progress") {
-    filtro.validadas = { $gt: 0 };
-  } else {
-    filtro.status = status;
-  }
-}
+    if (status && status !== "todos") {
+      if (status === "pending") {
+        match.validadas = 0;
+      } else if (status === "progress") {
+        match.$expr = { $and: [ { $gt: ["$validadas", 0] }, { $lt: ["$validadas", "$quantidade"] } ] };
+      } else if (status === "completed") {
+        match.$expr = { $eq: ["$validadas", "$quantidade"] };
+      } else {
+        match.status = status;
+      }
+    }
 
-    // Busca ações (id_servico é string)
-    const acoes = await Action.find(filtro).sort({ dataCriacao: -1 });
+    const acoes = await Action.aggregate([
+      { $match: match },
+      { $sort: { dataCriacao: -1 } }
+    ]);
 
-    // Busca serviços que tem id_servico igual ao de alguma ação
-    const idsServico = [...new Set(acoes.map(a => a.id_servico))]; // únicos
+    // Busca serviços relacionados
+    const idsServico = [...new Set(acoes.map(a => a.id_servico))];
     const servicos = await Servico.find({ id_servico: { $in: idsServico } });
 
-    // Mapear ações com detalhes do serviço
     const acoesComDetalhes = acoes.map(acao => {
-      const obj = acao.toObject();
+      const obj = acao;
       obj.servicoDetalhes = servicos.find(s => s.id_servico === obj.id_servico) || null;
       return obj;
     });
