@@ -1,5 +1,5 @@
 import connectDB from "./db.js";
-import { User, Action, ActionHistory } from "./schema.js";
+import { User, Action, ActionHistory, Servico } from "./schema.js";
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
