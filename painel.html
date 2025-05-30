@@ -627,6 +627,10 @@
 
             document.body.classList.add('loaded');
 
+            // Verifica se há um parâmetro de serviço na URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceIdFromUrl = urlParams.get('service');
+
             const selected = document.getElementById('selected-option');
             const optionsList = document.getElementById('select-options');
             const hiddenInput = document.getElementById('category');
@@ -791,6 +795,21 @@
                 });
 
                 quantityInput.disabled = false;
+
+                // Seleciona o serviço da URL se existir
+                if (serviceIdFromUrl && services.length > 0) {
+                    const serviceToSelect = services.find(s => s.id_servico == serviceIdFromUrl);
+                    if (serviceToSelect) {
+                        serviceSelect.value = serviceToSelect._id;
+                        
+                        // Atualiza a categoria para a do serviço selecionado
+                        const category = serviceToSelect.categoria.toLowerCase();
+                        const categoryOption = document.querySelector(`#select-options li[data-value="${category}"]`);
+                        if (categoryOption) {
+                            categoryOption.click(); // Simula o clique para atualizar a categoria
+                        }
+                    }
+                }
 
                 // Dispara o evento change para atualizar os valores mínimos/máximos
                 if (services.length > 0) {
