@@ -154,6 +154,69 @@ if (url.startsWith("/api/signup")) {
     }
 };
 
-    // ❌ Caso nenhuma rota seja correspondida
+// Rota: /api/profile (GET ou PUT)
+if (url.startsWith("/api/profile")) {
+  if (method !== "GET" && method !== "PUT") {
+    return res.status(405).json({ error: "Método não permitido." });
+  }
+
+  await connectDB();
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Não autorizado." });
+  }
+
+  const token = authHeader.split(" ")[1].trim();
+  console.log("🔐 Token recebido:", token);
+
+  try {
+    const usuario = await User.findOne({ token });
+    if (!usuario) {
+      return res.status(404).json({ error: "Usuário não encontrado." });
+    }
+
+    if (method === "GET") {
+      let actionHistory = null;
+
+      if (usuario.historico_acoes?.length > 0) {
+        actionHistory = await ActionHistory.findOne({
+          _id: { $in: usuario.historico_acoes }
+        }).sort({ data: -1 });
+      }
+
+      return res.status(200).json({
+        nome_usuario: usuario.nome,
+        email: usuario.email,
+        token: usuario.token
+      });
+    }
+
+    if (method === "PUT") {
+      const { nome_usuario, email, senha } = req.body;
+
+      const updateFields = { nome: nome_usuario, email };
+      if (senha) {
+        updateFields.senha = senha; // ⚠️ Criptografar se necessário
+      }
+
+      const usuarioAtualizado = await User.findOneAndUpdate(
+        { token },
+        updateFields,
+        { new: true }
+      );
+
+      if (!usuarioAtualizado) {
+        return res.status(404).json({ error: "Usuário não encontrado." });
+      }
+
+      return res.status(200).json({ message: "Perfil atualizado com sucesso!" });
+    }
+  } catch (error) {
+    console.error("💥 Erro ao processar /profile:", error);
+    return res.status(500).json({ error: "Erro ao processar perfil." });
+  }
+}
+
     return res.status(404).json({ error: "Rota não encontrada." });
 }
