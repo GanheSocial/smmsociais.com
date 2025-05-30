@@ -270,6 +270,11 @@
 
 .custom-select-selected .arrow-down {
   margin-left: auto;
+  transition: transform 0.2s;
+}
+
+.custom-select-selected.open .arrow-down {
+  transform: rotate(180deg);
 }
 
 .custom-select-options {
@@ -288,6 +293,7 @@
   overflow-y: auto;
   display: none;
   z-index: 999;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .custom-select-options li {
@@ -306,121 +312,45 @@
   height: 20px;
   margin-right: 10px;
 }
+</style>
 
-        body {
-            visibility: hidden;
-        }
-
-        body.loaded {
-            visibility: visible;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="header">
-        <div class="left-header">
-            <div class="menu-toggle" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <a href="painel" class="logo-container">
-                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                    alt="Logo smmsociais" class="logo">
-            </a>
-        </div>
-    </div>
-
-    <div class="container">
-        <form id="orderForm">
 <div class="input-group">
-<div class="custom-select-container">
-  <div class="custom-select-selected" id="selected-option">
-    <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png" alt="Ícone" class="select-icon">
-    <span>TikTok</span>
-    <div class="arrow-down">▼</div>
+  <label for="real-category">Categoria:</label>
+  <div class="custom-select-container">
+    <div class="custom-select-selected" id="selected-option">
+      <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png" alt="Ícone" class="select-icon">
+      <span>TikTok</span>
+      <div class="arrow-down">▼</div>
+    </div>
+    <ul class="custom-select-options" id="select-options">
+      <li data-value="tiktok" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png">
+        <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png" alt="TikTok"> TikTok
+      </li>
+      <li data-value="instagram" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png">
+        <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png" alt="Instagram"> Instagram
+      </li>
+    </ul>
+    <input type="hidden" name="category" id="real-category" value="tiktok">
   </div>
-  <ul class="custom-select-options" id="select-options">
-    <li data-value="tiktok" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png">
-      <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png"> TikTok
-    </li>
-    <li data-value="instagram" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png">
-      <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png"> Instagram
-    </li>
-  </ul>
-  <input type="hidden" name="category" id="real-category" value="tiktok">
 </div>
 
-</div>
-            <div class="input-group">
-                <label for="service">Serviço:</label>
-                <select id="service">
-                    <option value="" disabled selected>Carregando serviços...</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label for="link">Link:</label>
-                <input type="url" id="link">
-            </div>
-
-            <div class="input-group">
-                <label for="quantity">Quantidade (50-1.000.000):</label>
-                <input type="number" id="quantity" min="50" max="1000000" value="100" required>
-            </div>
-
-            <div class="price-display">
-                Preço: R$ <span id="price">0,00</span>
-            </div>
-
-            <button type="submit" class="button">Finalizar Pedido</button>
-        </form>
-
-        <p id="statusMessage" class="status-message"></p>
-    </div>
-
-    <!-- Menu Overlay e Conteúdo -->
-    <div class="menu-overlay" id="menuOverlay"></div>
-    <div class="menu-content" id="menuContent">
-        <a class="menu-item" href="painel">Novo Pedido</a>
-        <a class="menu-item" href="orders">Histórico de Pedidos</a>
-        <a class="menu-item" href="services">Serviços</a>
-        <a class="menu-item" href="massorder">Pedido em Massa</a>
-        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-
-        <div class="menu-footer">
-            <a class="menu-logout" onclick="logout()">Sair</a>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const priceDisplay = document.getElementById("price");
-            const serviceSelect = document.getElementById("service");
-            const quantityInput = document.getElementById("quantity");
-            const statusMessage = document.getElementById("statusMessage");
-
-            document.body.classList.add('loaded');
-
-document.getElementById('category').addEventListener('change', function() {
-  const icon = document.getElementById('category-icon');
-  if (this.value === 'instagram') {
-    icon.src = 'https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png';
-  } else {
-    icon.src = 'https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png';
-  }
-});
+<script>
+document.addEventListener("DOMContentLoaded", () => {
   const selected = document.getElementById('selected-option');
   const optionsList = document.getElementById('select-options');
   const hiddenInput = document.getElementById('real-category');
 
-  selected.addEventListener('click', () => {
+  // Abre/fecha dropdown
+  selected.addEventListener('click', (e) => {
+    e.stopPropagation();
+    selected.classList.toggle('open');
     optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
   });
 
+  // Seleciona opção
   document.querySelectorAll('#select-options li').forEach(option => {
-    option.addEventListener('click', () => {
+    option.addEventListener('click', (e) => {
+      e.stopPropagation();
       const value = option.getAttribute('data-value');
       const label = option.textContent.trim();
       const icon = option.getAttribute('data-icon');
@@ -429,13 +359,21 @@ document.getElementById('category').addEventListener('change', function() {
       selected.querySelector('img').src = icon;
       hiddenInput.value = value;
 
+      selected.classList.remove('open');
       optionsList.style.display = 'none';
     });
   });
 
   // Fecha dropdown ao clicar fora
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.custom-select-container')) {
+  document.addEventListener('click', () => {
+    selected.classList.remove('open');
+    optionsList.style.display = 'none';
+  });
+
+  // Fecha dropdown ao pressionar Esc
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      selected.classList.remove('open');
       optionsList.style.display = 'none';
     }
   });
