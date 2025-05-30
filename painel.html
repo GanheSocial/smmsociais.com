@@ -50,6 +50,11 @@
             margin-right: 10px;
         }
 
+        .form-container {
+            margin-bottom: 30px;
+            /* Espaço consistente entre os formulários */
+        }
+
         .container {
             background: var(--container-light);
             padding: 20px;
@@ -58,7 +63,8 @@
             text-align: center;
             width: 90%;
             max-width: 300px;
-            margin: 20px auto;
+            margin: 0 auto 30px;
+            /* Mantém margem automática nas laterais e 30px na parte inferior */
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
         }
@@ -431,14 +437,14 @@
             background: var(--container-light);
             padding: 15px;
             border-radius: 8px;
-            margin-top: 20px;
+            margin: 20px 0; /* Aumentado o espaço vertical */
             text-align: left;
             border: 1px solid #e1e4e8;
         }
 
         .service-description h3 {
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: var(--text-light);
             font-size: 16px;
         }
@@ -466,28 +472,42 @@
             width: 90%;
             max-width: 300px;
             margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            /* Espaço consistente entre os elementos filhos */
         }
 
         .description-container {
             background: var(--container-light);
             padding: 15px;
             border-radius: 8px;
-            margin-top: 20px;
             text-align: left;
             border: 1px solid #e1e4e8;
             width: 100%;
             box-sizing: border-box;
+            margin-top: 0;
+            /* Removemos a margem superior pois agora usamos gap no flexbox */
         }
 
         @media (max-width: 768px) {
-            .main-container {
+            .container {
                 width: 88%;
+                padding: 20px;
+                margin-bottom: 25px;
+                /* Espaço ligeiramente menor em mobile */
             }
 
-            .description-container {
-                margin-top: 15px;
-                padding: 10px;
+            .main-container {
+                width: 88%;
+                gap: 25px;
+                /* Espaço ligeiramente menor em mobile */
             }
+        }
+
+        .description-container {
+            margin-top: 15px;
+            padding: 10px;
         }
     </style>
 </head>
@@ -552,7 +572,7 @@
 
             <!-- Seção de descrição do serviço -->
             <div class="service-description" id="serviceDescription">
-                <h3>Descrição do Serviço</h3>
+                <h3>Descrição</h3>
                 <p id="serviceDescriptionText">Selecione um serviço para ver sua descrição.</p>
             </div>
 
@@ -563,8 +583,9 @@
             </div>
 
             <div class="input-group">
-                <label for="quantity">Quantidade (50-1.000.000):</label>
-                <input type="number" id="quantity" min="50" max="1000000" value="100" required>
+                <label for="quantity">Quantidade:</label>
+                <input type="number" id="quantity" value="100" required>
+                <small id="quantityRange" style="display: block; margin-top: 5px; color: #666;"></small>
             </div>
 
             <div class="price-display">
@@ -575,8 +596,6 @@
         </form>
 
         <p id="statusMessage" class="status-message"></p>
-
-
     </div>
 
     <!-- Menu Overlay e Conteúdo -->
@@ -598,6 +617,7 @@
             const priceDisplay = document.getElementById("price");
             const serviceSelect = document.getElementById("service");
             const quantityInput = document.getElementById("quantity");
+            const quantityRange = document.getElementById("quantityRange");
             const statusMessage = document.getElementById("statusMessage");
             const serviceSearch = document.getElementById("serviceSearch");
             const noResults = document.getElementById("noResults");
@@ -662,11 +682,38 @@
                 }
             }
 
+            function atualizarQuantidade() {
+                const selectedService = serviceSelect.selectedOptions[0];
+                if (selectedService) {
+                    const minimo = parseInt(selectedService.dataset.minimo) || 1;
+                    const maximo = parseInt(selectedService.dataset.maximo) || 1000000;
+                    
+                    // Atualiza os atributos min e max do input
+                    quantityInput.min = minimo;
+                    quantityInput.max = maximo;
+                    
+                    // Ajusta o valor se estiver fora do range
+                    if (parseInt(quantityInput.value) < minimo) {
+                        quantityInput.value = minimo;
+                    } else if (parseInt(quantityInput.value) > maximo) {
+                        quantityInput.value = maximo;
+                    }
+                    
+                    // Atualiza o texto de ajuda
+                    quantityRange.textContent = `Mínimo: ${minimo} - Máximo: ${maximo}`;
+                    quantityRange.style.display = 'block';
+                } else {
+                    quantityRange.style.display = 'none';
+                }
+                atualizarPreco();
+            }
+
             ["input", "change", "keyup"].forEach(evt =>
                 quantityInput.addEventListener(evt, atualizarPreco)
             );
+            
             serviceSelect.addEventListener('change', () => {
-                atualizarPreco();
+                atualizarQuantidade();
                 atualizarDescricao();
             });
 
