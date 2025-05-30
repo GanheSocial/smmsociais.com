@@ -346,12 +346,13 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Serviço</th>
-                    <th>Preço por 1000</th>
-                    <th>Mínimo</th>
-                    <th>Máximo</th>
-                    <th>Ação</th>
+        <th>ID</th>
+        <th>Serviço</th>
+        <th>Preço por 1000</th>
+        <th>Mínimo</th>
+        <th>Máximo</th>
+        <th>Tempo médio</th> <!-- NOVA COLUNA -->
+        <th>Ação</th>
                 </tr>
             </thead>
             <tbody id="servicesTableBody">
@@ -462,6 +463,7 @@ function renderServices(services) {
             <td>R$ ${service.preco_1000.toFixed(2)}</td>
             <td>${service.minimo}</td>
             <td>${service.maximo || 'N/A'}</td>
+            <td>${service.tempo_medio}</td> <!-- NOVO CAMPO -->
             <td><button class="order-btn" data-id="${service.id_servico}">Pedir</button></td>
         `;
 
@@ -475,7 +477,6 @@ function renderServices(services) {
         });
     });
 }
-
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "https://ganhesocial.com";
