@@ -46,6 +46,45 @@ const actionSchema = new mongoose.Schema({
   id_acao_smm: { type: Number } // Identificador da origem externa, opcional
 });
 
+const ServicoSchema = new mongoose.Schema({
+    id_servico: {
+    type: String, // Ex: "1254"
+    required: true
+  },
+  nome: {
+    type: String, // Ex: "🚀 Seguidores RÁPIDO no TikTok"
+    required: true
+  },
+   tipo: {
+    type: String, // Ex: "seguindores"
+    required: true
+  },
+  preco_1000: {
+    type: Number, // Ex: 10.00
+    required: true
+  },
+  minimo: {
+    type: Number, // Ex: 50
+    required: true
+  },
+  maximo: {
+    type: Number, // Ex: 1000000
+    required: true
+  },
+  tempo_medio: {
+    type: String, // Ex: "10 minutos"
+    required: true
+  },
+  categoria: {
+    type: String, // Ex: "TikTok"
+    required: true
+  },
+      descricao: {
+    type: String,
+    required: true
+  }
+}, { _id: false }); // Usamos o _id personalizado, então desativamos o autogerado
+
 // 🔄 Previne erro em hot-reload (dev)
 mongoose.models = {};
 
@@ -53,3 +92,4 @@ mongoose.models = {};
 export const User = mongoose.model("User", userSchema);
 export const Action = mongoose.model("Action", actionSchema);
 export const ActionHistory = mongoose.model("ActionHistory", actionHistorySchema);
+export const Servico = mongoose.model("ActionHistory", ServicoSchema);
