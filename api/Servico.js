@@ -32,6 +32,10 @@ const ServicoSchema = new mongoose.Schema({
   categoria: {
     type: String, // Ex: "TikTok"
     required: true
+  },
+      descricao: {
+    type: String,
+    required: true
   }
 }, { _id: false }); // Usamos o _id personalizado, então desativamos o autogerado
 
