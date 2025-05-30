@@ -245,7 +245,7 @@
             }
         }
 
- .custom-select-container {
+.custom-select-container {
   position: relative;
   width: 100%;
   font-family: sans-serif;
@@ -255,20 +255,23 @@
   display: flex;
   align-items: center;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-dark); /* Alterado para usar a variável dark */
   border-radius: 6px;
   cursor: pointer;
-  background: inherit;
+  background-color: var(--bg-dark); /* Preto azulado */
+  color: var(--text-dark); /* Cor do texto para modo escuro */
 }
 
 .custom-select-selected .select-icon {
   width: 20px;
   height: 20px;
   margin-right: 10px;
+  filter: brightness(0) invert(1); /* Opcional: inverte cores do ícone para melhor contraste */
 }
 
 .custom-select-selected .arrow-down {
   margin-left: auto;
+  color: var(--text-dark); /* Cor da seta para modo escuro */
 }
 
 .custom-select-options {
@@ -276,8 +279,8 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: inherit;
-  border: 1px solid #ccc;
+  background-color: var(--bg-dark); /* Preto azulado */
+  border: 1px solid var(--border-dark); /* Borda no modo escuro */
   border-top: none;
   border-radius: 0 0 6px 6px;
   list-style: none;
@@ -287,6 +290,7 @@
   overflow-y: auto;
   display: none;
   z-index: 999;
+  color: var(--text-dark); /* Cor do texto */
 }
 
 .custom-select-options li {
@@ -297,13 +301,14 @@
 }
 
 .custom-select-options li:hover {
-  background: inherit;
+  background-color: var(--container-dark); /* Cor de hover mais clara que o fundo */
 }
 
 .custom-select-options li img {
   width: 20px;
   height: 20px;
   margin-right: 10px;
+  filter: brightness(0) invert(1); /* Opcional: ajusta ícones para modo escuro */
 }
        
 
