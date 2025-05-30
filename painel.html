@@ -350,6 +350,14 @@
 
             document.body.classList.add('loaded');
 
+  document.getElementById('category').addEventListener('change', function() {
+    const icon = document.getElementById('category-icon');
+    if (this.value === 'instagram') {
+      icon.src = 'https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png';
+    } else {
+      icon.src = 'https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png';
+    }
+  });            
             function atualizarPreco() {
                 const quantity = parseInt(quantityInput.value) || 0;
                 const selectedService = serviceSelect.selectedOptions[0];
