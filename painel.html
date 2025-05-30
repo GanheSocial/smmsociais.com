@@ -275,7 +275,7 @@
         <form id="orderForm">
             <div class="input-group">
                 <label for="category">Categoria:</label>
-                <select id="category" disabled>
+                <select id="category">
                     <option value="tiktok" selected>TikTok</option>
                 </select>
             </div>
@@ -354,19 +354,19 @@
                         return;
                     }
 
-tiktokServices.forEach(servico => {
-    const option = document.createElement("option");
-    option.value = servico._id;
-    option.dataset.nome = servico.nome;
-    option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
-    option.dataset.tipo = servico.tipo;
-    option.dataset.categoria = servico.categoria;
-    option.dataset.minimo = servico.minimo;
-    option.dataset.maximo = servico.maximo;
-    option.dataset.id_servico = servico.id_servico; // ← adicionado aqui
-    option.textContent = servico.nome;
-    serviceSelect.appendChild(option);
-});
+                    tiktokServices.forEach(servico => {
+                        const option = document.createElement("option");
+                        option.value = servico._id;
+                        option.dataset.nome = servico.nome;
+                        option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
+                        option.dataset.tipo = servico.tipo;
+                        option.dataset.categoria = servico.categoria;
+                        option.dataset.minimo = servico.minimo;
+                        option.dataset.maximo = servico.maximo;
+                        option.dataset.id_servico = servico.id_servico; // ← adicionado aqui
+                        option.textContent = servico.nome;
+                        serviceSelect.appendChild(option);
+                    });
 
                     quantityInput.disabled = false;
 
@@ -404,75 +404,75 @@ tiktokServices.forEach(servico => {
                 return data.userId;
             };
 
-document.getElementById("orderForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+            document.getElementById("orderForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
 
-    const selectedOption = serviceSelect.selectedOptions[0];
-    const nomeServico = selectedOption?.dataset.nome;
-    const link = document.getElementById("link").value.trim();
-    const quantity = parseInt(quantityInput.value);
-    const valorUnitario = parseFloat(selectedOption?.dataset.valorUnitario || 0.05);
-    const valorTotal = quantity * valorUnitario;
-    const token = localStorage.getItem("token");
+                const selectedOption = serviceSelect.selectedOptions[0];
+                const nomeServico = selectedOption?.dataset.nome;
+                const link = document.getElementById("link").value.trim();
+                const quantity = parseInt(quantityInput.value);
+                const valorUnitario = parseFloat(selectedOption?.dataset.valorUnitario || 0.05);
+                const valorTotal = quantity * valorUnitario;
+                const token = localStorage.getItem("token");
 
-    if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
-        statusMessage.textContent = "Preencha todos os campos corretamente.";
-        statusMessage.style.color = "#d9534f";
-        return;
-    }
+                if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
+                    statusMessage.textContent = "Preencha todos os campos corretamente.";
+                    statusMessage.style.color = "#d9534f";
+                    return;
+                }
 
-    const tipo = selectedOption.dataset.tipo;
-    let linkValido = false;
+                const tipo = selectedOption.dataset.tipo;
+                let linkValido = false;
 
-    if (tipo === "seguidores") {
-        linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/?$/.test(link);
-    } else if (tipo === "curtidas") {
-        linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/video\/\d+\/?$/.test(link);
-    }
+                if (tipo === "seguidores") {
+                    linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/?$/.test(link);
+                } else if (tipo === "curtidas") {
+                    linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/video\/\d+\/?$/.test(link);
+                }
 
-    if (!linkValido) {
-        statusMessage.textContent = `O link fornecido não é válido para o serviço do tipo "${tipo}".`;
-        statusMessage.style.color = "#d9534f";
-        return;
-    }
+                if (!linkValido) {
+                    statusMessage.textContent = `O link fornecido não é válido para o serviço do tipo "${tipo}".`;
+                    statusMessage.style.color = "#d9534f";
+                    return;
+                }
 
-    try {
-        const userId = await getUserId(token);
+                try {
+                    const userId = await getUserId(token);
 
-        const response = await fetch("/api/criar_acao", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer 123456` // ← chave da API
-            },
-            body: JSON.stringify({
-                rede: selectedOption.dataset.categoria.toLowerCase(),
-                tipo: selectedOption.dataset.tipo,
-                nome: nomeServico,
-                valor: parseFloat(valorTotal.toFixed(2)),
-                link: link,
-                quantidade: quantity,
-                userId: userId,
-                id_servico: selectedOption.dataset.id_servico // ← corrigido aqui
-            })
-        });
+                    const response = await fetch("/api/criar_acao", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer 123456` // ← chave da API
+                        },
+                        body: JSON.stringify({
+                            rede: selectedOption.dataset.categoria.toLowerCase(),
+                            tipo: selectedOption.dataset.tipo,
+                            nome: nomeServico,
+                            valor: parseFloat(valorTotal.toFixed(2)),
+                            link: link,
+                            quantidade: quantity,
+                            userId: userId,
+                            id_servico: selectedOption.dataset.id_servico // ← corrigido aqui
+                        })
+                    });
 
-        const data = await response.json();
+                    const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.error || "Erro ao criar ação.");
-        }
+                    if (!response.ok) {
+                        throw new Error(data.error || "Erro ao criar ação.");
+                    }
 
-        statusMessage.textContent = "Ação criada com sucesso!";
-        statusMessage.style.color = "#5cb85c";
-        document.getElementById("orderForm").reset();
-        serviceSelect.dispatchEvent(new Event("change")); // atualiza o min/max após reset
-    } catch (error) {
-        console.error("Erro ao obter userId ou criar ação:", error);
-        statusMessage.textContent = error.message || "Erro inesperado.";
-        statusMessage.style.color = "#d9534f";
-    }
-});
+                    statusMessage.textContent = "Ação criada com sucesso!";
+                    statusMessage.style.color = "#5cb85c";
+                    document.getElementById("orderForm").reset();
+                    serviceSelect.dispatchEvent(new Event("change")); // atualiza o min/max após reset
+                } catch (error) {
+                    console.error("Erro ao obter userId ou criar ação:", error);
+                    statusMessage.textContent = error.message || "Erro inesperado.";
+                    statusMessage.style.color = "#d9534f";
+                }
+            });
 
             window.logout = function () {
                 localStorage.removeItem("token");
