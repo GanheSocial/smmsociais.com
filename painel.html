@@ -425,6 +425,42 @@
                 background-color: rgba(255, 255, 255, 0.05);
             }
         }
+
+        /* Estilos para a seção de descrição do serviço */
+        .service-description {
+            background: var(--container-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+            border: 1px solid #e1e4e8;
+        }
+
+        .service-description h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .service-description p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .service-description {
+                background: var(--container-dark);
+                border-color: var(--border-dark);
+            }
+            
+            .service-description h3,
+            .service-description p {
+                color: var(--text-dark);
+            }
+        }
     </style>
 </head>
 
@@ -504,6 +540,12 @@
         </form>
 
         <p id="statusMessage" class="status-message"></p>
+
+        <!-- Seção de descrição do serviço -->
+        <div class="service-description" id="serviceDescription">
+            <h3>Descrição do Serviço</h3>
+            <p id="serviceDescriptionText">Selecione um serviço para ver sua descrição.</p>
+        </div>
     </div>
 
     <!-- Menu Overlay e Conteúdo -->
@@ -529,6 +571,7 @@
             const serviceSearch = document.getElementById("serviceSearch");
             const noResults = document.getElementById("noResults");
             const searchSuggestions = document.getElementById("searchSuggestions");
+            const serviceDescription = document.getElementById("serviceDescriptionText");
             let allServices = [];
 
             document.body.classList.add('loaded');
@@ -579,10 +622,22 @@
                 priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
             }
 
+            function atualizarDescricao() {
+                const selectedService = serviceSelect.selectedOptions[0];
+                if (selectedService && selectedService.dataset.descricao) {
+                    serviceDescription.textContent = selectedService.dataset.descricao;
+                } else {
+                    serviceDescription.textContent = "Nenhuma descrição disponível para este serviço.";
+                }
+            }
+
             ["input", "change", "keyup"].forEach(evt =>
                 quantityInput.addEventListener(evt, atualizarPreco)
             );
-            serviceSelect.addEventListener('change', atualizarPreco);
+            serviceSelect.addEventListener('change', () => {
+                atualizarPreco();
+                atualizarDescricao();
+            });
 
             // Função para filtrar serviços com base na pesquisa
             function filterServices() {
@@ -636,6 +691,7 @@
                 if (services.length === 0) {
                     serviceSelect.innerHTML = "<option value='' disabled>Nenhum serviço encontrado</option>";
                     noResults.style.display = 'block';
+                    serviceDescription.textContent = "Nenhum serviço selecionado.";
                     return;
                 }
 
@@ -651,6 +707,7 @@
                     option.dataset.minimo = servico.minimo;
                     option.dataset.maximo = servico.maximo;
                     option.dataset.id_servico = servico.id_servico;
+                    option.dataset.descricao = servico.descricao || "Nenhuma descrição disponível para este serviço.";
                     option.textContent = servico.nome;
                     serviceSelect.appendChild(option);
                 });
@@ -686,6 +743,7 @@
                 .catch(error => {
                     console.error("Erro ao carregar serviços:", error);
                     serviceSelect.innerHTML = "<option value='' disabled>Erro ao carregar serviços</option>";
+                    serviceDescription.textContent = "Erro ao carregar informações dos serviços.";
                 });
 
             // 🔹 Função para obter o userId com base no token salvo localmente
