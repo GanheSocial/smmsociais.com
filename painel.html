@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprar Seguidores TikTok</title>
+    <title>Histórico de Pedidos - GanheSocial</title>
     <style>
         :root {
             --bg-light: #ffffff;
@@ -55,65 +55,93 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
             width: 90%;
-            max-width: 300px;
+            max-width: 1200px;
             margin: 20px auto;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
         }
 
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
         }
 
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .input-group input,
-        .input-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        .button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
+        .filter-button {
+            padding: 10px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            height: 40px;
-            box-sizing: border-box;
-            transition: background-color 0.2s;
-            background-color: var(--button-light);
-        }
-
-        .button:hover {
-            background-color: #024fa1;
-        }
-
-        .status-message {
-            margin-top: 10px;
             font-size: 14px;
             font-weight: bold;
-            color: #007BFF;
+            white-space: nowrap;
+            background-color: #e1e4e8;
+            color: var(--text-light);
+            transition: all 0.2s;
         }
 
-        .price-display {
-            margin: 15px 0;
-            font-size: 18px;
+        .filter-button.active {
+            background-color: var(--button-light);
+            color: white;
+        }
+
+        .filter-button:hover {
+            opacity: 0.9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        th {
+            background-color: #f6f8fa;
             font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-progress {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
         }
 
         /* Estilos do menu hamburguer */
@@ -230,308 +258,162 @@
                 background-color: rgba(255, 255, 255, 0.05);
             }
 
-            .input-group input,
-            .input-group select {
+            .filter-button {
                 background-color: var(--container-dark);
                 color: var(--text-dark);
-                border-color: var(--border-dark);
+                border: 1px solid var(--border-dark);
+            }
+
+            .filter-button.active {
+                background-color: var(--button-dark);
+                color: white;
+            }
+
+            th {
+                background-color: var(--container-dark);
+            }
+
+            th,
+            td {
+                border-bottom: 1px solid var(--border-dark);
+            }
+
+            tr:hover {
+                background-color: rgba(255, 255, 255, 0.05);
             }
         }
 
         @media (max-width: 768px) {
             .container {
-                width: 88%;
-                padding: 20px;
+                width: 95%;
+                padding: 15px;
+            }
+
+            th,
+            td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+
+            .filter-buttons {
+                gap: 5px;
+            }
+
+            .filter-button {
+                padding: 8px 10px;
+                font-size: 12px;
             }
         }
 
-.custom-select-container {
-  position: relative;
-  width: 100%;
-  max-width: 300px;
-  font-family: sans-serif;
-}
+        body {
+            visibility: hidden;
+        }
 
-.custom-select-selected {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  cursor: pointer;
-  background: white;
-}
+        body.loaded {
+            visibility: visible;
+        }
+    </style>
+</head>
 
-.custom-select-selected .select-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
-.custom-select-selected .arrow-down {
-  margin-left: auto;
-  transition: transform 0.2s;
-}
-
-.custom-select-selected.open .arrow-down {
-  transform: rotate(180deg);
-}
-
-.custom-select-options {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  border-top: none;
-  border-radius: 0 0 6px 6px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 200px;
-  overflow-y: auto;
-  display: none;
-  z-index: 999;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.custom-select-options li {
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.custom-select-options li:hover {
-  background-color: #f0f0f0;
-}
-
-.custom-select-options li img {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-</style>
-
-<div class="input-group">
-  <label for="real-category">Categoria:</label>
-  <div class="custom-select-container">
-    <div class="custom-select-selected" id="selected-option">
-      <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png" alt="Ícone" class="select-icon">
-      <span>TikTok</span>
-      <div class="arrow-down">▼</div>
+<body>
+    <div class="header">
+        <div class="left-header">
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <a href="painel" class="logo-container">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo smmsociais" class="logo">
+            </a>
+        </div>
     </div>
-    <ul class="custom-select-options" id="select-options">
-      <li data-value="tiktok" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png">
-        <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png" alt="TikTok"> TikTok
-      </li>
-      <li data-value="instagram" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png">
-        <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png" alt="Instagram"> Instagram
-      </li>
-    </ul>
-    <input type="hidden" name="category" id="real-category" value="tiktok">
-  </div>
-</div>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const selected = document.getElementById('selected-option');
-  const optionsList = document.getElementById('select-options');
-  const hiddenInput = document.getElementById('real-category');
+    <div class="container">
+        <h2>Histórico de Pedidos</h2>
 
-  // Abre/fecha dropdown
-  selected.addEventListener('click', (e) => {
-    e.stopPropagation();
-    selected.classList.toggle('open');
-    optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
-  });
+        <div class="filter-buttons">
+            <a href="orders" class="filter-button active">Tudo</a>
+            <a href="orders?status=pending" class="filter-button">Pendente</a>
+            <a href="orders?status=progress" class="filter-button">Em Progresso</a>
+            <a href="orders?status=completed" class="filter-button">Concluído</a>
+            <a href="orders?status=cancelled" class="filter-button">Cancelado</a>
+        </div>
 
-  // Seleciona opção
-  document.querySelectorAll('#select-options li').forEach(option => {
-    option.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const value = option.getAttribute('data-value');
-      const label = option.textContent.trim();
-      const icon = option.getAttribute('data-icon');
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Link</th>
+                    <th>Valor</th>
+                    <th>Quantidade</th>
+                    <th>Serviço</th>
+                    <th>Status</th>
+                    <th>Restam</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 
-      selected.querySelector('span').textContent = label;
-      selected.querySelector('img').src = icon;
-      hiddenInput.value = value;
+    <!-- Menu Overlay e Conteúdo -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-content" id="menuContent">
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="orders">Histórico de Pedidos</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
 
-      selected.classList.remove('open');
-      optionsList.style.display = 'none';
-    });
-  });
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
+        </div>
+    </div>
 
-  // Fecha dropdown ao clicar fora
-  document.addEventListener('click', () => {
-    selected.classList.remove('open');
-    optionsList.style.display = 'none';
-  });
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add('loaded');
 
-  // Fecha dropdown ao pressionar Esc
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      selected.classList.remove('open');
-      optionsList.style.display = 'none';
-    }
-  });
-         
-            function atualizarPreco() {
-                const quantity = parseInt(quantityInput.value) || 0;
-                const selectedService = serviceSelect.selectedOptions[0];
-                const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
-                const preco = Math.max(0, quantity * valorUnitario);
-                priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
+            // Ativar botão de filtro correspondente ao status atual
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+
+            if (status) {
+                const buttons = document.querySelectorAll('.filter-button');
+                buttons.forEach(button => button.classList.remove('active'));
+
+                let activeButton;
+                switch (status) {
+                    case 'pending':
+                        activeButton = document.querySelector('.filter-buttons a[href*="pending"]');
+                        break;
+                    case 'progress':
+                        activeButton = document.querySelector('.filter-buttons a[href*="progress"]');
+                        break;
+                    case 'completed':
+                        activeButton = document.querySelector('.filter-buttons a[href*="completed"]');
+                        break;
+                    case 'cancelled':
+                        activeButton = document.querySelector('.filter-buttons a[href*="cancelled"]');
+                        break;
+                    default:
+                        activeButton = document.querySelector('.filter-buttons a[href*="todos"]');
+                }
+
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
             }
 
-            ["input", "change", "keyup"].forEach(evt =>
-                quantityInput.addEventListener(evt, atualizarPreco)
-            );
-            serviceSelect.addEventListener('change', atualizarPreco);
-
-            fetch("/api/servico")
-                .then(response => response.json())
-                .then(data => {
-                    serviceSelect.innerHTML = "";
-                    const tiktokServices = data.filter(s => s.categoria?.toLowerCase() === "tiktok");
-
-                    if (tiktokServices.length === 0) {
-                        serviceSelect.innerHTML = "<option>Nenhum serviço disponível</option>";
-                        return;
-                    }
-
-                    tiktokServices.forEach(servico => {
-                        const option = document.createElement("option");
-                        option.value = servico._id;
-                        option.dataset.nome = servico.nome;
-                        option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
-                        option.dataset.tipo = servico.tipo;
-                        option.dataset.categoria = servico.categoria;
-                        option.dataset.minimo = servico.minimo;
-                        option.dataset.maximo = servico.maximo;
-                        option.dataset.id_servico = servico.id_servico; // ← adicionado aqui
-                        option.textContent = servico.nome;
-                        serviceSelect.appendChild(option);
-                    });
-
-                    quantityInput.disabled = false;
-
-                    serviceSelect.addEventListener("change", () => {
-                        const selectedService = serviceSelect.selectedOptions[0];
-                        const minimo = parseInt(selectedService.dataset.minimo || "50");
-                        const maximo = parseInt(selectedService.dataset.maximo || "1000000");
-
-                        quantityInput.min = minimo;
-                        quantityInput.max = maximo;
-
-                        if (parseInt(quantityInput.value) < minimo) quantityInput.value = minimo;
-                        if (parseInt(quantityInput.value) > maximo) quantityInput.value = maximo;
-
-                        const quantityLabel = document.querySelector("label[for='quantity']");
-                        if (quantityLabel) {
-                            quantityLabel.textContent = `Quantidade (${minimo.toLocaleString()} - ${maximo.toLocaleString()}):`;
-                        }
-
-                        atualizarPreco();
-                    });
-
-                    serviceSelect.dispatchEvent(new Event("change"));
-                });
-
-            // 🔹 Função para obter o userId com base no token salvo localmente
-            const getUserId = async (token) => {
-                const response = await fetch("/api/user-info", {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || "Erro ao obter userId");
-                return data.userId;
-            };
-
-            document.getElementById("orderForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-
-                const selectedOption = serviceSelect.selectedOptions[0];
-                const nomeServico = selectedOption?.dataset.nome;
-                const link = document.getElementById("link").value.trim();
-                const quantity = parseInt(quantityInput.value);
-                const valorUnitario = parseFloat(selectedOption?.dataset.valorUnitario || 0.05);
-                const valorTotal = quantity * valorUnitario;
-                const token = localStorage.getItem("token");
-
-                if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
-                    statusMessage.textContent = "Preencha todos os campos corretamente.";
-                    statusMessage.style.color = "#d9534f";
-                    return;
-                }
-
-                const tipo = selectedOption.dataset.tipo;
-                let linkValido = false;
-
-                if (tipo === "seguidores") {
-                    linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/?$/.test(link);
-                } else if (tipo === "curtidas") {
-                    linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/video\/\d+\/?$/.test(link);
-                }
-
-                if (!linkValido) {
-                    statusMessage.textContent = `O link fornecido não é válido para o serviço do tipo "${tipo}".`;
-                    statusMessage.style.color = "#d9534f";
-                    return;
-                }
-
-                try {
-                    const userId = await getUserId(token);
-
-                    const response = await fetch("/api/criar_acao", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer 123456` // ← chave da API
-                        },
-                        body: JSON.stringify({
-                            rede: selectedOption.dataset.categoria.toLowerCase(),
-                            tipo: selectedOption.dataset.tipo,
-                            nome: nomeServico,
-                            valor: parseFloat(valorTotal.toFixed(2)),
-                            link: link,
-                            quantidade: quantity,
-                            userId: userId,
-                            id_servico: selectedOption.dataset.id_servico // ← corrigido aqui
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(data.error || "Erro ao criar ação.");
-                    }
-
-                    statusMessage.textContent = "Ação criada com sucesso!";
-                    statusMessage.style.color = "#5cb85c";
-                    document.getElementById("orderForm").reset();
-                    serviceSelect.dispatchEvent(new Event("change")); // atualiza o min/max após reset
-                } catch (error) {
-                    console.error("Erro ao obter userId ou criar ação:", error);
-                    statusMessage.textContent = error.message || "Erro inesperado.";
-                    statusMessage.style.color = "#d9534f";
-                }
-            });
-
-            window.logout = function () {
-                localStorage.removeItem("token");
-                window.location.href = "https://smmsociais.com";
-            };
-
+            // Controle do menu hamburguer
             const menuToggle = document.getElementById('menuToggle');
             const menuOverlay = document.getElementById('menuOverlay');
             const menuContent = document.getElementById('menuContent');
 
-            menuToggle?.addEventListener('click', () => {
+            menuToggle.addEventListener('click', function () {
                 menuContent.classList.toggle('active');
                 menuOverlay.classList.toggle('active');
 
@@ -547,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            menuOverlay?.addEventListener('click', () => {
+            menuOverlay.addEventListener('click', function () {
                 menuContent.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 const spans = menuToggle.querySelectorAll('span');
@@ -556,6 +438,62 @@ document.addEventListener("DOMContentLoaded", () => {
                 spans[2].style.transform = 'none';
             });
         });
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "https://ganhesocial.com";
+        }
+
+        async function carregarHistoricoPedidos() {
+            const token = localStorage.getItem("token");
+            const statusParam = new URLSearchParams(window.location.search).get("status") || "todos";
+
+            try {
+                const response = await fetch("/api/historico_pedidos?status=" + statusParam, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    const tbody = document.querySelector("tbody");
+                    tbody.innerHTML = "";
+
+                    if (data.acoes.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Nenhum pedido encontrado.</td></tr>`;
+                    }
+
+                    data.acoes.forEach((acao, index) => {
+                        const tr = document.createElement("tr");
+                        const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
+
+                        tr.innerHTML = `
+<td>#${acao.id_servico || "-"}</td>
+<td>${dataCriacao}</td>
+<td>${acao.link}</td>
+<td>R$ ${parseFloat(acao.valor).toFixed(2)}</td>
+<td>${acao.quantidade}</td>
+<td>${acao.servicoDetalhes ? acao.servicoDetalhes.nome : acao.nome}</td>
+<td><span class="status status-${acao.status}">${acao.status.charAt(0).toUpperCase() + acao.status.slice(1)}</span></td>
+<td>${(acao.quantidade || 0) - (acao.validadas || 0)}</td>
+`;
+
+                        tbody.appendChild(tr);
+                    });
+
+                } else {
+                    alert(data.error || "Erro ao carregar histórico.");
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao carregar pedidos.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", carregarHistoricoPedidos);
+
     </script>
 </body>
 
