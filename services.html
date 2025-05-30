@@ -351,7 +351,6 @@
                     <th>Preço por 1000</th>
                     <th>Mínimo</th>
                     <th>Máximo</th>
-                    <th>Tempo médio</th>
                     <th>Ação</th>
                 </tr>
             </thead>
@@ -458,12 +457,12 @@
                 const row = document.createElement('tr');
 
                 row.innerHTML = `
-                    <td>${service._id}</td>
+                    <td>${service.id_service}</td>
                     <td class="service-name">${service.nome}</td>
                     <td>R$ ${service.preco_1000.toFixed(2)}</td>
                     <td>${service.minimo}</td>
                     <td>${service.maximo || 'N/A'}</td>
-                    <td><button class="order-btn" data-id="${service.id_servico}">Pedir</button></td>
+                    <td><button class="order-btn" data-id="${service.id_service}">Pedir</button></td>
                 `;
 
                 tableBody.appendChild(row);
