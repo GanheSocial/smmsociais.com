@@ -437,8 +437,7 @@
             background: var(--container-light);
             padding: 15px;
             border-radius: 8px;
-            margin: 20px 0;
-            /* Aumentado o espaço vertical */
+            margin: 20px 0; /* Aumentado o espaço vertical */
             text-align: left;
             border: 1px solid #e1e4e8;
         }
@@ -629,6 +628,10 @@
 
             document.body.classList.add('loaded');
 
+            // Verifica se há um parâmetro de serviço na URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceIdFromUrl = urlParams.get('service');
+
             const selected = document.getElementById('selected-option');
             const optionsList = document.getElementById('select-options');
             const hiddenInput = document.getElementById('category');
@@ -689,18 +692,18 @@
                 if (selectedService) {
                     const minimo = parseInt(selectedService.dataset.minimo) || 1;
                     const maximo = parseInt(selectedService.dataset.maximo) || 1000000;
-
+                    
                     // Atualiza os atributos min e max do input
                     quantityInput.min = minimo;
                     quantityInput.max = maximo;
-
+                    
                     // Ajusta o valor se estiver fora do range
                     if (parseInt(quantityInput.value) < minimo) {
                         quantityInput.value = minimo;
                     } else if (parseInt(quantityInput.value) > maximo) {
                         quantityInput.value = maximo;
                     }
-
+                    
                     // Atualiza o texto de ajuda
                     quantityRange.textContent = `Mínimo: ${minimo} - Máximo: ${maximo}`;
                     quantityRange.style.display = 'block';
@@ -713,7 +716,7 @@
             ["input", "change", "keyup"].forEach(evt =>
                 quantityInput.addEventListener(evt, atualizarPreco)
             );
-
+            
             serviceSelect.addEventListener('change', () => {
                 atualizarQuantidade();
                 atualizarDescricao();
@@ -793,6 +796,21 @@
                 });
 
                 quantityInput.disabled = false;
+
+                // Seleciona o serviço da URL se existir
+                if (serviceIdFromUrl && services.length > 0) {
+                    const serviceToSelect = services.find(s => s.id_servico == serviceIdFromUrl);
+                    if (serviceToSelect) {
+                        serviceSelect.value = serviceToSelect._id;
+                        
+                        // Atualiza a categoria para a do serviço selecionado
+                        const category = serviceToSelect.categoria.toLowerCase();
+                        const categoryOption = document.querySelector(`#select-options li[data-value="${category}"]`);
+                        if (categoryOption) {
+                            categoryOption.click(); // Simula o clique para atualizar a categoria
+                        }
+                    }
+                }
 
                 // Dispara o evento change para atualizar os valores mínimos/máximos
                 if (services.length > 0) {
