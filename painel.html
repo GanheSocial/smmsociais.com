@@ -245,6 +245,68 @@
             }
         }
 
+.custom-select-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  font-family: sans-serif;
+}
+
+.custom-select-selected {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  background: white;
+}
+
+.custom-select-selected .select-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.custom-select-selected .arrow-down {
+  margin-left: auto;
+}
+
+.custom-select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+  z-index: 999;
+}
+
+.custom-select-options li {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.custom-select-options li:hover {
+  background-color: #f0f0f0;
+}
+
+.custom-select-options li img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
         body {
             visibility: hidden;
         }
@@ -273,15 +335,23 @@
     <div class="container">
         <form id="orderForm">
 <div class="input-group">
-  <label for="category">Categoria:</label>
-  <div style="position: relative; display: inline-block; width: 100%;">
-    <select id="category" style="padding-left: 35px; width: 100%;">
-      <option value="tiktok" selected>TikTok</option>
-      <option value="instagram">Instagram</option>
-    </select>
-    <img id="category-icon" src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png" 
-         style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); height: 20px; width: 20px; pointer-events: none;">
+<div class="custom-select-container">
+  <div class="custom-select-selected" id="selected-option">
+    <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png" alt="Ícone" class="select-icon">
+    <span>TikTok</span>
+    <div class="arrow-down">▼</div>
   </div>
+  <ul class="custom-select-options" id="select-options">
+    <li data-value="tiktok" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png">
+      <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png"> TikTok
+    </li>
+    <li data-value="instagram" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png">
+      <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png"> Instagram
+    </li>
+  </ul>
+  <input type="hidden" name="category" id="real-category" value="tiktok">
+</div>
+
 </div>
             <div class="input-group">
                 <label for="service">Serviço:</label>
@@ -332,7 +402,7 @@
             const statusMessage = document.getElementById("statusMessage");
 
             document.body.classList.add('loaded');
-            
+
 document.getElementById('category').addEventListener('change', function() {
   const icon = document.getElementById('category-icon');
   if (this.value === 'instagram') {
@@ -341,6 +411,34 @@ document.getElementById('category').addEventListener('change', function() {
     icon.src = 'https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png';
   }
 });
+  const selected = document.getElementById('selected-option');
+  const optionsList = document.getElementById('select-options');
+  const hiddenInput = document.getElementById('real-category');
+
+  selected.addEventListener('click', () => {
+    optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+  });
+
+  document.querySelectorAll('#select-options li').forEach(option => {
+    option.addEventListener('click', () => {
+      const value = option.getAttribute('data-value');
+      const label = option.textContent.trim();
+      const icon = option.getAttribute('data-icon');
+
+      selected.querySelector('span').textContent = label;
+      selected.querySelector('img').src = icon;
+      hiddenInput.value = value;
+
+      optionsList.style.display = 'none';
+    });
+  });
+
+  // Fecha dropdown ao clicar fora
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.custom-select-container')) {
+      optionsList.style.display = 'none';
+    }
+  });
          
             function atualizarPreco() {
                 const quantity = parseInt(quantityInput.value) || 0;
