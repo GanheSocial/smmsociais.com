@@ -341,7 +341,6 @@
             .custom-select-options li {
                 color: var(--text-dark);
             }
-
         }
 
         body {
@@ -352,7 +351,7 @@
             visibility: visible;
         }
 
-        /* Estilos para a barra de pesquisa */
+        /* Estilos para a barra de pesquisa com autocomplete */
         .search-container {
             margin-bottom: 15px;
             position: relative;
@@ -374,10 +373,52 @@
             color: #777;
         }
 
+        .autocomplete-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            background: var(--container-light);
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .autocomplete-results div {
+            padding: 8px 10px;
+            cursor: pointer;
+        }
+
+        .autocomplete-results div:hover {
+            background-color: #f0f0f0;
+        }
+
         .no-results {
             color: #d9534f;
             font-size: 14px;
             margin-top: 5px;
+            display: none;
+        }
+
+        /* Estilo para o modo escuro do autocomplete */
+        @media (prefers-color-scheme: dark) {
+            .autocomplete-results {
+                background: var(--container-dark);
+                border-color: var(--border-dark);
+            }
+
+            .autocomplete-results div:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        /* Esconde o select original de serviços */
+        #service {
             display: none;
         }
     </style>
@@ -400,16 +441,18 @@
 
     <div class="container">
         <form id="orderForm">
-            <!-- Barra de pesquisa no topo -->
+            <!-- Barra de pesquisa que substitui o select de serviços -->
             <div class="input-group">
+                <label for="serviceSearch">Serviço:</label>
                 <div class="search-container">
                     <input type="text" id="serviceSearch" class="search-input" placeholder="Buscar serviços...">
                     <span class="search-icon">🔍</span>
+                    <div class="autocomplete-results" id="autocompleteResults"></div>
                     <div class="no-results" id="noResults">Nenhum serviço encontrado</div>
                 </div>
             </div>
 
-            <!-- Categoria em seguida -->
+            <!-- Categoria -->
             <div class="input-group">
                 <label for="category">Categoria:</label>
                 <div class="custom-select-container">
@@ -431,11 +474,11 @@
                 </div>
             </div>
 
-            <!-- Serviço por último -->
-            <div class="input-group">
+            <!-- Campo de serviço oculto que será preenchido automaticamente -->
+            <div class="input-group" style="display: none;">
                 <label for="service">Serviço:</label>
                 <select id="service">
-                    <option value="" disabled selected>Carregando serviços...</option>
+                    <option value="" disabled selected>Selecione um serviço...</option>
                 </select>
             </div>
 
@@ -481,8 +524,10 @@
             const quantityInput = document.getElementById("quantity");
             const statusMessage = document.getElementById("statusMessage");
             const serviceSearch = document.getElementById("serviceSearch");
+            const autocompleteResults = document.getElementById("autocompleteResults");
             const noResults = document.getElementById("noResults");
             let allServices = [];
+            let selectedService = null;
 
             document.body.classList.add('loaded');
 
@@ -521,9 +566,10 @@
             });
 
             function atualizarPreco() {
+                if (!selectedService) return;
+                
                 const quantity = parseInt(quantityInput.value) || 0;
-                const selectedService = serviceSelect.selectedOptions[0];
-                const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
+                const valorUnitario = parseFloat(selectedService.preco_1000) / 1000;
                 const preco = Math.max(0, quantity * valorUnitario);
                 priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
             }
@@ -531,7 +577,6 @@
             ["input", "change", "keyup"].forEach(evt =>
                 quantityInput.addEventListener(evt, atualizarPreco)
             );
-            serviceSelect.addEventListener('change', atualizarPreco);
 
             // Função para filtrar serviços com base na pesquisa
             function filterServices() {
@@ -540,59 +585,97 @@
                 const filteredServices = allServices.filter(s =>
                     s.categoria?.toLowerCase() === category &&
                     (s.nome.toLowerCase().includes(searchTerm) ||
-                        s.tipo.toLowerCase().includes(searchTerm))
+                    s.tipo.toLowerCase().includes(searchTerm))
                 );
 
-                updateServiceDropdown(filteredServices);
+                return filteredServices;
             }
 
-            // Função para atualizar o dropdown de serviços
-            function updateServiceDropdown(services) {
-                serviceSelect.innerHTML = "";
-
+            // Função para mostrar resultados do autocomplete
+            function showAutocompleteResults(services) {
+                autocompleteResults.innerHTML = "";
+                
                 if (services.length === 0) {
-                    serviceSelect.innerHTML = "<option value='' disabled>Nenhum serviço encontrado</option>";
                     noResults.style.display = 'block';
+                    autocompleteResults.style.display = 'none';
                     return;
                 }
 
                 noResults.style.display = 'none';
-
-                services.forEach(servico => {
-                    const option = document.createElement("option");
-                    option.value = servico._id;
-                    option.dataset.nome = servico.nome;
-                    option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
-                    option.dataset.tipo = servico.tipo;
-                    option.dataset.categoria = servico.categoria;
-                    option.dataset.minimo = servico.minimo;
-                    option.dataset.maximo = servico.maximo;
-                    option.dataset.id_servico = servico.id_servico;
-                    option.textContent = servico.nome;
-                    serviceSelect.appendChild(option);
+                
+                services.forEach(service => {
+                    const div = document.createElement("div");
+                    div.textContent = service.nome;
+                    div.addEventListener('click', () => {
+                        selectService(service);
+                    });
+                    autocompleteResults.appendChild(div);
                 });
 
-                quantityInput.disabled = false;
-
-                // Dispara o evento change para atualizar os valores mínimos/máximos
-                if (services.length > 0) {
-                    serviceSelect.dispatchEvent(new Event("change"));
-                }
+                autocompleteResults.style.display = 'block';
             }
 
-            // Event listener para a barra de pesquisa
-            serviceSearch.addEventListener('input', filterServices);
+            // Função para selecionar um serviço
+            function selectService(service) {
+                selectedService = service;
+                serviceSearch.value = service.nome;
+                autocompleteResults.style.display = 'none';
+                
+                // Atualiza o select oculto
+                serviceSelect.innerHTML = "";
+                const option = document.createElement("option");
+                option.value = service._id;
+                option.dataset.nome = service.nome;
+                option.dataset.valorUnitario = parseFloat(service.preco_1000) / 1000;
+                option.dataset.tipo = service.tipo;
+                option.dataset.categoria = service.categoria;
+                option.dataset.minimo = service.minimo;
+                option.dataset.maximo = service.maximo;
+                option.dataset.id_servico = service.id_servico;
+                option.textContent = service.nome;
+                option.selected = true;
+                serviceSelect.appendChild(option);
+                
+                // Atualiza os limites de quantidade
+                quantityInput.min = service.minimo;
+                quantityInput.max = service.maximo;
+                quantityInput.value = Math.max(service.minimo, 100);
+                quantityInput.disabled = false;
+                
+                // Atualiza o preço
+                atualizarPreco();
+            }
+
+            // Event listeners para a barra de pesquisa
+            serviceSearch.addEventListener('input', () => {
+                const filtered = filterServices();
+                showAutocompleteResults(filtered);
+            });
+
+            serviceSearch.addEventListener('focus', () => {
+                if (serviceSearch.value === '') {
+                    const filtered = filterServices();
+                    showAutocompleteResults(filtered);
+                }
+            });
+
+            // Fecha o autocomplete ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-container')) {
+                    autocompleteResults.style.display = 'none';
+                }
+            });
 
             // Carrega todos os serviços
             fetch("/api/servico")
                 .then(response => response.json())
                 .then(data => {
                     allServices = data;
-                    filterServices(); // Filtra inicialmente por TikTok (categoria padrão)
                 })
                 .catch(error => {
                     console.error("Erro ao carregar serviços:", error);
-                    serviceSelect.innerHTML = "<option value='' disabled>Erro ao carregar serviços</option>";
+                    noResults.textContent = "Erro ao carregar serviços";
+                    noResults.style.display = 'block';
                 });
 
             // 🔹 Função para obter o userId com base no token salvo localmente
@@ -610,21 +693,26 @@
             document.getElementById("orderForm").addEventListener("submit", async (e) => {
                 e.preventDefault();
 
-                const selectedOption = serviceSelect.selectedOptions[0];
-                const nomeServico = selectedOption?.dataset.nome;
+                if (!selectedService) {
+                    statusMessage.textContent = "Selecione um serviço válido.";
+                    statusMessage.style.color = "#d9534f";
+                    return;
+                }
+
+                const nomeServico = selectedService.nome;
                 const link = document.getElementById("link").value.trim();
                 const quantity = parseInt(quantityInput.value);
-                const valorUnitario = parseFloat(selectedOption?.dataset.valorUnitario || 0.05);
+                const valorUnitario = parseFloat(selectedService.preco_1000) / 1000;
                 const valorTotal = quantity * valorUnitario;
                 const token = localStorage.getItem("token");
 
-                if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
+                if (!link || isNaN(quantity) || quantity <= 0) {
                     statusMessage.textContent = "Preencha todos os campos corretamente.";
                     statusMessage.style.color = "#d9534f";
                     return;
                 }
 
-                const tipo = selectedOption.dataset.tipo;
+                const tipo = selectedService.tipo;
                 let linkValido = false;
 
                 if (tipo === "seguidores") {
@@ -649,14 +737,14 @@
                             Authorization: `Bearer 123456` // ← chave da API
                         },
                         body: JSON.stringify({
-                            rede: selectedOption.dataset.categoria.toLowerCase(),
-                            tipo: selectedOption.dataset.tipo,
+                            rede: selectedService.categoria.toLowerCase(),
+                            tipo: selectedService.tipo,
                             nome: nomeServico,
                             valor: parseFloat(valorTotal.toFixed(2)),
                             link: link,
                             quantidade: quantity,
                             userId: userId,
-                            id_servico: selectedOption.dataset.id_servico // ← corrigido aqui
+                            id_servico: selectedService.id_servico
                         })
                     });
 
@@ -669,7 +757,8 @@
                     statusMessage.textContent = "Ação criada com sucesso!";
                     statusMessage.style.color = "#5cb85c";
                     document.getElementById("orderForm").reset();
-                    serviceSelect.dispatchEvent(new Event("change")); // atualiza o min/max após reset
+                    selectedService = null;
+                    serviceSelect.innerHTML = '<option value="" disabled selected>Selecione um serviço...</option>';
                 } catch (error) {
                     console.error("Erro ao obter userId ou criar ação:", error);
                     statusMessage.textContent = error.message || "Erro inesperado.";
