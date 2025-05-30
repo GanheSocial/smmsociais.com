@@ -92,4 +92,4 @@ mongoose.models = {};
 export const User = mongoose.model("User", userSchema);
 export const Action = mongoose.model("Action", actionSchema);
 export const ActionHistory = mongoose.model("ActionHistory", actionHistorySchema);
-export const Servico = mongoose.model("ActionHistory", ServicoSchema);
+export const Servico = mongoose.model("Servico", ServicoSchema);
