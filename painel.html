@@ -380,7 +380,7 @@
             margin-top: 5px;
             display: none;
         }
-        
+
         /* Estilos para as sugestões de pesquisa */
         .search-suggestions {
             position: absolute;
@@ -396,31 +396,31 @@
             z-index: 1000;
             display: none;
         }
-        
+
         .search-suggestions.active {
             display: block;
         }
-        
+
         .search-suggestion-item {
             padding: 8px 10px;
             cursor: pointer;
             color: var(--text-light);
         }
-        
+
         .search-suggestion-item:hover {
             background-color: rgba(0, 0, 0, 0.05);
         }
-        
+
         @media (prefers-color-scheme: dark) {
             .search-suggestions {
                 background-color: var(--container-dark);
                 border-color: var(--border-dark);
             }
-            
+
             .search-suggestion-item {
                 color: var(--text-dark);
             }
-            
+
             .search-suggestion-item:hover {
                 background-color: rgba(255, 255, 255, 0.05);
             }
@@ -455,10 +455,38 @@
                 background: var(--container-dark);
                 border-color: var(--border-dark);
             }
-            
+
             .service-description h3,
             .service-description p {
                 color: var(--text-dark);
+            }
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+
+        .description-container {
+            background: var(--container-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+            border: 1px solid #e1e4e8;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                width: 88%;
+            }
+
+            .description-container {
+                margin-top: 15px;
+                padding: 10px;
             }
         }
     </style>
@@ -484,7 +512,8 @@
             <!-- Barra de pesquisa no topo -->
             <div class="input-group">
                 <div class="search-container">
-                    <input type="text" id="serviceSearch" class="search-input" placeholder="Buscar serviços..." autocomplete="off">
+                    <input type="text" id="serviceSearch" class="search-input" placeholder="Buscar serviços..."
+                        autocomplete="off">
                     <span class="search-icon">🔍</span>
                     <div class="no-results" id="noResults">Nenhum serviço encontrado</div>
                     <div class="search-suggestions" id="searchSuggestions"></div>
@@ -521,6 +550,12 @@
                 </select>
             </div>
 
+            <!-- Seção de descrição do serviço -->
+            <div class="service-description" id="serviceDescription">
+                <h3>Descrição do Serviço</h3>
+                <p id="serviceDescriptionText">Selecione um serviço para ver sua descrição.</p>
+            </div>
+
             <!-- Demais campos permanecem na mesma ordem -->
             <div class="input-group">
                 <label for="link">Link:</label>
@@ -541,11 +576,7 @@
 
         <p id="statusMessage" class="status-message"></p>
 
-        <!-- Seção de descrição do serviço -->
-        <div class="service-description" id="serviceDescription">
-            <h3>Descrição do Serviço</h3>
-            <p id="serviceDescriptionText">Selecione um serviço para ver sua descrição.</p>
-        </div>
+
     </div>
 
     <!-- Menu Overlay e Conteúdo -->
@@ -608,7 +639,7 @@
                 if (!e.target.closest('.custom-select-container')) {
                     optionsList.style.display = 'none';
                 }
-                
+
                 if (!e.target.closest('.search-container')) {
                     searchSuggestions.classList.remove('active');
                 }
@@ -656,12 +687,12 @@
             // Função para atualizar as sugestões de pesquisa
             function updateSearchSuggestions(services, searchTerm) {
                 searchSuggestions.innerHTML = "";
-                
+
                 if (searchTerm.length === 0 || services.length === 0) {
                     searchSuggestions.classList.remove('active');
                     return;
                 }
-                
+
                 services.slice(0, 5).forEach(servico => {
                     const suggestion = document.createElement('div');
                     suggestion.className = 'search-suggestion-item';
@@ -680,7 +711,7 @@
                     });
                     searchSuggestions.appendChild(suggestion);
                 });
-                
+
                 searchSuggestions.classList.add('active');
             }
 
@@ -722,11 +753,11 @@
 
             // Event listener para a barra de pesquisa
             serviceSearch.addEventListener('input', filterServices);
-            
+
             serviceSearch.addEventListener('focus', () => {
                 if (allServices.length > 0) {
                     const category = hiddenInput.value.toLowerCase();
-                    const filteredServices = allServices.filter(s => 
+                    const filteredServices = allServices.filter(s =>
                         s.categoria?.toLowerCase() === category
                     );
                     updateSearchSuggestions(filteredServices, serviceSearch.value);
