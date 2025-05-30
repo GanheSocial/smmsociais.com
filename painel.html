@@ -245,72 +245,109 @@
             }
         }
 
-.custom-select-container {
-  position: relative;
-  width: 100%;
-  font-family: sans-serif;
-}
+        .custom-select-container {
+            position: relative;
+            width: 100%;
+            font-family: sans-serif;
+        }
 
-.custom-select-selected {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid var(--border-dark); /* Alterado para usar a variável dark */
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: var(--bg-dark); /* Preto azulado */
-  color: var(--text-dark); /* Cor do texto para modo escuro */
-}
+        .custom-select-selected {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--border-dark, #e1e4e8);
+            /* Usa a borda do tema */
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: var(--container-light);
+            /* Cor do container */
+            color: var(--text-light);
+            /* Cor do texto */
+            transition: all 0.3s ease;
+        }
 
-.custom-select-selected .select-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  filter: brightness(0) invert(1); /* Opcional: inverte cores do ícone para melhor contraste */
-}
+        .custom-select-selected .select-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
 
-.custom-select-selected .arrow-down {
-  margin-left: auto;
-  color: var(--text-dark); /* Cor da seta para modo escuro */
-}
+        .custom-select-selected .arrow-down {
+            margin-left: auto;
+            transition: transform 0.2s;
+            color: var(--text-light);
+            /* Cor da seta */
+        }
 
-.custom-select-options {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: var(--bg-dark); /* Preto azulado */
-  border: 1px solid var(--border-dark); /* Borda no modo escuro */
-  border-top: none;
-  border-radius: 0 0 6px 6px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 200px;
-  overflow-y: auto;
-  display: none;
-  z-index: 999;
-  color: var(--text-dark); /* Cor do texto */
-}
+        .custom-select-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--container-light);
+            /* Cor do container */
+            border: 1px solid var(--border-dark, #e1e4e8);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-.custom-select-options li {
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
+        .custom-select-options li {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: var(--text-light);
+            /* Cor do texto */
+        }
 
-.custom-select-options li:hover {
-  background-color: var(--container-dark); /* Cor de hover mais clara que o fundo */
-}
+        .custom-select-options li:hover {
+            background-color: var(--bg-dark);
+            /* Cor de hover (pode ajustar) */
+            color: var(--text-dark);
+            /* Texto no hover */
+        }
 
-.custom-select-options li img {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  filter: brightness(0) invert(1); /* Opcional: ajusta ícones para modo escuro */
-}
-       
+        .custom-select-options li img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        /* Ajustes para modo escuro */
+        @media (prefers-color-scheme: dark) {
+            .custom-select-selected {
+                background-color: var(--container-dark);
+                border-color: var(--border-dark);
+                color: var(--text-dark);
+            }
+
+            .custom-select-selected .arrow-down {
+                color: var(--text-dark);
+            }
+
+            .custom-select-options {
+                background-color: var(--container-dark);
+                border-color: var(--border-dark);
+            }
+
+            .custom-select-options li {
+                color: var(--text-dark);
+            }
+
+            .custom-select-options li:hover {
+                background-color: var(--bg-light);
+                /* Inverte no modo escuro */
+                color: var(--text-light);
+            }
+        }
 
         body {
             visibility: hidden;
@@ -339,25 +376,32 @@
 
     <div class="container">
         <form id="orderForm">
-<div class="input-group">
-  <label for="category">Categoria:</label>
-  <div class="custom-select-container">
-    <div class="custom-select-selected" id="selected-option">
-      <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png" alt="Ícone" class="select-icon">
-      <span>TikTok</span>
-      <div class="arrow-down">▼</div>
-    </div>
-    <ul class="custom-select-options" id="select-options">
-      <li data-value="tiktok" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png">
-        <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png"> TikTok
-      </li>
-      <li data-value="instagram" data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png">
-        <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png"> Instagram
-      </li>
-    </ul>
-    <input type="hidden" name="category" id="category" value="tiktok">
-  </div>
-</div>
+            <div class="input-group">
+                <label for="category">Categoria:</label>
+                <div class="custom-select-container">
+                    <div class="custom-select-selected" id="selected-option">
+                        <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png"
+                            alt="Ícone" class="select-icon">
+                        <span>TikTok</span>
+                        <div class="arrow-down">▼</div>
+                    </div>
+                    <ul class="custom-select-options" id="select-options">
+                        <li data-value="tiktok"
+                            data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png">
+                            <img
+                                src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748566588702.png">
+                            TikTok
+                        </li>
+                        <li data-value="instagram"
+                            data-icon="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png">
+                            <img
+                                src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/Instagram_icon.png">
+                            Instagram
+                        </li>
+                    </ul>
+                    <input type="hidden" name="category" id="category" value="tiktok">
+                </div>
+            </div>
             <div class="input-group">
                 <label for="service">Serviço:</label>
                 <select id="service">
@@ -407,35 +451,35 @@
             const statusMessage = document.getElementById("statusMessage");
 
             document.body.classList.add('loaded');
-            
-const selected = document.getElementById('selected-option');
-const optionsList = document.getElementById('select-options');
-const hiddenInput = document.getElementById('category');
 
-selected.addEventListener('click', () => {
-  optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
-});
+            const selected = document.getElementById('selected-option');
+            const optionsList = document.getElementById('select-options');
+            const hiddenInput = document.getElementById('category');
 
-document.querySelectorAll('#select-options li').forEach(option => {
-  option.addEventListener('click', () => {
-    const value = option.getAttribute('data-value');
-    const label = option.textContent.trim();
-    const icon = option.getAttribute('data-icon');
+            selected.addEventListener('click', () => {
+                optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+            });
 
-    selected.querySelector('span').textContent = label;
-    selected.querySelector('img').src = icon;
-    hiddenInput.value = value;
+            document.querySelectorAll('#select-options li').forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.getAttribute('data-value');
+                    const label = option.textContent.trim();
+                    const icon = option.getAttribute('data-icon');
 
-    optionsList.style.display = 'none';
-  });
-});
+                    selected.querySelector('span').textContent = label;
+                    selected.querySelector('img').src = icon;
+                    hiddenInput.value = value;
 
-// Fecha dropdown ao clicar fora
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.custom-select-container')) {
-    optionsList.style.display = 'none';
-  }
-});
+                    optionsList.style.display = 'none';
+                });
+            });
+
+            // Fecha dropdown ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.custom-select-container')) {
+                    optionsList.style.display = 'none';
+                }
+            });
             function atualizarPreco() {
                 const quantity = parseInt(quantityInput.value) || 0;
                 const selectedService = serviceSelect.selectedOptions[0];
