@@ -351,6 +351,7 @@
                     <th>Preço por 1000</th>
                     <th>Mínimo</th>
                     <th>Máximo</th>
+                    <th>Tempo médio</th>
                     <th>Ação</th>
                 </tr>
             </thead>
@@ -462,7 +463,7 @@
                     <td>R$ ${service.preco_1000.toFixed(2)}</td>
                     <td>${service.minimo}</td>
                     <td>${service.maximo || 'N/A'}</td>
-                    <td><button class="order-btn" data-id="${service._id}">Pedir</button></td>
+                    <td><button class="order-btn" data-id="${service.id_servico}">Pedir</button></td>
                 `;
 
                 tableBody.appendChild(row);
