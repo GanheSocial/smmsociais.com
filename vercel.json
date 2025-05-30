@@ -8,11 +8,13 @@
       { "source": "/services", "destination": "/services.html" },
       { "source": "/massorder", "destination": "/massorder.html" },
       { "source": "/addfunds", "destination": "/addfunds.html" },
+      { "source": "/profile", "destination": "/profile.html" },
       { "source": "/recover-password", "destination": "/recover-password.html" },
       { "source": "/reset-password", "destination": "/reset-password.html" },
 
       { "source": "/api/login", "destination": "/api/handler.js" },
-      { "source": "/api/signup", "destination": "/api/handler.js" }
+      { "source": "/api/signup", "destination": "/api/handler.js" },
+      { "source": "/api/profile", "destination": "/api/handler.js" }
       
     ]
   }
