@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import connectDB from "./db.js";
-import { Deposito, User } from './schema';
+import { Deposito, User} from "./schema.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
