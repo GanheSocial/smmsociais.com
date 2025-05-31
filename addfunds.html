@@ -561,7 +561,7 @@
 
                     // Simulação - na prática você usaria os dados da API
                     pixQrCode.innerHTML = `<img src="data:image/png;base64,${data.qr_code_base64}" alt="QR Code PIX" style="width:100%;height:100%;">`;
-                    pixCode.textContent = data.qr_code || "00020126360014BR.GOV.BCB.PIX0114+5561999999999520400005303986540510.005802BR5913Fulano de Tal6008BRASILIA62070503***6304ABCD";
+                    pixCode.textContent = data.qr_code
                     
                     pixModal.style.display = "flex";
                 } else {
