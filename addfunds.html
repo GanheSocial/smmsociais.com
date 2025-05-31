@@ -640,12 +640,12 @@
 
             // Aqui você faria a chamada para a API de pagamentos
             try {
-const token = localStorage.getItem("token");                
-const res = await fetch("/api/gerar-pagamento", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ amount, token }) // 👈 agora envia o token
-});
+                const token = localStorage.getItem("token");
+                const res = await fetch("/api/gerar-pagamento", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ amount, token }) // 👈 agora envia o token
+                });
 
                 const data = await res.json();
 
@@ -708,7 +708,14 @@ const res = await fetch("/api/gerar-pagamento", {
         // Função global para ser chamada quando o saldo for atualizado
         async function fetchBalance() {
             try {
-                const response = await fetch('/api/get_saldo');
+                    const token = localStorage.getItem("token"); // seu token simples, não JWT
+                    const response = await fetch('/api/get_saldo', {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
                 if (!response.ok) {
                     throw new Error('Erro ao buscar saldo');
                 }
