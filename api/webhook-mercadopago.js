@@ -1,64 +1,63 @@
-import { Deposito, User} from "./schema.js";
 import connectDB from "./db.js";
+import { Deposito, User} from "./schema.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
 
-  await connectDB();
-
   try {
-    const { type, data } = req.body;
+    const { action, data, type } = req.body;
 
-    // Só processa pagamentos
-    if (type !== "payment" || !data?.id) {
-      return res.status(200).end(); // ignora notificações irrelevantes
+    // Só trata eventos do tipo "payment" e ação "payment.updated"
+    if (type !== "payment" || action !== "payment.updated") {
+      return res.status(200).json({ message: "Evento ignorado" });
     }
 
-    const paymentId = data.id;
+    await connectDB();
 
-    // 🔍 Consulta detalhes do pagamento no Mercado Pago
-    const mercadopagoRes = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+    const pagamentoID = String(data.id);
+
+    // Aqui, consulta os dados completos do pagamento usando a API do Mercado Pago
+    const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${pagamentoID}`, {
+      method: "GET",
       headers: {
         Authorization: "Bearer APP_USR-4392638487978504-053020-58385d412bdf3a5b9de74579fd791060-650613572"
       }
     });
 
-    const paymentData = await mercadopagoRes.json();
+    const paymentData = await mpResponse.json();
 
-    if (!mercadopagoRes.ok || !paymentData.id) {
-      console.error("Erro ao consultar pagamento:", paymentData);
-      return res.status(500).end();
+    if (paymentData.status === "approved") {
+      const deposito = await Deposito.findOne({ payment_id: pagamentoID });
+
+      if (!deposito) {
+        return res.status(404).json({ error: "Depósito não encontrado" });
+      }
+
+      if (deposito.status === "completed") {
+        return res.status(200).json({ message: "Depósito já processado" });
+      }
+
+      const user = await User.findOne({ email: deposito.userEmail });
+
+      if (!user) {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+      }
+
+      user.saldo += deposito.amount;
+      await user.save();
+
+      deposito.status = "completed";
+      await deposito.save();
+
+      return res.status(200).json({ message: "Depósito confirmado com sucesso" });
     }
 
-    // Só processa se foi aprovado
-    if (paymentData.status !== "approved") {
-      return res.status(200).end(); // ignora outros status
-    }
+    return res.status(200).json({ message: "Pagamento ainda não aprovado" });
 
-    const existing = await Deposito.findOne({ payment_id: String(paymentData.id) });
-
-    if (!existing) {
-      console.warn("Pagamento não registrado previamente:", paymentData.id);
-      return res.status(404).end();
-    }
-
-    if (existing.status === "approved") {
-      return res.status(200).end(); // já processado
-    }
-
-    // Atualiza status e credita saldo
-    await Deposito.updateOne({ _id: existing._id }, { status: "approved" });
-
-    await User.updateOne(
-      { email: existing.userEmail },
-      { $inc: { saldo: existing.amount } }
-    );
-
-    return res.status(200).end();
-  } catch (err) {
-    console.error("Erro no webhook:", err);
-    return res.status(500).end();
+  } catch (error) {
+    console.error("Erro no webhook do Mercado Pago:", error);
+    return res.status(500).json({ error: "Erro interno" });
   }
 }
