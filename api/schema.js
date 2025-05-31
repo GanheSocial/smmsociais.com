@@ -87,12 +87,11 @@ const ServicoSchema = new mongoose.Schema({
 
 /* 🔹 Depósitos via PIX (Mercado Pago) */
 const depositoSchema = new mongoose.Schema({
-  userEmail: { type: String, required: true }, // usado para identificar o usuário
-  payment_id: { type: String, required: true, unique: true }, // ID do Mercado Pago
-  amount: { type: Number, required: true },
-  status: { type: String, default: "pending" }, // "pending", "approved", "cancelled"
-  createdAt: { type: Date, default: Date.now }
-});
+  userEmail: String,
+  payment_id: String,
+  amount: Number,
+  status: String
+}, { timestamps: true });
 
 // 🔄 Previne erro em hot-reload (dev)
 mongoose.models = {};
