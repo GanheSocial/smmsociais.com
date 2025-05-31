@@ -640,11 +640,12 @@
 
             // Aqui você faria a chamada para a API de pagamentos
             try {
-                const res = await fetch("/api/gerar-pagamento", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ amount })
-                });
+const token = localStorage.getItem("token");                
+const res = await fetch("/api/gerar-pagamento", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ amount, token }) // 👈 agora envia o token
+});
 
                 const data = await res.json();
 
