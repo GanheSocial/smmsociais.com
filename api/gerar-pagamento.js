@@ -26,22 +26,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch("https://api.mercadopago.com/v1/payments", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer APP_USR-4392638487978504-053020-58385d412bdf3a5b9de74579fd791060-650613572",
-        "Content-Type": "application/json",
-        "X-Idempotency-Key": randomUUID()
-      },
-      body: JSON.stringify({
-        transaction_amount: parseFloat(amount),
-        payment_method_id: "pix",
-        description: "Depósito via PIX",
-        payer: {
-          email: user.email
-        }
-      })
-    });
+const response = await fetch("https://api.mercadopago.com/v1/payments", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer APP_USR-4392638487978504-053020-58385d412bdf3a5b9de74579fd791060-650613572",
+    "Content-Type": "application/json",
+    "X-Idempotency-Key": randomUUID()
+  },
+  body: JSON.stringify({
+    transaction_amount: Number(parseFloat(amount).toFixed(2)),
+    payment_method_id: "pix",
+    description: "Depósito via PIX",
+    payer: {
+      email: user.email
+    },
+    external_reference: user._id.toString()
+  })
+});
 
     const data = await response.json();
 
