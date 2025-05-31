@@ -2,6 +2,9 @@ import connectDB from "./db.js";
 import { Deposito, User} from "./schema.js";
 
 export default async function handler(req, res) {
+  console.log("🔍 Método recebido:", req.method);
+  console.log("🔍 Headers recebidos:", req.headers);
+  console.log("🔍 Body recebido:", req.body);
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
