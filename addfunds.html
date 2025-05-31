@@ -206,6 +206,91 @@
             text-decoration: none;
         }
 
+        /* Modal do PIX */
+        .pix-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pix-modal-content {
+            background: var(--container-light);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .pix-modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .pix-qrcode {
+            width: 200px;
+            height: 200px;
+            margin: 15px auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: white;
+        }
+
+        .pix-code-container {
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .pix-code {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+            text-align: left;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .pix-code:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-button {
+            background: var(--button-light);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #024fa1;
+        }
+
+        .copy-success {
+            color: #28a745;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
@@ -248,6 +333,30 @@
 
             .instructions {
                 background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            .pix-modal-content {
+                background: var(--container-dark);
+            }
+
+            .pix-modal-close {
+                color: var(--text-dark);
+            }
+
+            .pix-code {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .pix-code:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .copy-button {
+                background: var(--button-dark);
+            }
+
+            .copy-button:hover {
+                background: #3a82d6;
             }
         }
 
@@ -309,6 +418,24 @@
         <p id="statusMessage" class="status-message"></p>
     </div>
 
+    <!-- Modal do PIX -->
+    <div class="pix-modal" id="pixModal">
+        <div class="pix-modal-content">
+            <span class="pix-modal-close" id="pixModalClose">&times;</span>
+            <h3>Pagamento via PIX</h3>
+            <p>Escaneie o QR Code ou copie o código abaixo</p>
+            
+            <div class="pix-qrcode" id="pixQrCode"></div>
+            
+            <div class="pix-code-container">
+                <p>Código PIX:</p>
+                <div class="pix-code" id="pixCode"></div>
+                <button class="copy-button" id="copyPixButton">Copiar Código</button>
+                <div class="copy-success" id="copySuccess">Código copiado!</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Menu Overlay e Conteúdo -->
     <div class="menu-overlay" id="menuOverlay"></div>
     <div class="menu-content" id="menuContent">
@@ -357,6 +484,32 @@
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
             });
+
+            // Controle do modal PIX
+            const pixModal = document.getElementById('pixModal');
+            const pixModalClose = document.getElementById('pixModalClose');
+            const copyPixButton = document.getElementById('copyPixButton');
+            const copySuccess = document.getElementById('copySuccess');
+
+            pixModalClose.addEventListener('click', function() {
+                pixModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === pixModal) {
+                    pixModal.style.display = 'none';
+                }
+            });
+
+            copyPixButton.addEventListener('click', function() {
+                const pixCode = document.getElementById('pixCode').textContent;
+                navigator.clipboard.writeText(pixCode).then(function() {
+                    copySuccess.style.display = 'block';
+                    setTimeout(function() {
+                        copySuccess.style.display = 'none';
+                    }, 2000);
+                });
+            });
         });
 
         document.getElementById("depositForm").addEventListener("submit", async function (event) {
@@ -389,33 +542,36 @@
 
             // Aqui você faria a chamada para a API de pagamentos
             try {
-const res = await fetch("/api/gerar-pagamento", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ amount })
-});
+                const res = await fetch("/api/gerar-pagamento", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ amount })
+                });
 
-const data = await res.json();
+                const data = await res.json();
 
-if (res.ok) {
-    statusMessage.textContent = "Pagamento gerado!";
-    statusMessage.style.color = "#28a745";
+                if (res.ok) {
+                    statusMessage.textContent = "Pagamento gerado!";
+                    statusMessage.style.color = "#28a745";
 
-    // Exibir o QR Code (opcional)
-    const qrImage = document.createElement("img");
-    qrImage.src = "data:image/png;base64," + data.qr_code_base64;
-    document.querySelector(".container").appendChild(qrImage);
+                    // Mostrar o modal com os dados do PIX
+                    const pixModal = document.getElementById('pixModal');
+                    const pixQrCode = document.getElementById('pixQrCode');
+                    const pixCode = document.getElementById('pixCode');
 
-    // Exibir código copia e cola
-    const code = document.createElement("p");
-    code.textContent = "Código PIX: " + data.qr_code;
-    document.querySelector(".container").appendChild(code);
-} else {
-    statusMessage.textContent = "Erro: " + (data.error || "Não foi possível gerar o pagamento");
-    statusMessage.style.color = "#d9534f";
-}
+                    // Simulação - na prática você usaria os dados da API
+                    pixQrCode.innerHTML = `<img src="data:image/png;base64,${data.qr_code_base64}" alt="QR Code PIX" style="width:100%;height:100%;">`;
+                    pixCode.textContent = data.qr_code || "00020126360014BR.GOV.BCB.PIX0114+5561999999999520400005303986540510.005802BR5913Fulano de Tal6008BRASILIA62070503***6304ABCD";
+                    
+                    pixModal.style.display = "flex";
+                } else {
+                    statusMessage.textContent = "Erro: " + (data.error || "Não foi possível gerar o pagamento");
+                    statusMessage.style.color = "#d9534f";
+                }
             } catch (error) {
-
+                statusMessage.textContent = "Erro na conexão. Tente novamente.";
+                statusMessage.style.color = "#d9534f";
+                console.error("Erro:", error);
             }
         });
 
