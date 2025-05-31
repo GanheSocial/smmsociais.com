@@ -1,55 +1,64 @@
-// /api/webhook-mercadopago.js
-import { buffer } from 'micro';
-import { MongoClient, ObjectId } from 'mongodb';
-
-export const config = {
-  api: {
-    bodyParser: false, // necessário para capturar raw body
-  },
-};
+import { Deposito, User } from "./schema";
+import connectDB from "./db.js";
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
-
-  const rawBody = (await buffer(req)).toString();
-  const evento = JSON.parse(rawBody);
-
-  // Verifica se é notificação de pagamento aprovado
-  if (evento.type === "payment") {
-    try {
-      const paymentId = evento.data.id;
-
-      // Requisição à API do Mercado Pago para detalhes
-      const mpRes = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-        headers: {
-          Authorization: "Bearer APP_USR-4392638487978504-053020-58385d412bdf3a5b9de74579fd791060-650613572"
-        }
-      });
-
-      const paymentData = await mpRes.json();
-
-      if (paymentData.status === "approved") {
-        const email = paymentData.payer.email;
-        const valor = paymentData.transaction_amount;
-
-        const client = await MongoClient.connect(process.env.MONGODB_URI);
-        const db = client.db();
-
-        // Atualiza o saldo do usuário com base no e-mail do pagador
-        await db.collection('usuarios').updateOne(
-          { email },
-          { $inc: { saldo: valor } }
-        );
-
-        client.close();
-      }
-
-      return res.status(200).send('OK');
-    } catch (err) {
-      console.error("Erro ao processar webhook:", err);
-      return res.status(500).send('Erro interno');
-    }
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Método não permitido" });
   }
 
-  return res.status(200).send('Ignorado');
+  await connectDB();
+
+  try {
+    const { type, data } = req.body;
+
+    // Só processa pagamentos
+    if (type !== "payment" || !data?.id) {
+      return res.status(200).end(); // ignora notificações irrelevantes
+    }
+
+    const paymentId = data.id;
+
+    // 🔍 Consulta detalhes do pagamento no Mercado Pago
+    const mercadopagoRes = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+      headers: {
+        Authorization: "Bearer APP_USR-4392638487978504-053020-58385d412bdf3a5b9de74579fd791060-650613572"
+      }
+    });
+
+    const paymentData = await mercadopagoRes.json();
+
+    if (!mercadopagoRes.ok || !paymentData.id) {
+      console.error("Erro ao consultar pagamento:", paymentData);
+      return res.status(500).end();
+    }
+
+    // Só processa se foi aprovado
+    if (paymentData.status !== "approved") {
+      return res.status(200).end(); // ignora outros status
+    }
+
+    const existing = await Deposito.findOne({ payment_id: String(paymentData.id) });
+
+    if (!existing) {
+      console.warn("Pagamento não registrado previamente:", paymentData.id);
+      return res.status(404).end();
+    }
+
+    if (existing.status === "approved") {
+      return res.status(200).end(); // já processado
+    }
+
+    // Atualiza status e credita saldo
+    await Deposito.updateOne({ _id: existing._id }, { status: "approved" });
+
+    await User.updateOne(
+      { email: existing.userEmail },
+      { $inc: { saldo: existing.amount } }
+    );
+
+    return res.status(200).end();
+  } catch (err) {
+    console.error("Erro no webhook:", err);
+    return res.status(500).end();
+  }
 }
