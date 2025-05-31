@@ -389,18 +389,33 @@
 
             // Aqui você faria a chamada para a API de pagamentos
             try {
-                // Simulando um delay de requisição
-                await new Promise(resolve => setTimeout(resolve, 1500));
+const res = await fetch("/api/gerar-pagamento", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ amount })
+});
 
-                statusMessage.textContent = "Pagamento gerado com sucesso!";
-                statusMessage.style.color = "#28a745";
+const data = await res.json();
 
-                // Em uma implementação real, aqui você mostraria o QR Code e dados do PIX
-                // e possivelmente redirecionaria para uma página de confirmação
+if (res.ok) {
+    statusMessage.textContent = "Pagamento gerado!";
+    statusMessage.style.color = "#28a745";
 
+    // Exibir o QR Code (opcional)
+    const qrImage = document.createElement("img");
+    qrImage.src = "data:image/png;base64," + data.qr_code_base64;
+    document.querySelector(".container").appendChild(qrImage);
+
+    // Exibir código copia e cola
+    const code = document.createElement("p");
+    code.textContent = "Código PIX: " + data.qr_code;
+    document.querySelector(".container").appendChild(code);
+} else {
+    statusMessage.textContent = "Erro: " + (data.error || "Não foi possível gerar o pagamento");
+    statusMessage.style.color = "#d9534f";
+}
             } catch (error) {
-                statusMessage.textContent = "Erro ao gerar pagamento. Tente novamente.";
-                statusMessage.style.color = "#d9534f";
+
             }
         });
 
