@@ -83,7 +83,16 @@ const ServicoSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-}, { _id: false }); // Usamos o _id personalizado, então desativamos o autogerado
+}, { _id: false });
+
+/* 🔹 Depósitos via PIX (Mercado Pago) */
+const depositoSchema = new mongoose.Schema({
+  userEmail: { type: String, required: true }, // usado para identificar o usuário
+  payment_id: { type: String, required: true, unique: true }, // ID do Mercado Pago
+  amount: { type: Number, required: true },
+  status: { type: String, default: "pending" }, // "pending", "approved", "cancelled"
+  createdAt: { type: Date, default: Date.now }
+});
 
 // 🔄 Previne erro em hot-reload (dev)
 mongoose.models = {};
@@ -93,3 +102,4 @@ export const User = mongoose.model("User", userSchema);
 export const Action = mongoose.model("Action", actionSchema);
 export const ActionHistory = mongoose.model("ActionHistory", actionHistorySchema);
 export const Servico = mongoose.model("Servico", ServicoSchema);
+export const Deposito = mongoose.model("Deposito", depositoSchema);
