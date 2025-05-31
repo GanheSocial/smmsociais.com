@@ -1,4 +1,4 @@
-import { Deposito, User } from "./schema";
+import { Deposito, User} from "./schema.js";
 import connectDB from "./db.js";
 
 export default async function handler(req, res) {
