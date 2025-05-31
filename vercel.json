@@ -14,7 +14,8 @@
 
       { "source": "/api/login", "destination": "/api/handler.js" },
       { "source": "/api/signup", "destination": "/api/handler.js" },
-      { "source": "/api/profile", "destination": "/api/handler.js" }
+      { "source": "/api/profile", "destination": "/api/handler.js" },
+      { "source": "/api/confirmar-pagamento", "destination": "/api/handler.js" }
       
     ]
   }
