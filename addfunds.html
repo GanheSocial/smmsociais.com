@@ -663,32 +663,6 @@
 
                     pixModal.style.display = "flex";
 
-                    setTimeout(async () => {
-                        try {
-                            const confirmRes = await fetch("/api/webhook-mercadopago", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    token: localStorage.getItem("token"),
-                                    valor: amount // valor depositado
-                                })
-                            });
-
-                            if (confirmRes.ok) {
-                                statusMessage.textContent = "Depósito confirmado!";
-                                statusMessage.style.color = "#28a745";
-                                fetchBalance(); // Atualiza o saldo exibido
-                            } else {
-                                const errorData = await confirmRes.json();
-                                console.error("Erro ao confirmar pagamento:", errorData.error);
-                            }
-                        } catch (err) {
-                            console.error("Erro na confirmação do pagamento:", err);
-                        }
-                    }, 10000); // aguarda 10s para simular a confirmação
-
                 } else {
                     statusMessage.textContent = "Erro: " + (data.error || "Não foi possível gerar o pagamento");
                     statusMessage.style.color = "#d9534f";
@@ -708,14 +682,14 @@
         // Função global para ser chamada quando o saldo for atualizado
         async function fetchBalance() {
             try {
-                    const token = localStorage.getItem("token"); // seu token simples, não JWT
-                    const response = await fetch('/api/get_saldo', {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`
-                        }
-                    });
+                const token = localStorage.getItem("token"); // seu token simples, não JWT
+                const response = await fetch('/api/get_saldo', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Erro ao buscar saldo');
                 }
