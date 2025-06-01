@@ -29,8 +29,36 @@
             position: relative;
             transition: background-color 0.3s, color 0.3s;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+        }
+
+        .logo-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
         }
 
         .container {
@@ -136,7 +164,7 @@
                 color: var(--button-dark);
             }
 
-            .signup-link {
+            .signup-link, .nav-links a {
                 color: var(--button-dark);
             }
         }
@@ -145,6 +173,17 @@
             .container {
                 width: 88%;
                 padding: 20px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 10px;
+                font-size: 14px;
             }
         }
 
@@ -159,6 +198,17 @@
 </head>
 
 <body>
+    <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png" alt="SMM Sociais Logo">
+    </div>
+    
+    <div class="nav-links">
+        <a href="index.html">Fazer Login</a>
+        <a href="https://smmsociais.com/services">Serviços</a>
+        <a href="https://smmsociais.com/signup">Criar Conta</a>
+        <a href="https://smmsociais.com/terms">Termos</a>
+    </div>
+
     <div class="container">
         <h2>Login</h2>
         <form id="loginForm">
