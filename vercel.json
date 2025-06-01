@@ -16,7 +16,8 @@
       { "source": "/api/signup", "destination": "/api/handler.js" },
       { "source": "/api/profile", "destination": "/api/handler.js" },
       { "source": "/api/confirmar-pagamento", "destination": "/api/handler.js" },
-      { "source": "/api/incrementar-validadas", "destination": "/api/handler.js" }
+      { "source": "/api/incrementar-validadas", "destination": "/api/handler.js" },
+      { "source": "/api/historico_pedidos", "destination": "/api/handler.js" }
       
     ]
   }
