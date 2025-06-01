@@ -316,28 +316,20 @@
 
             .header {
                 padding-left: 270px;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 4;
+                position: relative;
             }
 
             .container {
-                margin: 80px auto 20px;
+                margin-left: 270px;
                 width: calc(90% - 270px);
             }
 
-            /* Ajustes para a logo ficar em cima do menu */
-            .logo-container {
-                position: fixed;
+            /* Novo estilo para a logo no desktop */
+            .logo-desktop-container {
+                position: absolute;
                 top: 15px;
-                left: 270px;
-                z-index: 5;
-            }
-
-            .left-header {
-                width: 100%;
+                left: 20px;
+                z-index: 10;
             }
         }
 
@@ -345,6 +337,10 @@
             .container {
                 width: 95%;
                 padding: 15px;
+            }
+            
+            .logo-desktop-container {
+                display: none;
             }
         }
 
@@ -359,6 +355,14 @@
 </head>
 
 <body>
+    <!-- Logo para desktop (nova adição) -->
+    <div class="logo-desktop-container">
+        <a href="painel">
+            <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                alt="Logo smmsociais" class="logo">
+        </a>
+    </div>
+
     <div class="header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
