@@ -575,7 +575,6 @@
                     <th>Data</th>
                     <th>Método</th>
                     <th>Valor</th>
-                    <th>Status</th>
                 </tr>
             </thead>
             <tbody id="historyTableBody">
@@ -761,7 +760,6 @@
                 <td>${formattedDate}</td>
                 <td>PIX</td>
                 <td>${formattedValue}</td>
-                <td>${payment.status || 'Processando'}</td>
             `;
             historyTableBody.appendChild(row);
         });
