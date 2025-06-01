@@ -137,7 +137,7 @@
             border-radius: 3px;
         }
 
-        /* Estilos do menu hamburguer (mobile) */
+        /* Estilos do menu hamburguer */
         .menu-toggle {
             width: 30px;
             height: 30px;
@@ -191,24 +191,31 @@
             display: block;
         }
 
-        /* Estilos do menu desktop */
-        .desktop-menu {
-            display: none;
-        }
-
-        .desktop-menu-item {
-            padding: 10px 15px;
-            margin: 0 5px;
+        .menu-item {
+            padding: 15px 25px;
             cursor: pointer;
             color: var(--text-light);
             font-size: 16px;
             text-decoration: none;
             transition: background-color 0.2s;
-            border-radius: 5px;
         }
 
-        .desktop-menu-item:hover {
+        .menu-item:hover {
             background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-footer {
+            margin-top: auto;
+            padding: 25px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-logout {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 16px;
+            text-decoration: none;
         }
 
         .error-message {
@@ -251,11 +258,11 @@
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            .menu-item, .desktop-menu-item {
+            .menu-item {
                 color: var(--text-dark);
             }
 
-            .menu-item:hover, .desktop-menu-item:hover {
+            .menu-item:hover {
                 background-color: rgba(255, 255, 255, 0.05);
             }
 
@@ -288,29 +295,39 @@
             }
         }
 
-        @media (min-width: 769px) {
+        /* Estilos para desktop */
+        @media (min-width: 992px) {
+            body {
+                padding-left: 250px;
+            }
+
             .menu-toggle {
                 display: none;
             }
 
-            .desktop-menu {
-                display: flex;
-                align-items: center;
+            .menu-content {
+                left: 0;
+                box-shadow: none;
             }
 
-            .menu-content {
-                display: none;
+            .menu-overlay {
+                display: none !important;
+            }
+
+            .header {
+                padding-left: 270px;
+            }
+
+            .container {
+                margin-left: 270px;
+                width: calc(90% - 270px);
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
             .container {
                 width: 95%;
                 padding: 15px;
-            }
-
-            .desktop-menu {
-                display: none;
             }
         }
 
@@ -337,17 +354,6 @@
                     alt="Logo smmsociais" class="logo">
             </a>
         </div>
-        
-        <!-- Menu para desktop -->
-        <div class="desktop-menu">
-            <a class="desktop-menu-item" href="painel">Novo Pedido</a>
-            <a class="desktop-menu-item" href="services">Serviços</a>
-            <a class="desktop-menu-item" href="orders">Ordens</a>
-            <a class="desktop-menu-item" href="massorder">Pedido em Massa</a>
-            <a class="desktop-menu-item" href="addfunds">Adicionar Saldo</a>
-            <a class="desktop-menu-item" href="profile">Minha Conta</a>
-            <a class="desktop-menu-item" onclick="logout()">Sair</a>
-        </div>
     </div>
 
     <div class="container">
@@ -368,7 +374,7 @@
         </form>
     </div>
 
-    <!-- Menu Overlay e Conteúdo (mobile) -->
+    <!-- Menu Overlay e Conteúdo -->
     <div class="menu-overlay" id="menuOverlay"></div>
     <div class="menu-content" id="menuContent">
         <a class="menu-item" href="painel">Novo Pedido</a>
@@ -412,35 +418,37 @@
         document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.add('loaded');
 
-            // Controle do menu hamburguer (mobile)
-            const menuToggle = document.getElementById('menuToggle');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const menuContent = document.getElementById('menuContent');
+            // Controle do menu hamburguer (só funciona em mobile)
+            if (window.innerWidth < 992) {
+                const menuToggle = document.getElementById('menuToggle');
+                const menuOverlay = document.getElementById('menuOverlay');
+                const menuContent = document.getElementById('menuContent');
 
-            menuToggle.addEventListener('click', function () {
-                menuContent.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
+                menuToggle.addEventListener('click', function () {
+                    menuContent.classList.toggle('active');
+                    menuOverlay.classList.toggle('active');
 
-                const spans = menuToggle.querySelectorAll('span');
-                if (menuContent.classList.contains('active')) {
-                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                    spans[1].style.opacity = '0';
-                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-                } else {
+                    const spans = menuToggle.querySelectorAll('span');
+                    if (menuContent.classList.contains('active')) {
+                        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                        spans[1].style.opacity = '0';
+                        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    } else {
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
+                });
+
+                menuOverlay.addEventListener('click', function () {
+                    menuContent.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    const spans = menuToggle.querySelectorAll('span');
                     spans[0].style.transform = 'none';
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
-                }
-            });
-
-            menuOverlay.addEventListener('click', function () {
-                menuContent.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                const spans = menuToggle.querySelectorAll('span');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            });
+                });
+            }
 
             // Validação do formulário de ordem em massa
             const bulkOrderForm = document.getElementById('bulkOrderForm');
