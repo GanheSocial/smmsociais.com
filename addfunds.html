@@ -617,326 +617,236 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.body.classList.add('loaded');
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.body.classList.add('loaded');
 
-            // Controle do menu hamburguer
-            const menuToggle = document.getElementById('menuToggle');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const menuContent = document.getElementById('menuContent');
+        // Controle do menu hamburguer
+        const menuToggle = document.getElementById('menuToggle');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuContent = document.getElementById('menuContent');
 
-            menuToggle.addEventListener('click', function () {
-                menuContent.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
+        menuToggle.addEventListener('click', function () {
+            menuContent.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
 
-                const spans = menuToggle.querySelectorAll('span');
-                if (menuContent.classList.contains('active')) {
-                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                    spans[1].style.opacity = '0';
-                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-                } else {
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
-                }
-            });
-
-            menuOverlay.addEventListener('click', function () {
-                menuContent.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                const spans = menuToggle.querySelectorAll('span');
+            const spans = menuToggle.querySelectorAll('span');
+            if (menuContent.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+            } else {
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
-            });
+            }
+        });
 
-            // Controle do modal PIX
-            const pixModal = document.getElementById('pixModal');
-            const pixModalClose = document.getElementById('pixModalClose');
-            const copyPixButton = document.getElementById('copyPixButton');
-            const copySuccess = document.getElementById('copySuccess');
+        menuOverlay.addEventListener('click', function () {
+            menuContent.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            const spans = menuToggle.querySelectorAll('span');
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+        });
 
-            pixModalClose.addEventListener('click', function () {
+        // Controle do modal PIX
+        const pixModal = document.getElementById('pixModal');
+        const pixModalClose = document.getElementById('pixModalClose');
+        const copyPixButton = document.getElementById('copyPixButton');
+        const copySuccess = document.getElementById('copySuccess');
+
+        pixModalClose.addEventListener('click', function () {
+            pixModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === pixModal) {
                 pixModal.style.display = 'none';
-            });
+            }
+        });
 
-            window.addEventListener('click', function (event) {
-                if (event.target === pixModal) {
-                    pixModal.style.display = 'none';
+        copyPixButton.addEventListener('click', function () {
+            const pixCode = document.getElementById('pixCode').textContent;
+            navigator.clipboard.writeText(pixCode).then(function () {
+                copySuccess.style.display = 'block';
+                setTimeout(function () {
+                    copySuccess.style.display = 'none';
+                }, 2000);
+            });
+        });
+
+        // Busca o saldo e o histórico quando a página carrega
+        fetchBalance();
+        loadPaymentHistory();
+    });
+
+    // Função para buscar o saldo
+    async function fetchBalance() {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch('/api/get_saldo', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 }
             });
 
-            copyPixButton.addEventListener('click', function () {
-                const pixCode = document.getElementById('pixCode').textContent;
-                navigator.clipboard.writeText(pixCode).then(function () {
-                    copySuccess.style.display = 'block';
-                    setTimeout(function () {
-                        copySuccess.style.display = 'none';
-                    }, 2000);
-                });
-            });
-                fetchBalance();
-    loadPaymentHistory();
-});
-
-            // Função para buscar o saldo
-            async function fetchBalance() {
-                try {
-                    const token = localStorage.getItem("token"); // seu token simples, não JWT
-                    const response = await fetch('/api/get_saldo', {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`
-                        }
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Erro ao buscar saldo');
-                    }
-
-                    const data = await response.json();
-
-                    const formattedBalance = new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                    }).format(data.saldo || 0);
-
-                    document.getElementById('userBalance').textContent = formattedBalance;
-                } catch (error) {
-                    console.error('Erro ao buscar saldo:', error);
-                    document.getElementById('userBalance').textContent = 'R$ 0,00';
-                }
+            if (!response.ok) {
+                throw new Error('Erro ao buscar saldo');
             }
 
-// Função para carregar o histórico de pagamentos
-async function loadPaymentHistory() {
-    try {
-        const adminToken = "APP_USR-4392638487978504-053020-58385d412bdf3a5b9de74579fd791060-650613572";
-        const token = localStorage.getItem("token");
+            const data = await response.json();
 
-        const response = await fetch(`/api/listar-depositos?admin_token=${adminToken}`);
+            const formattedBalance = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(data.saldo || 0);
 
-        if (!response.ok) {
-            throw new Error('Erro ao carregar histórico');
+            document.getElementById('userBalance').textContent = formattedBalance;
+        } catch (error) {
+            console.error('Erro ao buscar saldo:', error);
+            document.getElementById('userBalance').textContent = 'R$ 0,00';
         }
+    }
 
-        const data = await response.json();
-        const historyTable = document.getElementById('historyTable');
-        const historyTableBody = document.getElementById('historyTableBody');
-        const historyLoading = document.getElementById('historyLoading');
-        const historyEmpty = document.getElementById('historyEmpty');
+    // Função para carregar o histórico de pagamentos
+    async function loadPaymentHistory() {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch('/api/listar-depositos', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
-        historyLoading.style.display = 'none';
+            if (!response.ok) {
+                throw new Error('Erro ao carregar histórico');
+            }
 
-        if (!Array.isArray(data) || data.length === 0) {
-            historyEmpty.style.display = 'block';
+            const data = await response.json();
+            const historyTable = document.getElementById('historyTable');
+            const historyTableBody = document.getElementById('historyTableBody');
+            const historyLoading = document.getElementById('historyLoading');
+            const historyEmpty = document.getElementById('historyEmpty');
+
+            historyLoading.style.display = 'none';
+
+            if (!Array.isArray(data) || data.length === 0) {
+                historyEmpty.style.display = 'block';
+                return;
+            }
+
+            // Limpa o corpo da tabela
+            historyTableBody.innerHTML = '';
+
+            // Preenche a tabela com os dados
+            data.forEach(payment => {
+                const row = document.createElement('tr');
+
+                // Formata a data
+                const paymentDate = new Date(payment.data);
+                const formattedDate = paymentDate.toLocaleString('pt-BR');
+
+                // Formata o valor
+                const formattedValue = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(payment.valor);
+
+                row.innerHTML = `
+                    <td>${payment.id}</td>
+                    <td>${formattedDate}</td>
+                    <td>PIX</td>
+                    <td>${formattedValue}</td>
+                    <td>${payment.status || 'Processando'}</td>
+                `;
+                historyTableBody.appendChild(row);
+            });
+
+            historyTable.style.display = 'table';
+        } catch (error) {
+            console.error('Erro ao carregar histórico:', error);
+            document.getElementById('historyLoading').textContent = 'Erro ao carregar histórico.';
+        }
+    }
+
+    document.getElementById("depositForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const amount = parseFloat(document.getElementById("amount").value);
+        const statusMessage = document.getElementById("statusMessage");
+
+        if (isNaN(amount)) {
+            statusMessage.textContent = "Por favor, insira um valor válido!";
+            statusMessage.style.color = "#d9534f";
             return;
         }
 
-        // Limpa o corpo da tabela
-        historyTableBody.innerHTML = '';
+        if (amount < 1) {
+            statusMessage.textContent = "O valor mínimo é R$1,00!";
+            statusMessage.style.color = "#d9534f";
+            return;
+        }
 
-        // Preenche a tabela com os dados
-        data.forEach(payment => {
-            const row = document.createElement('tr');
+        if (amount > 1000) {
+            statusMessage.textContent = "O valor máximo é R$1000,00!";
+            statusMessage.style.color = "#d9534f";
+            return;
+        }
 
-            // Formata a data
-            const paymentDate = new Date(payment.data);
-            const formattedDate = paymentDate.toLocaleString('pt-BR');
+        // Simulação de geração de PIX
+        statusMessage.textContent = "Gerando código PIX...";
+        statusMessage.style.color = "#007BFF";
 
-            // Formata o valor
-            const formattedValue = new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(payment.valor);
+        // Aqui você faria a chamada para a API de pagamentos
+        try {
+            const token = localStorage.getItem("token");
+            const res = await fetch("/api/gerar-pagamento", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ amount, token })
+            });
 
-            row.innerHTML = `
-                <td>${payment.id}</td>
-                <td>${formattedDate}</td>
-                <td>PIX</td>
-                <td>${formattedValue}</td>
-                <td>${payment.status || 'Processando'}</td>
-            `;
-            historyTableBody.appendChild(row);
-        });
+            const data = await res.json();
 
-        historyTable.style.display = 'table';
-    } catch (error) {
-        console.error('Erro ao carregar histórico:', error);
-        document.getElementById('historyLoading').textContent = 'Erro ao carregar histórico.';
+            if (res.ok) {
+                statusMessage.textContent = "Pagamento gerado!";
+                statusMessage.style.color = "#28a745";
+
+                // Mostrar o modal com os dados do PIX
+                const pixModal = document.getElementById('pixModal');
+                const pixQrCode = document.getElementById('pixQrCode');
+                const pixCode = document.getElementById('pixCode');
+
+                pixQrCode.innerHTML = `<img src="data:image/png;base64,${data.qr_code_base64}" alt="QR Code PIX" style="width:100%;height:100%;">`;
+                pixCode.textContent = data.qr_code;
+
+                pixModal.style.display = "flex";
+
+                // Atualiza o histórico após gerar um novo pagamento
+                loadPaymentHistory();
+
+            } else {
+                statusMessage.textContent = "Erro: " + (data.error || "Não foi possível gerar o pagamento");
+                statusMessage.style.color = "#d9534f";
+            }
+        } catch (error) {
+            statusMessage.textContent = "Erro na conexão. Tente novamente.";
+            statusMessage.style.color = "#d9534f";
+            console.error("Erro:", error);
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "https://smmsociais.com";
     }
-}
-
-// Busca o saldo e o histórico quando a página carrega
-fetchBalance();
-loadPaymentHistory();
-
-        document.getElementById("depositForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
-
-            const amount = parseFloat(document.getElementById("amount").value);
-            const statusMessage = document.getElementById("statusMessage");
-
-            if (isNaN(amount)) {
-                statusMessage.textContent = "Por favor, insira um valor válido!";
-                statusMessage.style.color = "#d9534f";
-                return;
-            }
-
-            if (amount < 1) {
-                statusMessage.textContent = "O valor mínimo é R$1,00!";
-                statusMessage.style.color = "#d9534f";
-                return;
-            }
-
-            if (amount > 1000) {
-                statusMessage.textContent = "O valor máximo é R$1000,00!";
-                statusMessage.style.color = "#d9534f";
-                return;
-            }
-
-            // Simulação de geração de PIX
-            statusMessage.textContent = "Gerando código PIX...";
-            statusMessage.style.color = "#007BFF";
-
-            // Aqui você faria a chamada para a API de pagamentos
-            try {
-                const token = localStorage.getItem("token");
-                const res = await fetch("/api/gerar-pagamento", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ amount, token }) // 👈 agora envia o token
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    statusMessage.textContent = "Pagamento gerado!";
-                    statusMessage.style.color = "#28a745";
-
-                    // Mostrar o modal com os dados do PIX
-                    const pixModal = document.getElementById('pixModal');
-                    const pixQrCode = document.getElementById('pixQrCode');
-                    const pixCode = document.getElementById('pixCode');
-
-                    pixQrCode.innerHTML = `<img src="data:image/png;base64,${data.qr_code_base64}" alt="QR Code PIX" style="width:100%;height:100%;">`;
-                    pixCode.textContent = data.qr_code;
-
-                    pixModal.style.display = "flex";
-
-                    // Atualiza o histórico após gerar um novo pagamento
-                    loadPaymentHistory();
-
-                } else {
-                    statusMessage.textContent = "Erro: " + (data.error || "Não foi possível gerar o pagamento");
-                    statusMessage.style.color = "#d9534f";
-                }
-            } catch (error) {
-                statusMessage.textContent = "Erro na conexão. Tente novamente.";
-                statusMessage.style.color = "#d9534f";
-                console.error("Erro:", error);
-            }
-        });
-
-        function logout() {
-            localStorage.removeItem("token");
-            window.location.href = "https://smmsociais.com";
-        }
-
-        // Função global para ser chamada quando o saldo for atualizado
-        async function fetchBalance() {
-            try {
-                const token = localStorage.getItem("token"); // seu token simples, não JWT
-                const response = await fetch('/api/get_saldo', {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Erro ao buscar saldo');
-                }
-                const data = await response.json();
-
-                // Formata o saldo como moeda brasileira
-                const formattedBalance = new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                }).format(data.saldo || 0);
-
-                document.getElementById('userBalance').textContent = formattedBalance;
-            } catch (error) {
-                console.error('Erro ao buscar saldo:', error);
-                document.getElementById('userBalance').textContent = 'R$ 0,00';
-            }
-        }
-
-        // Função global para carregar o histórico de pagamentos
-        async function loadPaymentHistory() {
-            try {
-                const token = localStorage.getItem("token");
-                const response = await fetch('/api/listar-depositos.js', {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Erro ao carregar histórico');
-                }
-
-                const data = await response.json();
-                const historyTable = document.getElementById('historyTable');
-                const historyTableBody = document.getElementById('historyTableBody');
-                const historyLoading = document.getElementById('historyLoading');
-                const historyEmpty = document.getElementById('historyEmpty');
-
-                historyLoading.style.display = 'none';
-
-                if (!data || data.length === 0) {
-                    historyEmpty.style.display = 'block';
-                    return;
-                }
-
-                // Limpa o corpo da tabela
-                historyTableBody.innerHTML = '';
-
-                // Preenche a tabela com os dados
-                data.forEach(payment => {
-                    const row = document.createElement('tr');
-                    
-                    // Formata a data
-                    const paymentDate = new Date(payment.data);
-                    const formattedDate = paymentDate.toLocaleString('pt-BR');
-                    
-                    // Formata o valor
-                    const formattedValue = new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                    }).format(payment.valor);
-
-                    row.innerHTML = `
-                        <td>${payment.id}</td>
-                        <td>${formattedDate}</td>
-                        <td>PIX</td>
-                        <td>${formattedValue}</td>
-                        <td>${payment.status || 'Processando'}</td>
-                    `;
-                    historyTableBody.appendChild(row);
-                });
-
-                historyTable.style.display = 'table';
-            } catch (error) {
-                console.error('Erro ao carregar histórico:', error);
-                document.getElementById('historyLoading').textContent = 'Erro ao carregar histórico.';
-            }
-        }
-    </script>
+</script>
 </body>
 
 </html>
