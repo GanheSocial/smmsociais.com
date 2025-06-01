@@ -712,68 +712,66 @@
         }
     }
 
-    // Função para carregar o histórico de pagamentos
-    async function loadPaymentHistory() {
-        try {
-            const token = localStorage.getItem("token");
-            const response = await fetch('/api/listar-depositos', {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Erro ao carregar histórico');
+  async function loadPaymentHistory() {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch('/api/listar-depositos', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             }
+        });
 
-            const data = await response.json();
-            const historyTable = document.getElementById('historyTable');
-            const historyTableBody = document.getElementById('historyTableBody');
-            const historyLoading = document.getElementById('historyLoading');
-            const historyEmpty = document.getElementById('historyEmpty');
-
-            historyLoading.style.display = 'none';
-
-            if (!Array.isArray(data) || data.length === 0) {
-                historyEmpty.style.display = 'block';
-                return;
-            }
-
-            // Limpa o corpo da tabela
-            historyTableBody.innerHTML = '';
-
-            // Preenche a tabela com os dados
-            data.forEach(payment => {
-                const row = document.createElement('tr');
-
-                // Formata a data
-                const paymentDate = new Date(payment.data);
-                const formattedDate = paymentDate.toLocaleString('pt-BR');
-
-                // Formata o valor
-                const formattedValue = new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                }).format(payment.valor);
-
-                row.innerHTML = `
-                    <td>${payment.id}</td>
-                    <td>${formattedDate}</td>
-                    <td>PIX</td>
-                    <td>${formattedValue}</td>
-                    <td>${payment.status || 'Processando'}</td>
-                `;
-                historyTableBody.appendChild(row);
-            });
-
-            historyTable.style.display = 'table';
-        } catch (error) {
-            console.error('Erro ao carregar histórico:', error);
-            document.getElementById('historyLoading').textContent = 'Erro ao carregar histórico.';
+        if (!response.ok) {
+            throw new Error('Erro ao carregar histórico');
         }
+
+        const data = await response.json();
+        const historyTable = document.getElementById('historyTable');
+        const historyTableBody = document.getElementById('historyTableBody');
+        const historyLoading = document.getElementById('historyLoading');
+        const historyEmpty = document.getElementById('historyEmpty');
+
+        historyLoading.style.display = 'none';
+
+        if (!Array.isArray(data) || data.length === 0) {
+            historyEmpty.style.display = 'block';
+            return;
+        }
+
+        // Limpa o corpo da tabela
+        historyTableBody.innerHTML = '';
+
+        data.forEach(payment => {
+            const row = document.createElement('tr');
+
+            // Formata a data
+            const paymentDate = new Date(payment.createdAt);
+            const formattedDate = paymentDate.toLocaleString('pt-BR');
+
+            // Formata o valor
+            const formattedValue = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(payment.amount);
+
+            row.innerHTML = `
+                <td>${payment.payment_id}</td>
+                <td>${formattedDate}</td>
+                <td>PIX</td>
+                <td>${formattedValue}</td>
+                <td>${payment.status || 'Processando'}</td>
+            `;
+            historyTableBody.appendChild(row);
+        });
+
+        historyTable.style.display = 'table';
+    } catch (error) {
+        console.error('Erro ao carregar histórico:', error);
+        document.getElementById('historyLoading').textContent = 'Erro ao carregar histórico.';
     }
+}
 
     document.getElementById("depositForm").addEventListener("submit", async function (event) {
         event.preventDefault();
