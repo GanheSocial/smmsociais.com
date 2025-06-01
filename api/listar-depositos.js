@@ -1,5 +1,5 @@
 import connectDB from "./db.js";
-import { Deposito, Usuario } from "./schema.js";
+import { Deposito, User } from "./schema.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
