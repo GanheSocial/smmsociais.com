@@ -316,11 +316,28 @@
 
             .header {
                 padding-left: 270px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 4;
             }
 
             .container {
-                margin-left: 270px;
+                margin: 80px auto 20px;
                 width: calc(90% - 270px);
+            }
+
+            /* Ajustes para a logo ficar em cima do menu */
+            .logo-container {
+                position: fixed;
+                top: 15px;
+                left: 270px;
+                z-index: 5;
+            }
+
+            .left-header {
+                width: 100%;
             }
         }
 
