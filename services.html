@@ -107,8 +107,7 @@
             margin-top: 20px;
         }
 
-        th,
-        td {
+        th, td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #e1e4e8;
@@ -146,16 +145,25 @@
             transform: translateY(-1px);
         }
 
-        .login-required {
-            text-align: center;
-            padding: 20px;
-            margin: 20px 0;
-            background-color: #fff8e1;
+        .login-btn {
+            padding: 8px 15px;
+            background-color: var(--button-light);
+            color: white;
+            border: none;
             border-radius: 5px;
-            border-left: 4px solid #ffc107;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        /* Estilos específicos para versão logada */
+        .login-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Estilos específicos para usuários logados */
         .header {
             display: flex;
             justify-content: space-between;
@@ -257,7 +265,7 @@
             text-decoration: none;
         }
 
-        /* Tema escuro */
+        /* Estilos para modo escuro */
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
@@ -319,16 +327,13 @@
                 color: var(--button-dark);
             }
 
-            .order-btn {
+            .order-btn,
+            .login-btn {
                 background-color: var(--button-dark);
-            }
-
-            .login-required {
-                background-color: #332900;
-                border-left-color: #ffd54f;
             }
         }
 
+        /* Responsividade */
         @media (max-width: 768px) {
             .container {
                 width: 95%;
@@ -350,7 +355,8 @@
                 font-size: 12px;
             }
 
-            .order-btn {
+            .order-btn,
+            .login-btn {
                 padding: 6px 10px;
                 font-size: 12px;
             }
@@ -367,7 +373,8 @@
 </head>
 
 <body>
-    <div id="loggedInVersion" style="display: none;">
+    <!-- Estrutura para usuários logados (será mostrada apenas se houver token) -->
+    <div id="loggedInHeader" style="display: none;">
         <div class="header">
             <div class="left-header">
                 <div class="menu-toggle" id="menuToggle">
@@ -381,48 +388,10 @@
                 </a>
             </div>
         </div>
-
-        <div class="container">
-            <h2>Serviços SMM</h2>
-
-            <div class="category-tabs">
-                <button class="category-tab active" data-category="Todos">Todos</button>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Serviço</th>
-                        <th>Preço por 1000</th>
-                        <th>Mínimo</th>
-                        <th>Máximo</th>
-                        <th>Tempo médio</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="servicesTableBody">
-                    <!-- Os serviços serão carregados aqui via JavaScript -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Menu Overlay e Conteúdo -->
-        <div class="menu-overlay" id="menuOverlay"></div>
-        <div class="menu-content" id="menuContent">
-            <a class="menu-item" href="painel">Novo Pedido</a>
-            <a class="menu-item" href="orders">Histórico de Pedidos</a>
-            <a class="menu-item" href="services">Serviços</a>
-            <a class="menu-item" href="massorder">Pedido em Massa</a>
-            <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-
-            <div class="menu-footer">
-                <a class="menu-logout" onclick="logout()">Sair</a>
-            </div>
-        </div>
     </div>
 
-    <div id="loggedOutVersion" style="display: none;">
+    <!-- Estrutura para usuários não logados -->
+    <div id="loggedOutHeader" style="display: none;">
         <div class="logo-container">
             <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png" alt="SMM Sociais Logo">
         </div>
@@ -433,42 +402,44 @@
             <a href="signup.html">Criar Conta</a>
             <a href="terms.html">Termos</a>
         </div>
+    </div>
 
-        <div class="container">
-            <h2>Serviços SMM</h2>
-            
-            <div class="login-required">
-                <p>Você precisa estar logado para visualizar nossos serviços completos.</p>
-                <a href="index.html" class="button" style="display: inline-block; margin-top: 10px;">Fazer Login</a>
-                <a href="signup.html" class="button" style="display: inline-block; margin-top: 10px; background-color: #28a745;">Criar Conta</a>
-            </div>
+    <div class="container">
+        <h2>Serviços SMM</h2>
 
-            <div class="category-tabs">
-                <button class="category-tab active" data-category="Todos">Todos</button>
-            </div>
+        <div class="category-tabs">
+            <button class="category-tab active" data-category="Todos">Todos</button>
+        </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Serviço</th>
-                        <th>Descrição</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="service-name">Crescimento de Seguidores</td>
-                        <td>Aumente sua base de seguidores com nossos serviços especializados</td>
-                    </tr>
-                    <tr>
-                        <td class="service-name">Curtidas e Engajamento</td>
-                        <td>Melhore o alcance orgânico com interações reais</td>
-                    </tr>
-                    <tr>
-                        <td class="service-name">Visualizações de Vídeo</td>
-                        <td>Impulsione seus vídeos com visualizações de alta qualidade</td>
-                    </tr>
-                </tbody>
-            </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Serviço</th>
+                    <th>Preço por 1000</th>
+                    <th>Mínimo</th>
+                    <th>Máximo</th>
+                    <th>Tempo médio</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="servicesTableBody">
+                <!-- Os serviços serão carregados aqui via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Menu Overlay e Conteúdo (apenas para usuários logados) -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-content" id="menuContent">
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="orders">Histórico de Pedidos</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
         </div>
     </div>
 
@@ -477,20 +448,23 @@
             document.body.classList.add('loaded');
 
             const token = localStorage.getItem("token");
-            const loggedInVersion = document.getElementById("loggedInVersion");
-            const loggedOutVersion = document.getElementById("loggedOutVersion");
-
+            const loggedInHeader = document.getElementById('loggedInHeader');
+            const loggedOutHeader = document.getElementById('loggedOutHeader');
+            
+            // Mostra o cabeçalho apropriado
             if (token) {
-                loggedInVersion.style.display = "block";
-                loggedOutVersion.style.display = "none";
-                initLoggedInVersion();
+                loggedInHeader.style.display = 'block';
+                setupLoggedInFeatures();
             } else {
-                loggedInVersion.style.display = "none";
-                loggedOutVersion.style.display = "block";
+                loggedOutHeader.style.display = 'block';
+                setupLoggedOutFeatures();
             }
+
+            // Carrega os serviços (funciona para ambos os casos)
+            loadServices('Todos');
         });
 
-        function initLoggedInVersion() {
+        function setupLoggedInFeatures() {
             // Controle do menu hamburguer
             const menuToggle = document.getElementById('menuToggle');
             const menuOverlay = document.getElementById('menuOverlay');
@@ -520,34 +494,30 @@
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
             });
-
-            // Controle das abas de categoria
-            const categoryTabs = document.querySelectorAll('.category-tab');
-            categoryTabs.forEach(tab => {
-                tab.addEventListener('click', function () {
-                    categoryTabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    const category = this.getAttribute('data-category');
-                    loadServices(category);
-                });
-            });
-
-            // Carrega os serviços inicialmente
-            loadServices('Todos');
         }
+
+        function setupLoggedOutFeatures() {
+            // Nada especial necessário além de mostrar os links de navegação
+        }
+
+        // Controle das abas de categoria
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                categoryTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const category = this.getAttribute('data-category');
+                loadServices(category);
+            });
+        });
 
         async function loadServices(category) {
             try {
                 const token = localStorage.getItem("token");
-                if (!token) {
-                    logout();
-                    return;
-                }
-
+                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                
                 const response = await fetch(`https://smmsociais.com/api/servico`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: headers
                 });
 
                 if (!response.ok) {
@@ -555,39 +525,53 @@
                 }
 
                 const services = await response.json();
-                renderServices(services);
+                renderServices(services, !!token);
             } catch (error) {
                 console.error('Erro:', error);
                 alert('Erro ao carregar serviços. Tente novamente.');
             }
         }
 
-        function renderServices(services) {
+        function renderServices(services, isLoggedIn) {
             const tableBody = document.getElementById('servicesTableBody');
             tableBody.innerHTML = '';
 
             services.forEach(service => {
                 const row = document.createElement('tr');
 
-                row.innerHTML = `
-                    <td>${service.id_servico}</td>
-                    <td class="service-name">${service.nome}</td>
-                    <td>R$ ${service.preco_1000.toFixed(2)}</td>
-                    <td>${service.minimo}</td>
-                    <td>${service.maximo || 'N/A'}</td>
-                    <td>${service.tempo_medio}</td>
-                    <td><button class="order-btn" data-id="${service.id_servico}">Pedir</button></td>
-                `;
+                if (isLoggedIn) {
+                    row.innerHTML = `
+                        <td>${service.id_servico}</td>
+                        <td class="service-name">${service.nome}</td>
+                        <td>R$ ${service.preco_1000.toFixed(2)}</td>
+                        <td>${service.minimo}</td>
+                        <td>${service.maximo || 'N/A'}</td>
+                        <td>${service.tempo_medio}</td>
+                        <td><button class="order-btn" data-id="${service.id_servico}">Pedir</button></td>
+                    `;
+                } else {
+                    row.innerHTML = `
+                        <td>${service.id_servico}</td>
+                        <td class="service-name">${service.nome}</td>
+                        <td>R$ ${service.preco_1000.toFixed(2)}</td>
+                        <td>${service.minimo}</td>
+                        <td>${service.maximo || 'N/A'}</td>
+                        <td>${service.tempo_medio}</td>
+                        <td><a href="index.html" class="login-btn">Login</a></td>
+                    `;
+                }
 
                 tableBody.appendChild(row);
             });
 
-            document.querySelectorAll('.order-btn').forEach(button => {
-                button.addEventListener('click', function () {
-                    const serviceId = this.getAttribute('data-id');
-                    window.location.href = `painel?service=${serviceId}`;
+            if (isLoggedIn) {
+                document.querySelectorAll('.order-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const serviceId = this.getAttribute('data-id');
+                        window.location.href = `painel?service=${serviceId}`;
+                    });
                 });
-            });
+            }
         }
 
         function logout() {
