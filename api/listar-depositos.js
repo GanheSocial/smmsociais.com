@@ -1,18 +1,27 @@
 import connectDB from "./db.js";
-import { Deposito } from "./schema.js";
+import { Deposito, Usuario } from "./schema.js";
 
 export default async function handler(req, res) {
-  const { admin_token } = req.query;
-
-  if (admin_token !== "APP_USR-4392638487978504-053020-58385d412bdf3a5b9de74579fd791060-650613572") {
-    return res.status(401).json({ error: "Não autorizado" });
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Método não permitido" });
   }
 
-  await connectDB();
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Token não fornecido" });
+  }
 
-  const depositos = await Deposito.find({})
-    .sort({ createdAt: -1 })
-    .limit(10);
+  const token = authHeader.split(" ")[1];
 
-  return res.status(200).json({ depositos });
+  try {
+    await connectDB();
+
+    // Filtra os depósitos pelo ID do usuário
+    const depositos = await Deposito.find({ userId }).sort({ createdAt: -1 }).limit(10);
+
+    return res.status(200).json({ depositos });
+  } catch (error) {
+    console.error("Erro ao verificar token:", error);
+    return res.status(401).json({ error: "Token inválido ou expirado" });
+  }
 }
