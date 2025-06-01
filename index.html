@@ -95,11 +95,21 @@
             text-align: center;
             transition: transform 0.3s, box-shadow 0.3s;
             border: 1px solid #e1e4e8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            object-fit: contain;
         }
 
         .feature-title {
@@ -238,6 +248,11 @@
                 gap: 10px;
                 font-size: 14px;
             }
+            
+            .feature-icon {
+                width: 50px;
+                height: 50px;
+            }
         }
 
         body {
@@ -285,21 +300,25 @@
     <div class="features-container">
         <div class="features-grid">
             <div class="feature-card">
+                <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748744865919.png" alt="Qualidade Profissional" class="feature-icon">
                 <div class="feature-title">Qualidade Profissional</div>
                 <div class="feature-description">A qualidade dos nossos serviços irá surpreendê-lo agradavelmente.</div>
             </div>
             
             <div class="feature-card">
+                <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748745066803.png" alt="Pagamentos Seguros com PIX" class="feature-icon">
                 <div class="feature-title">Pagamentos Seguros com PIX</div>
                 <div class="feature-description">Aceitamos PIX, a forma de pagamento rápida e segura do Banco Central, além de outras opções.</div>
             </div>
             
             <div class="feature-card">
+                <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748745738322.png" alt="Soluções Acessíveis" class="feature-icon">
                 <div class="feature-title">Soluções Acessíveis</div>
                 <div class="feature-description">Oferecemos serviços de alta qualidade a preços competitivos, perfeitos para negócios de todos os tamanhos.</div>
             </div>
             
             <div class="feature-card">
+                <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748745986520.png" alt="Suporte Rápido e Eficiente" class="feature-icon">
                 <div class="feature-title">Suporte Rápido e Eficiente</div>
                 <div class="feature-description">Nossa equipe está pronta para ajudar você em cada etapa, garantindo uma experiência fluida e resultados rápidos.</div>
             </div>
