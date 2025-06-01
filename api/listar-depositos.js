@@ -16,18 +16,17 @@ export default async function handler(req, res) {
   try {
     await connectDB();
 
-    // Busca o usuário pelo token
     const usuario = await User.findOne({ token });
     if (!usuario) {
       return res.status(401).json({ error: "Usuário não encontrado" });
     }
 
-    // Busca os depósitos relacionados ao usuário
-    const depositos = await Deposito.find({ userId: usuario._id })
+    // Agora usa o e-mail para buscar depósitos
+    const depositos = await Deposito.find({ userEmail: usuario.email })
       .sort({ createdAt: -1 })
       .limit(10);
 
-    return res.status(200).json({ depositos });
+    return res.status(200).json(depositos); // envia array diretamente
   } catch (error) {
     console.error("Erro ao listar depósitos:", error);
     return res.status(500).json({ error: "Erro interno do servidor" });
