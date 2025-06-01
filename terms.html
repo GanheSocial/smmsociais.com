@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMM Sociais - Termos e Condições</title>
+    <style>
+        :root {
+            --bg-light: #ffffff;
+            --text-light: #24292e;
+            --container-light: #f6f8fa;
+            --button-light: #0366d6;
+            --link-color: #0366d6;
+            --bg-dark: #0d1117;
+            --text-dark: #c9d1d9;
+            --container-dark: #161b22;
+            --button-dark: #58a6ff;
+            --border-dark: #30363d;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .terms-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background: var(--container-light);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s;
+            border: 1px solid #e1e4e8;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: var(--button-light);
+        }
+
+        .subtitle {
+            font-size: 20px;
+            margin: 25px 0 15px;
+            color: var(--button-light);
+        }
+
+        .term-item {
+            margin-bottom: 20px;
+        }
+
+        .term-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .term-content {
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-top: 30px;
+            font-style: italic;
+        }
+
+        .update-date {
+            text-align: right;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+            }
+
+            .terms-container {
+                background: var(--container-dark);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--border-dark);
+            }
+
+            .nav-links a {
+                color: var(--button-dark);
+            }
+
+            .section-title, .subtitle {
+                color: var(--button-dark);
+            }
+
+            .update-date {
+                color: #aaa;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .terms-container {
+                width: 88%;
+                padding: 20px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 10px;
+                font-size: 14px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .subtitle {
+                font-size: 18px;
+            }
+        }
+
+        body {
+            visibility: hidden;
+        }
+
+        body.loaded {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png" alt="SMM Sociais Logo">
+    </div>
+    
+    <div class="nav-links">
+        <a href="index.html">Fazer Login</a>
+        <a href="https://smmsociais.com/services">Serviços</a>
+        <a href="https://smmsociais.com/signup">Criar Conta</a>
+        <a href="terms.html">Termos</a>
+    </div>
+
+    <div class="terms-container">
+        <h1 class="section-title">Termos & Condições</h1>
+        
+        <h2 class="subtitle">1. Geral</h2>
+        <div class="term-item">
+            <div class="term-title">1.1</div>
+            <div class="term-content">Ao usar este site, você concorda com estes Termos & Condições.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">1.2</div>
+            <div class="term-content">Podemos atualizar estes termos a qualquer momento, sem aviso prévio. Consulte-os regularmente.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">1.3</div>
+            <div class="term-content">Você deve usar o site conforme as leis aplicáveis e as diretrizes do Google.</div>
+        </div>
+        
+        <h2 class="subtitle">2. Serviços Pagos</h2>
+        <div class="term-item">
+            <div class="term-title">2.1</div>
+            <div class="term-content">Todos os serviços são exclusivamente pagos, sem opções gratuitas ou promocionais.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">2.2</div>
+            <div class="term-content">Oferecemos serviços de marketing pago para ampliar a visibilidade digital mediante investimento financeiro.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">2.3</div>
+            <div class="term-content">Valores, condições de pagamento e prazos são informados antes da contratação.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">2.4</div>
+            <div class="term-content">Não garantimos resultados específicos, pois dependem de fatores externos não controláveis.</div>
+        </div>
+        
+        <h2 class="subtitle">3. Transparência</h2>
+        <div class="term-item">
+            <div class="term-title">3.1</div>
+            <div class="term-content">Informamos claramente os custos e condições de cada serviço, conforme o CDC.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">3.2</div>
+            <div class="term-content">Não realizamos práticas enganosas, fraudulentas ou contrárias às políticas do Google.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">3.3</div>
+            <div class="term-content">Você é responsável por fornecer informações corretas e atualizadas para a execução dos serviços.</div>
+        </div>
+        
+        <h2 class="subtitle">4. Pagamento e Reembolso</h2>
+        <div class="term-item">
+            <div class="term-title">4.1</div>
+            <div class="term-content">Os preços podem ser alterados sem aviso prévio.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">4.2</div>
+            <div class="term-content">Reembolsos podem ser solicitados em até 14 dias após a conclusão do serviço, se comprovado que não foi prestado adequadamente.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">4.3</div>
+            <div class="term-content">Evite disputas ou chargebacks arbitrários; contate nosso suporte para soluções.</div>
+        </div>
+        
+        <h2 class="subtitle">5. Responsabilidade</h2>
+        <div class="term-item">
+            <div class="term-title">5.1</div>
+            <div class="term-content">Não nos responsabilizamos por prejuízos decorrentes do uso dos serviços ou por ações de plataformas.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">5.2</div>
+            <div class="term-content">Você deve cumprir as políticas das plataformas utilizadas.</div>
+        </div>
+        
+        <h1 class="section-title">Política de Privacidade</h1>
+        
+        <h2 class="subtitle">1. Geral</h2>
+        <div class="term-item">
+            <div class="term-title">1.1</div>
+            <div class="term-content">Protegemos seus dados pessoais conforme a LGPD, sem compartilhá-los com terceiros, exceto para executar os serviços.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">1.2</div>
+            <div class="term-content">Adotamos medidas para evitar acesso não autorizado, perda ou alteração indevida de dados.</div>
+        </div>
+        
+        <h2 class="subtitle">2. Dados Coletados</h2>
+        <div class="term-item">
+            <div class="term-title">2.1</div>
+            <div class="term-content">Coletamos informações necessárias para cadastro e prestação de serviços (ex.: nome, e-mail, telefone).</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">2.2</div>
+            <div class="term-content">Mensagens enviadas ao suporte podem ser armazenadas para melhorar o atendimento.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">2.3</div>
+            <div class="term-content">O tratamento de dados segue o consentimento do usuário ou outras bases legais da LGPD.</div>
+        </div>
+        
+        <h2 class="subtitle">3. Cookies</h2>
+        <div class="term-item">
+            <div class="term-title">3.1</div>
+            <div class="term-content">Usamos cookies para melhorar a experiência no site (ex.: preferências de idioma).</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">3.2</div>
+            <div class="term-content">Parceiros publicitários, como o Google, podem usar cookies para anúncios, conforme suas políticas.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">3.3</div>
+            <div class="term-content">Você pode desativar cookies nas configurações do navegador ou com ferramentas como o Add-on de Desativação do Google Analytics.</div>
+        </div>
+        
+        <h2 class="subtitle">4. Direitos do Usuário</h2>
+        <div class="term-item">
+            <div class="term-title">4.1</div>
+            <div class="term-content">Você pode acessar, corrigir ou solicitar a exclusão de seus dados, contatando nosso suporte.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-title">4.2</div>
+            <div class="term-content">Podemos exigir verificação de identidade para atender solicitações.</div>
+        </div>
+        
+        <h2 class="subtitle">5. Parceiros Publicitários</h2>
+        <div class="term-item">
+            <div class="term-title">5.1</div>
+            <div class="term-content">Anúncios podem usar cookies de terceiros para personalização. Consulte as políticas de privacidade dos parceiros (ex.: Google).</div>
+        </div>
+        
+        <div class="contact-info">
+            Dúvidas sobre os Termos & Condições ou Política de Privacidade? Contate nosso suporte pelo site.
+        </div>
+        
+        <div class="update-date">
+            Atualizado em: 31/05/2025
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+
+</html>
