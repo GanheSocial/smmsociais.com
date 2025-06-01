@@ -321,6 +321,60 @@
             display: none;
         }
 
+        /* Estilos do histórico de pagamentos */
+        .history-container {
+            background: var(--container-light);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            transition: background 0.3s;
+            border: 1px solid #e1e4e8;
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .history-table th {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .history-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-loading {
+            text-align: center;
+            padding: 20px;
+            color: #007BFF;
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
@@ -328,7 +382,8 @@
             }
 
             .header,
-            .container {
+            .container,
+            .history-container {
                 background: var(--container-dark);
                 box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
                 border: 1px solid var(--border-dark);
@@ -396,10 +451,19 @@
             .refresh-balance {
                 color: var(--text-dark);
             }
+
+            .history-table th {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            .history-table td {
+                border-bottom: 1px solid var(--border-dark);
+            }
         }
 
         @media (max-width: 768px) {
-            .container {
+            .container,
+            .history-container {
                 width: 88%;
                 padding: 20px;
             }
@@ -407,6 +471,15 @@
             .balance-container {
                 font-size: 14px;
                 padding: 6px 10px;
+            }
+
+            .history-table {
+                font-size: 12px;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 8px 5px;
             }
         }
 
@@ -424,6 +497,12 @@
 
             .balance-label {
                 display: none;
+            }
+
+            .history-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
             }
         }
 
@@ -482,6 +561,27 @@
         </form>
 
         <p id="statusMessage" class="status-message"></p>
+    </div>
+
+    <!-- Histórico de Pagamentos -->
+    <div class="history-container">
+        <div class="history-title">Histórico de Pagamentos</div>
+        <div id="historyLoading" class="history-loading">Carregando histórico...</div>
+        <div id="historyEmpty" class="history-empty" style="display: none;">Nenhum pagamento encontrado</div>
+        <table id="historyTable" class="history-table" style="display: none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Método</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="historyTableBody">
+                <!-- Os dados serão inseridos aqui via JavaScript -->
+            </tbody>
+        </table>
     </div>
 
     <!-- Modal do PIX -->
@@ -606,8 +706,73 @@
                     document.getElementById('userBalance').textContent = 'R$ 0,00';
                 }
             }
-            // Busca o saldo quando a página carrega
+
+            // Função para carregar o histórico de pagamentos
+            async function loadPaymentHistory() {
+                try {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch('/api/listar-depositos.js', {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar histórico');
+                    }
+
+                    const data = await response.json();
+                    const historyTable = document.getElementById('historyTable');
+                    const historyTableBody = document.getElementById('historyTableBody');
+                    const historyLoading = document.getElementById('historyLoading');
+                    const historyEmpty = document.getElementById('historyEmpty');
+
+                    historyLoading.style.display = 'none';
+
+                    if (data.length === 0) {
+                        historyEmpty.style.display = 'block';
+                        return;
+                    }
+
+                    // Limpa o corpo da tabela
+                    historyTableBody.innerHTML = '';
+
+                    // Preenche a tabela com os dados
+                    data.forEach(payment => {
+                        const row = document.createElement('tr');
+                        
+                        // Formata a data
+                        const paymentDate = new Date(payment.data);
+                        const formattedDate = paymentDate.toLocaleString('pt-BR');
+                        
+                        // Formata o valor
+                        const formattedValue = new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        }).format(payment.valor);
+
+                        row.innerHTML = `
+                            <td>${payment.id}</td>
+                            <td>${formattedDate}</td>
+                            <td>PIX</td>
+                            <td>${formattedValue}</td>
+                            <td>${payment.status || 'Processando'}</td>
+                        `;
+                        historyTableBody.appendChild(row);
+                    });
+
+                    historyTable.style.display = 'table';
+                } catch (error) {
+                    console.error('Erro ao carregar histórico:', error);
+                    document.getElementById('historyLoading').textContent = 'Erro ao carregar histórico.';
+                }
+            }
+
+            // Busca o saldo e o histórico quando a página carrega
             fetchBalance();
+            loadPaymentHistory();
         });
 
         document.getElementById("depositForm").addEventListener("submit", async function (event) {
@@ -663,6 +828,9 @@
 
                     pixModal.style.display = "flex";
 
+                    // Atualiza o histórico após gerar um novo pagamento
+                    loadPaymentHistory();
+
                 } else {
                     statusMessage.textContent = "Erro: " + (data.error || "Não foi possível gerar o pagamento");
                     statusMessage.style.color = "#d9534f";
@@ -705,6 +873,69 @@
             } catch (error) {
                 console.error('Erro ao buscar saldo:', error);
                 document.getElementById('userBalance').textContent = 'R$ 0,00';
+            }
+        }
+
+        // Função global para carregar o histórico de pagamentos
+        async function loadPaymentHistory() {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await fetch('/api/listar-depositos.js', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar histórico');
+                }
+
+                const data = await response.json();
+                const historyTable = document.getElementById('historyTable');
+                const historyTableBody = document.getElementById('historyTableBody');
+                const historyLoading = document.getElementById('historyLoading');
+                const historyEmpty = document.getElementById('historyEmpty');
+
+                historyLoading.style.display = 'none';
+
+                if (!data || data.length === 0) {
+                    historyEmpty.style.display = 'block';
+                    return;
+                }
+
+                // Limpa o corpo da tabela
+                historyTableBody.innerHTML = '';
+
+                // Preenche a tabela com os dados
+                data.forEach(payment => {
+                    const row = document.createElement('tr');
+                    
+                    // Formata a data
+                    const paymentDate = new Date(payment.data);
+                    const formattedDate = paymentDate.toLocaleString('pt-BR');
+                    
+                    // Formata o valor
+                    const formattedValue = new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(payment.valor);
+
+                    row.innerHTML = `
+                        <td>${payment.id}</td>
+                        <td>${formattedDate}</td>
+                        <td>PIX</td>
+                        <td>${formattedValue}</td>
+                        <td>${payment.status || 'Processando'}</td>
+                    `;
+                    historyTableBody.appendChild(row);
+                });
+
+                historyTable.style.display = 'table';
+            } catch (error) {
+                console.error('Erro ao carregar histórico:', error);
+                document.getElementById('historyLoading').textContent = 'Erro ao carregar histórico.';
             }
         }
     </script>
