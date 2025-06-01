@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ordem em Massa - GanheSocial</title>
+    <title>Ordem em Massa - SMM Sociais</title>
     <style>
         :root {
             --bg-light: #ffffff;
@@ -328,7 +328,6 @@
     </div>
 
     <div class="container">
-        <h2>Ordem em Massa</h2>
 
         <div class="success-message" id="successMessage">
             Pedidos enviados com sucesso! Você será redirecionado em breve.
@@ -336,7 +335,7 @@
 
         <form id="bulkOrderForm">
             <div class="form-group">
-                <label for="bulkOrders" class="form-label">Pedidos (um por linha):</label>
+                <label for="bulkOrders" class="form-label">Um pedido por linha, no formato:</label>
                 <textarea id="bulkOrders" class="form-control" rows="10"
                     placeholder="Exemplo:&#10;1254 https://tiktok.com/@usuario 1000&#10;1255 https://tiktok.com/@outrousuario 500"
                     required></textarea>
@@ -369,7 +368,7 @@
         async function fetchServices() {
             const token = localStorage.getItem("token");
             if (!token) {
-                window.location.href = "https://ganhesocial.com";
+                window.location.href = "https://smmsociais.com";
                 return;
             }
 
