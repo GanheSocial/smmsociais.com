@@ -21,12 +21,15 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: "Usuário não encontrado" });
     }
 
-    // Agora usa o e-mail para buscar depósitos
-    const depositos = await Deposito.find({ userEmail: usuario.email })
-      .sort({ createdAt: -1 })
-      .limit(10);
+    // ✅ Busca apenas depósitos com status "completed"
+    const depositos = await Deposito.find({
+      userEmail: usuario.email,
+      status: "completed"
+    })
+    .sort({ createdAt: -1 })
+    .limit(10);
 
-    return res.status(200).json(depositos); // envia array diretamente
+    return res.status(200).json(depositos);
   } catch (error) {
     console.error("Erro ao listar depósitos:", error);
     return res.status(500).json({ error: "Erro interno do servidor" });
