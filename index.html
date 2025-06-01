@@ -71,6 +71,47 @@
             max-width: 300px;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
+            margin-bottom: 30px;
+        }
+
+        .features-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: var(--container-light);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #e1e4e8;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--button-light);
+        }
+
+        .feature-description {
+            font-size: 14px;
+            color: var(--text-light);
         }
 
         .input-group {
@@ -148,7 +189,7 @@
                 color: var(--text-dark);
             }
 
-            .container {
+            .container, .feature-card {
                 background: var(--container-dark);
                 box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
                 border: 1px solid var(--border-dark);
@@ -167,6 +208,14 @@
             .signup-link, .nav-links a {
                 color: var(--button-dark);
             }
+
+            .feature-title {
+                color: var(--button-dark);
+            }
+
+            .feature-description {
+                color: var(--text-dark);
+            }
         }
 
         @media (max-width: 768px) {
@@ -177,6 +226,10 @@
             
             .nav-links {
                 gap: 15px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -227,6 +280,30 @@
         <a href="https://smmsociais.com/signup" class="signup-link">Não tem conta? Cadastre-se</a>
 
         <p id="statusMessage" class="status-message"></p>
+    </div>
+
+    <div class="features-container">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-title">Qualidade Profissional</div>
+                <div class="feature-description">A qualidade dos nossos serviços irá surpreendê-lo agradavelmente.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">Pagamentos Seguros com PIX</div>
+                <div class="feature-description">Aceitamos PIX, a forma de pagamento rápida e segura do Banco Central, além de outras opções.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">Soluções Acessíveis</div>
+                <div class="feature-description">Oferecemos serviços de alta qualidade a preços competitivos, perfeitos para negócios de todos os tamanhos.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">Suporte Rápido e Eficiente</div>
+                <div class="feature-description">Nossa equipe está pronta para ajudar você em cada etapa, garantindo uma experiência fluida e resultados rápidos.</div>
+            </div>
+        </div>
     </div>
 
     <script>
