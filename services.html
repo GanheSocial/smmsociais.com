@@ -434,10 +434,10 @@
         </div>
         
         <div class="nav-links">
-            <a href="index.html">Fazer Login</a>
-            <a href="services.html">Serviços</a>
-            <a href="signup.html">Criar Conta</a>
-            <a href="terms.html">Termos</a>
+            <a href="/">Fazer Login</a>
+            <a href="services">Serviços</a>
+            <a href="signup">Criar Conta</a>
+            <a href="terms">Termos</a>
         </div>
     </div>
 
@@ -458,7 +458,7 @@
                         <th>Mínimo</th>
                         <th>Máximo</th>
                         <th>Tempo médio</th>
-                        <th>Ação</th>
+                        <th>Descrição</th>
                     </tr>
                 </thead>
                 <tbody id="servicesTableBody">
@@ -586,7 +586,7 @@
                         <td>${service.minimo}</td>
                         <td>${service.maximo || 'N/A'}</td>
                         <td>${service.tempo_medio}</td>
-                        <td><button class="order-btn" data-id="${service.id_servico}">Pedir</button></td>
+                        <td><button class="order-btn" data-id="${service.id_servico}">Ver</button></td>
                     `;
                 } else {
                     row.innerHTML = `
@@ -596,7 +596,7 @@
                         <td>${service.minimo}</td>
                         <td>${service.maximo || 'N/A'}</td>
                         <td>${service.tempo_medio}</td>
-                        <td><a href="index.html" class="login-btn">Login</a></td>
+                        <td><a href="index.html" class="login-btn">Ver</a></td>
                     `;
                 }
 
@@ -615,7 +615,7 @@
 
         function logout() {
             localStorage.removeItem("token");
-            window.location.href = "index.html";
+            window.location.href = "https://smmsociais.com/";
         }
     </script>
 </body>
