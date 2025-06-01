@@ -324,12 +324,9 @@
                 width: calc(90% - 270px);
             }
 
-            /* Novo estilo para a logo no desktop */
-            .logo-desktop-container {
-                position: absolute;
-                top: 15px;
-                left: 20px;
-                z-index: 10;
+            /* Esconde a logo no header na versão desktop */
+            .logo-container {
+                display: none;
             }
         }
 
@@ -339,6 +336,12 @@
                 padding: 15px;
             }
             
+            /* Mostra a logo no header apenas na versão mobile */
+            .logo-container {
+                display: block;
+            }
+            
+            /* Esconde o container da logo desktop */
             .logo-desktop-container {
                 display: none;
             }
@@ -355,12 +358,24 @@
 </head>
 
 <body>
-    <!-- Logo para desktop (nova adição) -->
-    <div class="logo-desktop-container">
-        <a href="painel">
-            <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                alt="Logo smmsociais" class="logo">
-        </a>
+    <!-- Logo para desktop (no menu lateral) -->
+    <div class="menu-content" id="menuContent">
+        <div style="padding: 20px; text-align: center;">
+            <a href="painel">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo smmsociais" class="logo" style="max-width: 80%;">
+            </a>
+        </div>
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="orders">Ordens</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
+        <a class="menu-item" href="profile">Minha Conta</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
+        </div>
     </div>
 
     <div class="header">
@@ -370,6 +385,7 @@
                 <span></span>
                 <span></span>
             </div>
+            <!-- Logo para mobile (no header) -->
             <a href="painel" class="logo-container">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo">
@@ -395,20 +411,8 @@
         </form>
     </div>
 
-    <!-- Menu Overlay e Conteúdo -->
+    <!-- Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay"></div>
-    <div class="menu-content" id="menuContent">
-        <a class="menu-item" href="painel">Novo Pedido</a>
-        <a class="menu-item" href="services">Serviços</a>
-        <a class="menu-item" href="orders">Ordens</a>
-        <a class="menu-item" href="massorder">Pedido em Massa</a>
-        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-        <a class="menu-item" href="profile">Minha Conta</a>
-
-        <div class="menu-footer">
-            <a class="menu-logout" onclick="logout()">Sair</a>
-        </div>
-    </div>
 
     <script>
         let allServices = {};
