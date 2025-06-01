@@ -17,12 +17,12 @@ export default async function handler(req, res) {
     await connectDB();
 
     // Busca o usuário pelo token
-    const usuario = await Usuario.findOne({ token });
+    const usuario = await User.findOne({ token });
     if (!usuario) {
       return res.status(401).json({ error: "Usuário não encontrado" });
     }
 
-    // Busca os depósitos do usuário
+    // Busca os depósitos relacionados ao usuário
     const depositos = await Deposito.find({ userId: usuario._id })
       .sort({ createdAt: -1 })
       .limit(10);
