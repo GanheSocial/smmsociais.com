@@ -137,7 +137,7 @@
             border-radius: 3px;
         }
 
-        /* Estilos do menu hamburguer */
+        /* Estilos do menu hamburguer (mobile) */
         .menu-toggle {
             width: 30px;
             height: 30px;
@@ -191,31 +191,24 @@
             display: block;
         }
 
-        .menu-item {
-            padding: 15px 25px;
+        /* Estilos do menu desktop */
+        .desktop-menu {
+            display: none;
+        }
+
+        .desktop-menu-item {
+            padding: 10px 15px;
+            margin: 0 5px;
             cursor: pointer;
             color: var(--text-light);
             font-size: 16px;
             text-decoration: none;
             transition: background-color 0.2s;
+            border-radius: 5px;
         }
 
-        .menu-item:hover {
+        .desktop-menu-item:hover {
             background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .menu-footer {
-            margin-top: auto;
-            padding: 25px 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .menu-logout {
-            padding: 15px 25px;
-            cursor: pointer;
-            color: #dc3545;
-            font-size: 16px;
-            text-decoration: none;
         }
 
         .error-message {
@@ -258,11 +251,11 @@
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            .menu-item {
+            .menu-item, .desktop-menu-item {
                 color: var(--text-dark);
             }
 
-            .menu-item:hover {
+            .menu-item:hover, .desktop-menu-item:hover {
                 background-color: rgba(255, 255, 255, 0.05);
             }
 
@@ -295,10 +288,29 @@
             }
         }
 
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+
+            .desktop-menu {
+                display: flex;
+                align-items: center;
+            }
+
+            .menu-content {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
                 width: 95%;
                 padding: 15px;
+            }
+
+            .desktop-menu {
+                display: none;
             }
         }
 
@@ -325,10 +337,20 @@
                     alt="Logo smmsociais" class="logo">
             </a>
         </div>
+        
+        <!-- Menu para desktop -->
+        <div class="desktop-menu">
+            <a class="desktop-menu-item" href="painel">Novo Pedido</a>
+            <a class="desktop-menu-item" href="services">Serviços</a>
+            <a class="desktop-menu-item" href="orders">Ordens</a>
+            <a class="desktop-menu-item" href="massorder">Pedido em Massa</a>
+            <a class="desktop-menu-item" href="addfunds">Adicionar Saldo</a>
+            <a class="desktop-menu-item" href="profile">Minha Conta</a>
+            <a class="desktop-menu-item" onclick="logout()">Sair</a>
+        </div>
     </div>
 
     <div class="container">
-
         <div class="success-message" id="successMessage">
             Pedidos enviados com sucesso! Você será redirecionado em breve.
         </div>
@@ -346,7 +368,7 @@
         </form>
     </div>
 
-    <!-- Menu Overlay e Conteúdo -->
+    <!-- Menu Overlay e Conteúdo (mobile) -->
     <div class="menu-overlay" id="menuOverlay"></div>
     <div class="menu-content" id="menuContent">
         <a class="menu-item" href="painel">Novo Pedido</a>
@@ -362,7 +384,6 @@
     </div>
 
     <script>
-
         let allServices = {};
 
         async function fetchServices() {
@@ -391,7 +412,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.add('loaded');
 
-            // Controle do menu hamburguer
+            // Controle do menu hamburguer (mobile)
             const menuToggle = document.getElementById('menuToggle');
             const menuOverlay = document.getElementById('menuOverlay');
             const menuContent = document.getElementById('menuContent');
