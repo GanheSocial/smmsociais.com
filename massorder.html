@@ -49,7 +49,7 @@
 
         .logo {
             height: 32px;
-            margin-right: 10px;
+            margin-right: 29px;
         }
 
         .container {
@@ -298,9 +298,10 @@
         /* Estilos para desktop */
         @media (min-width: 992px) {
             .desktop-header {
-                display: none; /* Esconde o header no desktop */
+                display: none;
+                /* Esconde o header no desktop */
             }
-            
+
             body {
                 padding-left: 250px;
             }
@@ -334,12 +335,17 @@
                 width: 95%;
                 padding: 15px;
             }
-            
+
             /* Esconde a logo no menu na versão mobile */
             .menu-content .logo-desktop {
-                display: none;
+                padding: 10px 15px;
+                /* Reduz o padding */
+                text-align: left;
+                /* Alinha à esquerda */
+                margin-top: 5px;
+                /* Ajusta o topo */
             }
-            
+
             /* Mostra a logo no header apenas na versão mobile */
             .logo-mobile {
                 display: block;
@@ -359,7 +365,7 @@
 <body>
     <!-- Logo para desktop (no menu lateral) -->
     <div class="menu-content" id="menuContent">
-        <div style="padding: 20px; text-align: center;" class="logo-desktop">
+        <div style="padding: 20px; text-align: left; margin-top: -20px;" class="logo-desktop">
             <a href="painel">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo" style="max-width: 80%;">
@@ -400,8 +406,7 @@
         <form id="bulkOrderForm">
             <div class="form-group">
                 <label for="bulkOrders" class="form-label">Um pedido por linha, no formato:</label>
-                <textarea id="bulkOrders" class="form-control" rows="10"
-                    placeholder="ID do serviço Link Quantidade"
+                <textarea id="bulkOrders" class="form-control" rows="10" placeholder="ID do serviço Link Quantidade"
                     required></textarea>
                 <div class="error-message" id="bulkOrdersError"></div>
             </div>
@@ -418,10 +423,10 @@
 
         async function fetchServices() {
             const token = localStorage.getItem("token");
-            if (!token) {
-                window.location.href = "https://smmsociais.com";
-                return;
-            }
+            //if (!token) {
+            //window.location.href = "https://smmsociais.com";
+            // return;
+            //}
 
             const response = await fetch("https://smmsociais.com/api/servico", {
                 headers: { Authorization: `Bearer ${token}` }
