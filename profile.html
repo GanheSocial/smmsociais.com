@@ -51,9 +51,55 @@
             gap: 30px;
         }
 
+        .right-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
         .logo {
             height: 32px;
             margin-right: 29px;
+        }
+
+        /* Adicionado: Estilo do saldo */
+        .balance-container {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .balance-value {
+            color: var(--success-color);
+        }
+
+        .refresh-balance {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Adicionado: Saldo para desktop */
+        .desktop-balance-container {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
         }
 
         .container {
@@ -330,6 +376,19 @@
             .menu-footer {
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
+
+            /* Adicionado: Estilo do saldo no dark mode */
+            .balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .refresh-balance {
+                color: var(--text-dark);
+            }
+
+            .desktop-balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
         }
 
         /* Estilos para desktop */
@@ -365,6 +424,11 @@
             .logo-mobile {
                 display: none;
             }
+
+            /* Mostra o saldo desktop */
+            .desktop-balance-container {
+                display: flex;
+            }
         }
 
         @media (max-width: 991px) {
@@ -378,6 +442,11 @@
             .logo-mobile {
                 display: block;
             }
+
+            /* Esconde o saldo desktop */
+            .desktop-balance-container {
+                display: none;
+            }
         }
 
         @media (max-width: 768px) {
@@ -389,6 +458,12 @@
         @media (max-width: 420px) {
             .container {
                 width: 300px;
+            }
+
+            /* Ajuste para o saldo mobile */
+            .balance-container {
+                font-size: 14px;
+                padding: 6px 10px;
             }
         }
 
@@ -423,6 +498,11 @@
         </div>
     </div>
 
+    <!-- Adicionado: Saldo para desktop (fixo no topo direito) -->
+    <div class="desktop-balance-container">
+        <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
+    </div>
+
     <div class="header desktop-header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
@@ -435,6 +515,13 @@
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo">
             </a>
+        </div>
+
+        <!-- Adicionado: Saldo para mobile -->
+        <div class="right-header">
+            <div class="balance-container">
+                <span class="balance-value" id="userBalance">R$ 0,00</span>
+            </div>
         </div>
     </div>
 
@@ -480,6 +567,38 @@
     <div class="menu-overlay" id="menuOverlay"></div>
 
     <script>
+        // Função para buscar o saldo
+        async function fetchBalance() {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await fetch('/api/get_saldo', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar saldo');
+                }
+
+                const data = await response.json();
+
+                const formattedBalance = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(data.saldo || 0);
+
+                document.getElementById('userBalance').textContent = formattedBalance;
+                document.getElementById('desktopUserBalance').textContent = formattedBalance;
+            } catch (error) {
+                console.error('Erro ao buscar saldo:', error);
+                document.getElementById('userBalance').textContent = 'R$ 0,00';
+                document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
+            }
+        }
+
         async function loadProfile() {
             const token = localStorage.getItem("token");
 
@@ -508,6 +627,9 @@
                 document.getElementById("name").value = data.nome_usuario || "";
                 document.getElementById("email").value = data.email || "";
                 document.getElementById("authToken").value = data.token;
+
+                // Busca o saldo após carregar o perfil
+                await fetchBalance();
 
             } catch (error) {
                 showMessage(error.message, true);
