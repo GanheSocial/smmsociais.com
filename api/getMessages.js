@@ -1,41 +1,48 @@
+// /api/sendMessage.js
+
 import connectDB from './db.js';
 import { User, Message } from './schema.js';
 
 export default async function handler(req, res) {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Token ausente' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const token = authHeader.split(' ')[1];
+  const { session_id, message, from } = req.body;
 
-  try {
-    await connectDB();
+  if (!session_id || !message || !from) {
+    return res.status(400).json({ error: 'Campos obrigatórios: session_id, message, from' });
+  }
 
+  await connectDB();
+
+  const authHeader = req.headers.authorization;
+  let isAttendant = false;
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
     const user = await User.findOne({ token });
 
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
 
-    if (req.method !== 'GET') {
-      return res.status(405).json({ error: 'Método não permitido' });
-    }
+    isAttendant = true;
+  }
 
-    const { session_id } = req.query;
+  try {
+    const newMessage = new Message({
+      session_id,
+      message,
+      from,
+      timestamp: new Date()
+    });
 
-    if (!session_id) {
-      return res.status(400).json({ error: 'session_id é obrigatório' });
-    }
+    await newMessage.save();
 
-    const messages = await Message
-      .find({ session_id })
-      .sort({ timestamp: 1 });
-
-    return res.status(200).json({ messages });
+    return res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Erro em /api/getMessages:', error);
-    return res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error('Erro em /api/sendMessage:', error);
+    return res.status(500).json({ error: 'Erro ao salvar mensagem' });
   }
 }
