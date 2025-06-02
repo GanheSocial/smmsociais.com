@@ -1,5 +1,5 @@
-import connectDB from "./db";
-import { Message } from "./schema";
+import connectDB from "./db.js";
+import { Message } from "./schema.js";
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
