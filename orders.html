@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histórico de Pedidos - GanheSocial</title>
+    <title>Histórico de Pedidos - SMM Sociais</title>
     <style>
         :root {
             --bg-light: #ffffff;
@@ -17,6 +17,8 @@
             --container-dark: #161b22;
             --button-dark: #58a6ff;
             --border-dark: #30363d;
+            --error-color: #dc3545;
+            --success-color: #28a745;
         }
 
         body {
@@ -47,7 +49,7 @@
 
         .logo {
             height: 32px;
-            margin-right: 10px;
+            margin-right: 29px;
         }
 
         .container {
@@ -81,6 +83,8 @@
             background-color: #e1e4e8;
             color: var(--text-light);
             transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .filter-button.active {
@@ -283,6 +287,54 @@
             }
         }
 
+        /* Estilos para desktop */
+        @media (min-width: 992px) {
+            .desktop-header {
+                display: none;
+            }
+
+            body {
+                padding-left: 250px;
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+
+            .menu-content {
+                left: 0;
+                box-shadow: none;
+            }
+
+            .menu-overlay {
+                display: none !important;
+            }
+
+            .container {
+                margin-left: 250px;
+                width: calc(90% - 250px);
+                max-width: 1200px;
+            }
+
+            /* Esconde a logo no header na versão desktop */
+            .logo-mobile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .container {
+                width: 95%;
+                max-width: 1200px;
+                padding: 15px;
+            }
+
+            /* Mostra a logo no header apenas na versão mobile */
+            .logo-mobile {
+                display: block;
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
                 width: 95%;
@@ -316,14 +368,35 @@
 </head>
 
 <body>
-    <div class="header">
+    <!-- Logo para desktop (no menu lateral) -->
+    <div class="menu-content" id="menuContent">
+        <div style="padding: 20px; text-align: left; margin-top: -20px;" class="logo-desktop">
+            <a href="painel">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo smmsociais" class="logo" style="max-width: 80%;">
+            </a>
+        </div>
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="orders">Ordens</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
+        <a class="menu-item" href="profile">Minha Conta</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
+        </div>
+    </div>
+
+    <div class="header desktop-header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            <a href="painel" class="logo-container">
+            <!-- Logo para mobile (no header) -->
+            <a href="painel" class="logo-mobile">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo">
             </a>
@@ -359,19 +432,8 @@
         </table>
     </div>
 
-    <!-- Menu Overlay e Conteúdo -->
+    <!-- Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay"></div>
-    <div class="menu-content" id="menuContent">
-        <a class="menu-item" href="painel">Novo Pedido</a>
-        <a class="menu-item" href="orders">Histórico de Pedidos</a>
-        <a class="menu-item" href="services">Serviços</a>
-        <a class="menu-item" href="massorder">Pedido em Massa</a>
-        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-
-        <div class="menu-footer">
-            <a class="menu-logout" onclick="logout()">Sair</a>
-        </div>
-    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -400,7 +462,7 @@
                         activeButton = document.querySelector('.filter-buttons a[href*="cancelled"]');
                         break;
                     default:
-                        activeButton = document.querySelector('.filter-buttons a[href*="todos"]');
+                        activeButton = document.querySelector('.filter-buttons a[href*="orders"]');
                 }
 
                 if (activeButton) {
@@ -408,40 +470,42 @@
                 }
             }
 
-            // Controle do menu hamburguer
-            const menuToggle = document.getElementById('menuToggle');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const menuContent = document.getElementById('menuContent');
+            // Controle do menu hamburguer (só funciona em mobile)
+            if (window.innerWidth < 992) {
+                const menuToggle = document.getElementById('menuToggle');
+                const menuOverlay = document.getElementById('menuOverlay');
+                const menuContent = document.getElementById('menuContent');
 
-            menuToggle.addEventListener('click', function () {
-                menuContent.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
+                menuToggle.addEventListener('click', function () {
+                    menuContent.classList.toggle('active');
+                    menuOverlay.classList.toggle('active');
 
-                const spans = menuToggle.querySelectorAll('span');
-                if (menuContent.classList.contains('active')) {
-                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                    spans[1].style.opacity = '0';
-                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-                } else {
+                    const spans = menuToggle.querySelectorAll('span');
+                    if (menuContent.classList.contains('active')) {
+                        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                        spans[1].style.opacity = '0';
+                        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    } else {
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
+                });
+
+                menuOverlay.addEventListener('click', function () {
+                    menuContent.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    const spans = menuToggle.querySelectorAll('span');
                     spans[0].style.transform = 'none';
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
-                }
-            });
-
-            menuOverlay.addEventListener('click', function () {
-                menuContent.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                const spans = menuToggle.querySelectorAll('span');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            });
+                });
+            }
         });
 
         function logout() {
             localStorage.removeItem("token");
-            window.location.href = "https://ganhesocial.com";
+            window.location.href = "https://smmsociais.com";
         }
 
         async function carregarHistoricoPedidos() {
@@ -493,7 +557,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", carregarHistoricoPedidos);
-
     </script>
 </body>
 
