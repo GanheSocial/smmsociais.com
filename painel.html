@@ -633,388 +633,389 @@
     <!-- Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <script>
-        // Função para buscar o saldo
-        async function fetchBalance() {
-            try {
-                const token = localStorage.getItem("token");
-                const response = await fetch('/api/get_saldo', {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Erro ao buscar saldo');
+<script>
+    // Função para buscar o saldo
+    async function fetchBalance() {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch('/api/get_saldo', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 }
+            });
 
-                const data = await response.json();
+            if (!response.ok) {
+                throw new Error('Erro ao buscar saldo');
+            }
 
-                const formattedBalance = new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                }).format(data.saldo || 0);
+            const data = await response.json();
 
-                document.getElementById('userBalance').textContent = formattedBalance;
-                document.getElementById('desktopUserBalance').textContent = formattedBalance;
-            } catch (error) {
-                console.error('Erro ao buscar saldo:', error);
-                document.getElementById('userBalance').textContent = 'R$ 0,00';
-                document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
+            const formattedBalance = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(data.saldo || 0);
+
+            document.getElementById('userBalance').textContent = formattedBalance;
+            document.getElementById('desktopUserBalance').textContent = formattedBalance;
+        } catch (error) {
+            console.error('Erro ao buscar saldo:', error);
+            document.getElementById('userBalance').textContent = 'R$ 0,00';
+            document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const priceDisplay = document.getElementById("price");
+        const serviceSelect = document.getElementById("service");
+        const quantityInput = document.getElementById("quantity");
+        const quantityRange = document.getElementById("quantityRange");
+        const statusMessage = document.getElementById("statusMessage");
+        const serviceSearch = document.getElementById("serviceSearch");
+        const noResults = document.getElementById("noResults");
+        const searchSuggestions = document.getElementById("searchSuggestions");
+        const serviceDescription = document.getElementById("serviceDescriptionText");
+        let allServices = [];
+
+        document.body.classList.add('loaded');
+
+        // Verifica se há um parâmetro de serviço na URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceIdFromUrl = urlParams.get('service');
+
+        const selected = document.getElementById('selected-option');
+        const optionsList = document.getElementById('select-options');
+        const hiddenInput = document.getElementById('category');
+
+        selected.addEventListener('click', () => {
+            optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.querySelectorAll('#select-options li').forEach(option => {
+            option.addEventListener('click', () => {
+                const value = option.getAttribute('data-value');
+                const label = option.textContent.trim();
+                const icon = option.getAttribute('data-icon');
+
+                selected.querySelector('span').textContent = label;
+                selected.querySelector('img').src = icon;
+                hiddenInput.value = value;
+
+                optionsList.style.display = 'none';
+
+                // Atualiza os serviços quando a categoria muda
+                if (allServices.length > 0) {
+                    filterServices();
+                }
+            });
+        });
+
+        // Fecha dropdown ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-select-container')) {
+                optionsList.style.display = 'none';
+            }
+
+            if (!e.target.closest('.search-container')) {
+                searchSuggestions.classList.remove('active');
+            }
+        });
+
+        function atualizarPreco() {
+            const quantity = parseInt(quantityInput.value) || 0;
+            const selectedService = serviceSelect.selectedOptions[0];
+            const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
+            const preco = Math.max(0, quantity * valorUnitario);
+            priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
+        }
+
+        function atualizarDescricao() {
+            const selectedService = serviceSelect.selectedOptions[0];
+            if (selectedService && selectedService.dataset.descricao) {
+                serviceDescription.textContent = selectedService.dataset.descricao;
+            } else {
+                serviceDescription.textContent = "Nenhuma descrição disponível para este serviço.";
             }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const priceDisplay = document.getElementById("price");
-            const serviceSelect = document.getElementById("service");
-            const quantityInput = document.getElementById("quantity");
-            const quantityRange = document.getElementById("quantityRange");
-            const statusMessage = document.getElementById("statusMessage");
-            const serviceSearch = document.getElementById("serviceSearch");
-            const noResults = document.getElementById("noResults");
-            const searchSuggestions = document.getElementById("searchSuggestions");
-            const serviceDescription = document.getElementById("serviceDescriptionText");
-            let allServices = [];
+        function atualizarQuantidade() {
+            const selectedService = serviceSelect.selectedOptions[0];
+            if (selectedService) {
+                const minimo = parseInt(selectedService.dataset.minimo) || 1;
+                const maximo = parseInt(selectedService.dataset.maximo) || 1000000;
 
-            document.body.classList.add('loaded');
+                // Atualiza os atributos min e max do input
+                quantityInput.min = minimo;
+                quantityInput.max = maximo;
 
-            // Verifica se há um parâmetro de serviço na URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const serviceIdFromUrl = urlParams.get('service');
-
-            const selected = document.getElementById('selected-option');
-            const optionsList = document.getElementById('select-options');
-            const hiddenInput = document.getElementById('category');
-
-            selected.addEventListener('click', () => {
-                optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
-            });
-
-            document.querySelectorAll('#select-options li').forEach(option => {
-                option.addEventListener('click', () => {
-                    const value = option.getAttribute('data-value');
-                    const label = option.textContent.trim();
-                    const icon = option.getAttribute('data-icon');
-
-                    selected.querySelector('span').textContent = label;
-                    selected.querySelector('img').src = icon;
-                    hiddenInput.value = value;
-
-                    optionsList.style.display = 'none';
-
-                    // Atualiza os serviços quando a categoria muda
-                    if (allServices.length > 0) {
-                        filterServices();
-                    }
-                });
-            });
-
-            
-
-            // Fecha dropdown ao clicar fora
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.custom-select-container')) {
-                    optionsList.style.display = 'none';
+                // Ajusta o valor se estiver fora do range
+                if (parseInt(quantityInput.value) < minimo) {
+                    quantityInput.value = minimo;
+                } else if (parseInt(quantityInput.value) > maximo) {
+                    quantityInput.value = maximo;
                 }
 
-                if (!e.target.closest('.search-container')) {
-                    searchSuggestions.classList.remove('active');
-                }
-            });
-
-            function atualizarPreco() {
-                const quantity = parseInt(quantityInput.value) || 0;
-                const selectedService = serviceSelect.selectedOptions[0];
-                const valorUnitario = parseFloat(selectedService?.dataset?.valorUnitario || 0.05);
-                const preco = Math.max(0, quantity * valorUnitario);
-                priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
+                // Atualiza o texto de ajuda
+                quantityRange.textContent = `Mínimo: ${minimo} - Máximo: ${maximo}`;
+                quantityRange.style.display = 'block';
+            } else {
+                quantityRange.style.display = 'none';
             }
+            atualizarPreco();
+        }
 
-            function atualizarDescricao() {
-                const selectedService = serviceSelect.selectedOptions[0];
-                if (selectedService && selectedService.dataset.descricao) {
-                    serviceDescription.textContent = selectedService.dataset.descricao;
-                } else {
-                    serviceDescription.textContent = "Nenhuma descrição disponível para este serviço.";
-                }
-            }
+        ["input", "change", "keyup"].forEach(evt =>
+            quantityInput.addEventListener(evt, atualizarPreco)
+        );
 
-            function atualizarQuantidade() {
-                const selectedService = serviceSelect.selectedOptions[0];
-                if (selectedService) {
-                    const minimo = parseInt(selectedService.dataset.minimo) || 1;
-                    const maximo = parseInt(selectedService.dataset.maximo) || 1000000;
+        serviceSelect.addEventListener('change', () => {
+            atualizarQuantidade();
+            atualizarDescricao();
+        });
 
-                    // Atualiza os atributos min e max do input
-                    quantityInput.min = minimo;
-                    quantityInput.max = maximo;
-
-                    // Ajusta o valor se estiver fora do range
-                    if (parseInt(quantityInput.value) < minimo) {
-                        quantityInput.value = minimo;
-                    } else if (parseInt(quantityInput.value) > maximo) {
-                        quantityInput.value = maximo;
-                    }
-
-                    // Atualiza o texto de ajuda
-                    quantityRange.textContent = `Mínimo: ${minimo} - Máximo: ${maximo}`;
-                    quantityRange.style.display = 'block';
-                } else {
-                    quantityRange.style.display = 'none';
-                }
-                atualizarPreco();
-            }
-
-            ["input", "change", "keyup"].forEach(evt =>
-                quantityInput.addEventListener(evt, atualizarPreco)
+        // Função para filtrar serviços com base na pesquisa
+        function filterServices() {
+            const searchTerm = serviceSearch.value.toLowerCase();
+            const category = hiddenInput.value.toLowerCase();
+            const filteredServices = allServices.filter(s =>
+                s.categoria?.toLowerCase() === category &&
+                (s.nome.toLowerCase().includes(searchTerm) ||
+                    s.tipo.toLowerCase().includes(searchTerm))
             );
 
-            serviceSelect.addEventListener('change', () => {
-                atualizarQuantidade();
-                atualizarDescricao();
+            updateServiceDropdown(filteredServices);
+            updateSearchSuggestions(filteredServices, searchTerm);
+        }
+
+        // Função para atualizar as sugestões de pesquisa
+        function updateSearchSuggestions(services, searchTerm) {
+            searchSuggestions.innerHTML = "";
+
+            if (searchTerm.length === 0 || services.length === 0) {
+                searchSuggestions.classList.remove('active');
+                return;
+            }
+
+            services.slice(0, 5).forEach(servico => {
+                const suggestion = document.createElement('div');
+                suggestion.className = 'search-suggestion-item';
+                suggestion.textContent = servico.nome;
+                suggestion.addEventListener('click', () => {
+                    // Seleciona o serviço correspondente no dropdown
+                    const option = Array.from(serviceSelect.options).find(
+                        opt => opt.value === servico._id
+                    );
+                    if (option) {
+                        serviceSelect.value = option.value;
+                        serviceSearch.value = servico.nome;
+                        searchSuggestions.classList.remove('active');
+                        serviceSelect.dispatchEvent(new Event('change'));
+                    }
+                });
+                searchSuggestions.appendChild(suggestion);
             });
 
-            // Função para filtrar serviços com base na pesquisa
-            function filterServices() {
-                const searchTerm = serviceSearch.value.toLowerCase();
+            searchSuggestions.classList.add('active');
+        }
+
+        // Função para atualizar o dropdown de serviços
+        function updateServiceDropdown(services) {
+            serviceSelect.innerHTML = "";
+
+            if (services.length === 0) {
+                serviceSelect.innerHTML = "<option value='' disabled>Nenhum serviço encontrado</option>";
+                noResults.style.display = 'block';
+                serviceDescription.textContent = "Nenhum serviço selecionado.";
+                return;
+            }
+
+            noResults.style.display = 'none';
+
+            services.forEach(servico => {
+                const option = document.createElement("option");
+                option.value = servico._id;
+                option.dataset.nome = servico.nome;
+                option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
+                option.dataset.tipo = servico.tipo;
+                option.dataset.categoria = servico.categoria;
+                option.dataset.minimo = servico.minimo;
+                option.dataset.maximo = servico.maximo;
+                option.dataset.id_servico = servico.id_servico;
+                option.dataset.descricao = servico.descricao || "Nenhuma descrição disponível para este serviço.";
+                option.textContent = servico.nome;
+                serviceSelect.appendChild(option);
+            });
+
+            quantityInput.disabled = false;
+
+            // Seleciona o serviço da URL se existir
+            if (serviceIdFromUrl && services.length > 0) {
+                const serviceToSelect = services.find(s => s.id_servico == serviceIdFromUrl);
+                if (serviceToSelect) {
+                    serviceSelect.value = serviceToSelect._id;
+
+                    // Atualiza a categoria para a do serviço selecionado
+                    const category = serviceToSelect.categoria.toLowerCase();
+                    const categoryOption = document.querySelector(`#select-options li[data-value="${category}"]`);
+                    if (categoryOption) {
+                        categoryOption.click(); // Simula o clique para atualizar a categoria
+                    }
+                }
+            }
+
+            // Dispara o evento change para atualizar os valores mínimos/máximos
+            if (services.length > 0) {
+                serviceSelect.dispatchEvent(new Event("change"));
+            }
+        }
+
+        // Event listener para a barra de pesquisa
+        serviceSearch.addEventListener('input', filterServices);
+
+        serviceSearch.addEventListener('focus', () => {
+            if (allServices.length > 0) {
                 const category = hiddenInput.value.toLowerCase();
                 const filteredServices = allServices.filter(s =>
-                    s.categoria?.toLowerCase() === category &&
-                    (s.nome.toLowerCase().includes(searchTerm) ||
-                        s.tipo.toLowerCase().includes(searchTerm))
+                    s.categoria?.toLowerCase() === category
                 );
-
-                updateServiceDropdown(filteredServices);
-                updateSearchSuggestions(filteredServices, searchTerm);
+                updateSearchSuggestions(filteredServices, serviceSearch.value);
             }
+        });
 
-            // Função para atualizar as sugestões de pesquisa
-            function updateSearchSuggestions(services, searchTerm) {
-                searchSuggestions.innerHTML = "";
-
-                if (searchTerm.length === 0 || services.length === 0) {
-                    searchSuggestions.classList.remove('active');
-                    return;
-                }
-
-                services.slice(0, 5).forEach(servico => {
-                    const suggestion = document.createElement('div');
-                    suggestion.className = 'search-suggestion-item';
-                    suggestion.textContent = servico.nome;
-                    suggestion.addEventListener('click', () => {
-                        // Seleciona o serviço correspondente no dropdown
-                        const option = Array.from(serviceSelect.options).find(
-                            opt => opt.value === servico._id
-                        );
-                        if (option) {
-                            serviceSelect.value = option.value;
-                            serviceSearch.value = servico.nome;
-                            searchSuggestions.classList.remove('active');
-                            serviceSelect.dispatchEvent(new Event('change'));
-                        }
-                    });
-                    searchSuggestions.appendChild(suggestion);
-                });
-
-                searchSuggestions.classList.add('active');
-            }
-
-            // Função para atualizar o dropdown de serviços
-            function updateServiceDropdown(services) {
-                serviceSelect.innerHTML = "";
-
-                if (services.length === 0) {
-                    serviceSelect.innerHTML = "<option value='' disabled>Nenhum serviço encontrado</option>";
-                    noResults.style.display = 'block';
-                    serviceDescription.textContent = "Nenhum serviço selecionado.";
-                    return;
-                }
-
-                noResults.style.display = 'none';
-
-                services.forEach(servico => {
-                    const option = document.createElement("option");
-                    option.value = servico._id;
-                    option.dataset.nome = servico.nome;
-                    option.dataset.valorUnitario = parseFloat(servico.preco_1000) / 1000;
-                    option.dataset.tipo = servico.tipo;
-                    option.dataset.categoria = servico.categoria;
-                    option.dataset.minimo = servico.minimo;
-                    option.dataset.maximo = servico.maximo;
-                    option.dataset.id_servico = servico.id_servico;
-                    option.dataset.descricao = servico.descricao || "Nenhuma descrição disponível para este serviço.";
-                    option.textContent = servico.nome;
-                    serviceSelect.appendChild(option);
-                });
-
-                quantityInput.disabled = false;
-
-                // Seleciona o serviço da URL se existir
-                if (serviceIdFromUrl && services.length > 0) {
-                    const serviceToSelect = services.find(s => s.id_servico == serviceIdFromUrl);
-                    if (serviceToSelect) {
-                        serviceSelect.value = serviceToSelect._id;
-
-                        // Atualiza a categoria para a do serviço selecionado
-                        const category = serviceToSelect.categoria.toLowerCase();
-                        const categoryOption = document.querySelector(`#select-options li[data-value="${category}"]`);
-                        if (categoryOption) {
-                            categoryOption.click(); // Simula o clique para atualizar a categoria
-                        }
-                    }
-                }
-
-                // Dispara o evento change para atualizar os valores mínimos/máximos
-                if (services.length > 0) {
-                    serviceSelect.dispatchEvent(new Event("change"));
-                }
-            }
-
-            // Event listener para a barra de pesquisa
-            serviceSearch.addEventListener('input', filterServices);
-
-            serviceSearch.addEventListener('focus', () => {
-                if (allServices.length > 0) {
-                    const category = hiddenInput.value.toLowerCase();
-                    const filteredServices = allServices.filter(s =>
-                        s.categoria?.toLowerCase() === category
-                    );
-                    updateSearchSuggestions(filteredServices, serviceSearch.value);
-                }
+        // Carrega todos os serviços
+        fetch("/api/servico")
+            .then(response => response.json())
+            .then(data => {
+                allServices = data;
+                filterServices(); // Filtra inicialmente por TikTok (categoria padrão)
+            })
+            .catch(error => {
+                console.error("Erro ao carregar serviços:", error);
+                serviceSelect.innerHTML = "<option value='' disabled>Erro ao carregar serviços</option>";
+                serviceDescription.textContent = "Erro ao carregar informações dos serviços.";
             });
 
-            // Carrega todos os serviços
-            fetch("/api/servico")
-                .then(response => response.json())
-                .then(data => {
-                    allServices = data;
-                    filterServices(); // Filtra inicialmente por TikTok (categoria padrão)
-                })
-                .catch(error => {
-                    console.error("Erro ao carregar serviços:", error);
-                    serviceSelect.innerHTML = "<option value='' disabled>Erro ao carregar serviços</option>";
-                    serviceDescription.textContent = "Erro ao carregar informações dos serviços.";
-                });
+        // 🔹 Função para obter o userId com base no token salvo localmente
+        const getUserId = async (token) => {
+            const response = await fetch("/api/user-info", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Erro ao obter userId");
+            return data.userId;
+        };
 
-            // 🔹 Função para obter o userId com base no token salvo localmente
-            const getUserId = async (token) => {
-                const response = await fetch("/api/user-info", {
+        document.getElementById("orderForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const selectedOption = serviceSelect.selectedOptions[0];
+            const nomeServico = selectedOption?.dataset.nome;
+            const link = document.getElementById("link").value.trim();
+            const quantity = parseInt(quantityInput.value);
+            const valorUnitario = parseFloat(selectedOption?.dataset.valorUnitario || 0.05);
+            const valorTotal = quantity * valorUnitario;
+            const token = localStorage.getItem("token");
+
+            if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
+                statusMessage.textContent = "Preencha todos os campos corretamente.";
+                statusMessage.style.color = "#d9534f";
+                return;
+            }
+
+            const tipo = selectedOption.dataset.tipo;
+            let linkValido = false;
+
+            if (tipo === "seguidores") {
+                linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/?$/.test(link);
+            } else if (tipo === "curtidas") {
+                linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/video\/\d+\/?$/.test(link);
+            }
+
+            if (!linkValido) {
+                statusMessage.textContent = `O link fornecido não é válido para o serviço do tipo "${tipo}".`;
+                statusMessage.style.color = "#d9534f";
+                return;
+            }
+
+            try {
+                const userId = await getUserId(token);
+
+                const response = await fetch("/api/criar_acao", {
+                    method: "POST",
                     headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer 123456` // ← chave da API
+                    },
+                    body: JSON.stringify({
+                        rede: selectedOption.dataset.categoria.toLowerCase(),
+                        tipo: selectedOption.dataset.tipo,
+                        nome: nomeServico,
+                        valor: parseFloat(valorTotal.toFixed(2)),
+                        link: link,
+                        quantidade: quantity,
+                        userId: userId,
+                        id_servico: selectedOption.dataset.id_servico // ← corrigido aqui
+                    })
                 });
+
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error || "Erro ao obter userId");
-                return data.userId;
-            };
 
-            document.getElementById("orderForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-
-                const selectedOption = serviceSelect.selectedOptions[0];
-                const nomeServico = selectedOption?.dataset.nome;
-                const link = document.getElementById("link").value.trim();
-                const quantity = parseInt(quantityInput.value);
-                const valorUnitario = parseFloat(selectedOption?.dataset.valorUnitario || 0.05);
-                const valorTotal = quantity * valorUnitario;
-                const token = localStorage.getItem("token");
-
-                if (!link || isNaN(quantity) || quantity <= 0 || !selectedOption) {
-                    statusMessage.textContent = "Preencha todos os campos corretamente.";
-                    statusMessage.style.color = "#d9534f";
-                    return;
+                if (!response.ok) {
+                    throw new Error(data.error || "Erro ao criar ação.");
                 }
 
-                const tipo = selectedOption.dataset.tipo;
-                let linkValido = false;
+                statusMessage.textContent = "Ação criada com sucesso!";
+                statusMessage.style.color = "#5cb85c";
+                document.getElementById("orderForm").reset();
+                serviceSelect.dispatchEvent(new Event("change")); // atualiza o min/max após reset
+            } catch (error) {
+                console.error("Erro ao obter userId ou criar ação:", error);
+                statusMessage.textContent = error.message || "Erro inesperado.";
+                statusMessage.style.color = "#d9534f";
+            }
+        });
 
-                if (tipo === "seguidores") {
-                    linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/?$/.test(link);
-                } else if (tipo === "curtidas") {
-                    linkValido = /^https:\/\/www\.tiktok\.com\/@[\w\.\-]+\/video\/\d+\/?$/.test(link);
-                }
+        window.logout = function () {
+            localStorage.removeItem("token");
+            window.location.href = "https://smmsociais.com";
+        };
 
-                if (!linkValido) {
-                    statusMessage.textContent = `O link fornecido não é válido para o serviço do tipo "${tipo}".`;
-                    statusMessage.style.color = "#d9534f";
-                    return;
-                }
+        const menuToggle = document.getElementById('menuToggle');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuContent = document.getElementById('menuContent');
 
-                try {
-                    const userId = await getUserId(token);
+        menuToggle?.addEventListener('click', () => {
+            menuContent.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
 
-                    const response = await fetch("/api/criar_acao", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer 123456` // ← chave da API
-                        },
-                        body: JSON.stringify({
-                            rede: selectedOption.dataset.categoria.toLowerCase(),
-                            tipo: selectedOption.dataset.tipo,
-                            nome: nomeServico,
-                            valor: parseFloat(valorTotal.toFixed(2)),
-                            link: link,
-                            quantidade: quantity,
-                            userId: userId,
-                            id_servico: selectedOption.dataset.id_servico // ← corrigido aqui
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(data.error || "Erro ao criar ação.");
-                    }
-
-                    statusMessage.textContent = "Ação criada com sucesso!";
-                    statusMessage.style.color = "#5cb85c";
-                    document.getElementById("orderForm").reset();
-                    serviceSelect.dispatchEvent(new Event("change")); // atualiza o min/max após reset
-                } catch (error) {
-                    console.error("Erro ao obter userId ou criar ação:", error);
-                    statusMessage.textContent = error.message || "Erro inesperado.";
-                    statusMessage.style.color = "#d9534f";
-                }
-            });
-
-            window.logout = function () {
-                localStorage.removeItem("token");
-                window.location.href = "https://smmsociais.com";
-            };
-
-            const menuToggle = document.getElementById('menuToggle');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const menuContent = document.getElementById('menuContent');
-
-            menuToggle?.addEventListener('click', () => {
-                menuContent.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
-
-                const spans = menuToggle.querySelectorAll('span');
-                if (menuContent.classList.contains('active')) {
-                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                    spans[1].style.opacity = '0';
-                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-                } else {
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
-                }
-            });
-
-            menuOverlay?.addEventListener('click', () => {
-                menuContent.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                const spans = menuToggle.querySelectorAll('span');
+            const spans = menuToggle.querySelectorAll('span');
+            if (menuContent.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+            } else {
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
-            });
+            }
         });
-    </script>
+
+        menuOverlay?.addEventListener('click', () => {
+            menuContent.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            const spans = menuToggle.querySelectorAll('span');
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+        });
+
+        // Chamada para buscar o saldo quando a página carrega
+        await fetchBalance();
+    });
+</script>
 </body>
 
 </html>
