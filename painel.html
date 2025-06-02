@@ -624,7 +624,7 @@
                 Preço: R$ <span id="price">0,00</span>
             </div>
 
-            <button type="submit" class="button">Finalizar Pedido</button>
+            <button type="submit" class="button">Enviar</button>
         </form>
 
         <p id="statusMessage" class="status-message"></p>
@@ -665,6 +665,8 @@
                 document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
             }
         }
+                        // Busca o saldo após carregar o perfil
+                await fetchBalance();
         document.addEventListener("DOMContentLoaded", () => {
             const priceDisplay = document.getElementById("price");
             const serviceSelect = document.getElementById("service");
