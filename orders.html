@@ -47,6 +47,12 @@
             gap: 30px;
         }
 
+        .right-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
         .logo {
             height: 32px;
             margin-right: 29px;
@@ -229,6 +235,35 @@
             text-decoration: none;
         }
 
+        /* Estilos para o saldo */
+        .balance-container {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .balance-value {
+            color: var(--success-color);
+        }
+
+        .desktop-balance-container {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+        }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
@@ -285,6 +320,14 @@
             tr:hover {
                 background-color: rgba(255, 255, 255, 0.05);
             }
+
+            .balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .desktop-balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
         }
 
         /* Estilos para desktop */
@@ -332,6 +375,10 @@
             /* Mostra a logo no header apenas na versão mobile */
             .logo-mobile {
                 display: block;
+            }
+
+            .desktop-balance-container {
+                display: none;
             }
         }
 
@@ -388,6 +435,11 @@
         </div>
     </div>
 
+    <!-- Saldo para desktop (fixo no topo direito) -->
+    <div class="desktop-balance-container">
+        <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
+    </div>
+
     <div class="header desktop-header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
@@ -400,6 +452,12 @@
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo">
             </a>
+        </div>
+
+        <div class="right-header">
+            <div class="balance-container">
+                <span class="balance-value" id="userBalance">R$ 0,00</span>
+            </div>
         </div>
     </div>
 
@@ -438,6 +496,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.add('loaded');
+
+            // Busca o saldo quando a página carrega
+            fetchBalance();
 
             // Ativar botão de filtro correspondente ao status atual
             const urlParams = new URLSearchParams(window.location.search);
@@ -502,6 +563,38 @@
                 });
             }
         });
+
+        // Função para buscar o saldo
+        async function fetchBalance() {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await fetch('/api/get_saldo', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar saldo');
+                }
+
+                const data = await response.json();
+
+                const formattedBalance = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(data.saldo || 0);
+
+                document.getElementById('userBalance').textContent = formattedBalance;
+                document.getElementById('desktopUserBalance').textContent = formattedBalance;
+            } catch (error) {
+                console.error('Erro ao buscar saldo:', error);
+                document.getElementById('userBalance').textContent = 'R$ 0,00';
+                document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
+            }
+        }
 
         function logout() {
             localStorage.removeItem("token");
