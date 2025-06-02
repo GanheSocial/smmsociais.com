@@ -665,8 +665,7 @@
                 document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
             }
         }
-                        // Busca o saldo após carregar o perfil
-                await fetchBalance();
+
         document.addEventListener("DOMContentLoaded", () => {
             const priceDisplay = document.getElementById("price");
             const serviceSelect = document.getElementById("service");
@@ -711,6 +710,8 @@
                     }
                 });
             });
+
+            
 
             // Fecha dropdown ao clicar fora
             document.addEventListener('click', (e) => {
@@ -1013,6 +1014,8 @@
                 spans[2].style.transform = 'none';
             });
         });
+
+        await fetchBalance();
     </script>
 </body>
 
