@@ -96,7 +96,7 @@
             padding: 8px 12px;
             border-radius: 5px;
             font-weight: bold;
-            display: flex;
+            display: none; /* Alterado: inicialmente escondido */
             align-items: center;
             gap: 5px;
             z-index: 10;
@@ -392,7 +392,7 @@
                 display: none;
             }
 
-            body {
+            body.logged-in {
                 padding-left: 250px;
             }
 
@@ -410,7 +410,6 @@
             }
 
             .container {
-                margin-left: 250px;
                 width: calc(90% - 250px);
                 max-width: 1200px;
             }
@@ -420,8 +419,8 @@
                 display: none;
             }
 
-            /* Mostra o saldo desktop */
-            .desktop-balance-container {
+            /* Mostra o saldo desktop apenas para logados */
+            .logged-in .desktop-balance-container {
                 display: flex;
             }
         }
@@ -665,10 +664,12 @@
             // Mostra o cabeçalho apropriado
             if (token) {
                 loggedInHeader.style.display = 'block';
+                document.body.classList.add('logged-in'); // Adiciona classe para usuário logado
                 setupLoggedInFeatures();
                 fetchBalance(); // Carrega o saldo se estiver logado
             } else {
                 loggedOutHeader.style.display = 'block';
+                document.body.classList.remove('logged-in'); // Remove classe para usuário não logado
                 setupLoggedOutFeatures();
             }
 
