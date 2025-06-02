@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprar Seguidores TikTok</title>
+    <title>Comprar Seguidores TikTok - SMM Sociais</title>
     <style>
         :root {
             --bg-light: #ffffff;
@@ -17,6 +17,8 @@
             --container-dark: #161b22;
             --button-dark: #58a6ff;
             --border-dark: #30363d;
+            --error-color: #dc3545;
+            --success-color: #28a745;
         }
 
         body {
@@ -47,12 +49,7 @@
 
         .logo {
             height: 32px;
-            margin-right: 10px;
-        }
-
-        .form-container {
-            margin-bottom: 30px;
-            /* Espaço consistente entre os formulários */
+            margin-right: 29px;
         }
 
         .container {
@@ -60,11 +57,9 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
             width: 90%;
             max-width: 300px;
-            margin: 0 auto 30px;
-            /* Mantém margem automática nas laterais e 30px na parte inferior */
+            margin: 20px auto;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
         }
@@ -87,6 +82,8 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
+            background-color: var(--bg-light);
+            color: var(--text-light);
         }
 
         .button {
@@ -101,19 +98,20 @@
             font-weight: bold;
             height: 40px;
             box-sizing: border-box;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
             background-color: var(--button-light);
         }
 
         .button:hover {
-            background-color: #024fa1;
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
         .status-message {
             margin-top: 10px;
             font-size: 14px;
             font-weight: bold;
-            color: #007BFF;
+            color: var(--button-light);
         }
 
         .price-display {
@@ -203,54 +201,6 @@
             text-decoration: none;
         }
 
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: var(--bg-dark);
-                color: var(--text-dark);
-            }
-
-            .header,
-            .container {
-                background: var(--container-dark);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-                border: 1px solid var(--border-dark);
-            }
-
-            .menu-toggle span {
-                background-color: var(--text-dark);
-            }
-
-            .menu-content {
-                background: var(--container-dark);
-            }
-
-            .menu-footer {
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .menu-item {
-                color: var(--text-dark);
-            }
-
-            .menu-item:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-
-            .input-group input,
-            .input-group select {
-                background-color: var(--container-dark);
-                color: var(--text-dark);
-                border-color: var(--border-dark);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                width: 88%;
-                padding: 20px;
-            }
-        }
-
         .custom-select-container {
             position: relative;
             width: 100%;
@@ -262,13 +212,10 @@
             align-items: center;
             padding: 10px;
             border: 1px solid var(--border-dark, #e1e4e8);
-            /* Usa a borda do tema */
             border-radius: 6px;
             cursor: pointer;
             background-color: var(--container-light);
-            /* Cor do container */
             color: var(--text-light);
-            /* Cor do texto */
             transition: all 0.3s ease;
         }
 
@@ -282,7 +229,6 @@
             margin-left: auto;
             transition: transform 0.2s;
             color: var(--text-light);
-            /* Cor da seta */
         }
 
         .custom-select-options {
@@ -291,7 +237,6 @@
             left: 0;
             right: 0;
             background-color: var(--container-light);
-            /* Cor do container */
             border: 1px solid var(--border-dark, #e1e4e8);
             border-top: none;
             border-radius: 0 0 6px 6px;
@@ -311,51 +256,16 @@
             align-items: center;
             cursor: pointer;
             color: var(--text-light);
-            /* Cor do texto */
         }
 
         .custom-select-options li:hover {
-            background-color: var(--bg-dark);
-            /* Cor de hover (pode ajustar) */
-            color: var(--text-dark);
-            /* Texto no hover */
+            background-color: rgba(0, 0, 0, 0.05);
         }
 
         .custom-select-options li img {
             width: 20px;
             height: 20px;
             margin-right: 10px;
-        }
-
-        /* Ajustes para modo escuro */
-        @media (prefers-color-scheme: dark) {
-            .custom-select-selected {
-                background-color: var(--container-dark);
-                border-color: var(--border-dark);
-                color: var(--text-dark);
-            }
-
-            .custom-select-selected .arrow-down {
-                color: var(--text-dark);
-            }
-
-            .custom-select-options {
-                background-color: var(--container-dark);
-                border-color: var(--border-dark);
-            }
-
-            .custom-select-options li {
-                color: var(--text-dark);
-            }
-
-        }
-
-        body {
-            visibility: hidden;
-        }
-
-        body.loaded {
-            visibility: visible;
         }
 
         /* Estilos para a barra de pesquisa */
@@ -370,6 +280,8 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
+            background-color: var(--bg-light);
+            color: var(--text-light);
         }
 
         .search-icon {
@@ -381,7 +293,7 @@
         }
 
         .no-results {
-            color: #d9534f;
+            color: var(--error-color);
             font-size: 14px;
             margin-top: 5px;
             display: none;
@@ -417,27 +329,12 @@
             background-color: rgba(0, 0, 0, 0.05);
         }
 
-        @media (prefers-color-scheme: dark) {
-            .search-suggestions {
-                background-color: var(--container-dark);
-                border-color: var(--border-dark);
-            }
-
-            .search-suggestion-item {
-                color: var(--text-dark);
-            }
-
-            .search-suggestion-item:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-        }
-
         /* Estilos para a seção de descrição do serviço */
         .service-description {
             background: var(--container-light);
             padding: 15px;
             border-radius: 8px;
-            margin: 20px 0; /* Aumentado o espaço vertical */
+            margin: 20px 0;
             text-align: left;
             border: 1px solid #e1e4e8;
         }
@@ -457,6 +354,87 @@
         }
 
         @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+            }
+
+            .header,
+            .container {
+                background: var(--container-dark);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--border-dark);
+            }
+
+            .menu-toggle span {
+                background-color: var(--text-dark);
+            }
+
+            .menu-content {
+                background: var(--container-dark);
+            }
+
+            .menu-footer {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .menu-item {
+                color: var(--text-dark);
+            }
+
+            .menu-item:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            .input-group input,
+            .input-group select {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+                border-color: var(--border-dark);
+            }
+
+            .custom-select-selected {
+                background-color: var(--container-dark);
+                border-color: var(--border-dark);
+                color: var(--text-dark);
+            }
+
+            .custom-select-selected .arrow-down {
+                color: var(--text-dark);
+            }
+
+            .custom-select-options {
+                background-color: var(--container-dark);
+                border-color: var(--border-dark);
+            }
+
+            .custom-select-options li {
+                color: var(--text-dark);
+            }
+
+            .custom-select-options li:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            .search-input {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+                border-color: var(--border-dark);
+            }
+
+            .search-suggestions {
+                background-color: var(--container-dark);
+                border-color: var(--border-dark);
+            }
+
+            .search-suggestion-item {
+                color: var(--text-dark);
+            }
+
+            .search-suggestion-item:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
             .service-description {
                 background: var(--container-dark);
                 border-color: var(--border-dark);
@@ -468,59 +446,101 @@
             }
         }
 
-        .main-container {
-            width: 90%;
-            max-width: 300px;
-            margin: 20px auto;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            /* Espaço consistente entre os elementos filhos */
+        /* Estilos para desktop */
+        @media (min-width: 992px) {
+            .desktop-header {
+                display: none;
+            }
+
+            body {
+                padding-left: 250px;
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+
+            .menu-content {
+                left: 0;
+                box-shadow: none;
+            }
+
+            .menu-overlay {
+                display: none !important;
+            }
+
+            .container {
+                margin-left: 250px;
+                width: calc(90% - 250px);
+                max-width: 300px;
+            }
+
+            /* Esconde a logo no header na versão desktop */
+            .logo-mobile {
+                display: none;
+            }
         }
 
-        .description-container {
-            background: var(--container-light);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: left;
-            border: 1px solid #e1e4e8;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 0;
-            /* Removemos a margem superior pois agora usamos gap no flexbox */
+        @media (max-width: 991px) {
+            .container {
+                width: 95%;
+                max-width: 300px;
+                padding: 15px;
+            }
+
+            /* Mostra a logo no header apenas na versão mobile */
+            .logo-mobile {
+                display: block;
+            }
         }
 
         @media (max-width: 768px) {
             .container {
                 width: 88%;
                 padding: 20px;
-                margin-bottom: 25px;
-                /* Espaço ligeiramente menor em mobile */
-            }
-
-            .main-container {
-                width: 88%;
-                gap: 25px;
-                /* Espaço ligeiramente menor em mobile */
             }
         }
 
-        .description-container {
-            margin-top: 15px;
-            padding: 10px;
+        body {
+            visibility: hidden;
+        }
+
+        body.loaded {
+            visibility: visible;
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
+    <!-- Logo para desktop (no menu lateral) -->
+    <div class="menu-content" id="menuContent">
+        <div style="padding: 20px; text-align: left; margin-top: -20px;" class="logo-desktop">
+            <a href="painel">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo smmsociais" class="logo" style="max-width: 80%;">
+            </a>
+        </div>
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="orders">Ordens</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
+        <a class="menu-item" href="profile">Minha Conta</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
+        </div>
+    </div>
+
+    <div class="header desktop-header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            <a href="painel" class="logo-container">
+            <!-- Logo para mobile (no header) -->
+            <a href="painel" class="logo-mobile">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo">
             </a>
@@ -598,20 +618,8 @@
         <p id="statusMessage" class="status-message"></p>
     </div>
 
-    <!-- Menu Overlay e Conteúdo -->
+    <!-- Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay"></div>
-    <div class="menu-content" id="menuContent">
-        <a class="menu-item" href="painel">Novo Pedido</a>
-        <a class="menu-item" href="services">Serviços</a>
-        <a class="menu-item" href="orders">Ordens</a>
-        <a class="menu-item" href="massorder">Pedido em Massa</a>
-        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-        <a class="menu-item" href="profile">Minha Conta</a>
-
-        <div class="menu-footer">
-            <a class="menu-logout" onclick="logout()">Sair</a>
-        </div>
-    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
