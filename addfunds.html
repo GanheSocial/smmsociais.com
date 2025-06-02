@@ -381,6 +381,21 @@
             color: #6c757d;
         }
 
+        /* Desktop Balance */
+        .desktop-balance-container {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+        }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
@@ -465,6 +480,10 @@
             .history-table td {
                 border-bottom: 1px solid var(--border-dark);
             }
+
+            .desktop-balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
         }
 
         /* Estilos para desktop */
@@ -524,6 +543,10 @@
             /* Mostra a logo no header apenas na versão mobile */
             .logo-mobile {
                 display: block;
+            }
+
+            .desktop-balance-container {
+                display: none;
             }
         }
 
@@ -601,6 +624,11 @@
         <div class="menu-footer">
             <a class="menu-logout" onclick="logout()">Sair</a>
         </div>
+    </div>
+
+    <!-- Saldo para desktop (fixo no topo direito) -->
+    <div class="desktop-balance-container">
+        <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
     </div>
 
     <div class="header desktop-header">
@@ -782,9 +810,11 @@
                 }).format(data.saldo || 0);
 
                 document.getElementById('userBalance').textContent = formattedBalance;
+                document.getElementById('desktopUserBalance').textContent = formattedBalance;
             } catch (error) {
                 console.error('Erro ao buscar saldo:', error);
                 document.getElementById('userBalance').textContent = 'R$ 0,00';
+                document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
             }
         }
 
