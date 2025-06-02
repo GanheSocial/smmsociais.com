@@ -790,16 +790,19 @@
             });
         }
         
-        function filterServices(searchTerm) {
-            const filteredServices = searchTerm === '' 
-                ? allServices 
-                : allServices.filter(service => 
-                    service.nome.toLowerCase().includes(searchTerm) || 
-                    service.id_servico.toString().includes(searchTerm) ||
-                    (service.descricao && service.descricao.toLowerCase().includes(searchTerm)),
-            
-            renderServices(filteredServices, !!localStorage.getItem("token")))
-        }
+function filterServices(searchTerm) {
+    const filteredServices = searchTerm === '' 
+        ? allServices 
+        : allServices.filter(service => {
+            return (
+                service.nome.toLowerCase().includes(searchTerm) || 
+                service.id_servico.toString().includes(searchTerm) ||
+                (service.descricao && service.descricao.toLowerCase().includes(searchTerm))
+            );
+        });
+    
+    renderServices(filteredServices, !!localStorage.getItem("token"));
+}
 
         function setupLoggedInFeatures() {
             // Controle do menu hamburguer
