@@ -400,9 +400,15 @@
                 display: none;
             }
 
-            .menu-content {
+            /* Menu lateral só aparece para usuários logados */
+            body.logged-in .menu-content {
                 left: 0;
                 box-shadow: none;
+            }
+            
+            /* Menu lateral escondido para não logados */
+            body:not(.logged-in) .menu-content {
+                display: none;
             }
 
             .menu-overlay {
@@ -412,6 +418,13 @@
             .container {
                 width: calc(90% - 250px);
                 max-width: 1200px;
+            }
+            
+            /* Ajuste do container para não logados */
+            body:not(.logged-in) .container {
+                width: 90%;
+                max-width: 1200px;
+                margin: 20px auto;
             }
 
             /* Esconde a logo no header na versão desktop */
