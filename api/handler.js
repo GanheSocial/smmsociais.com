@@ -3,7 +3,7 @@ import connectDB from "./db.js";
 import mongoose from "mongoose";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import { User, Action, ActionHistory, Servico } from "./schema.js";
+import { User, Deposito, Action, ActionHistory, Servico } from "./schema.js";
 
 export default async function handler(req, res) {
     await connectDB(); // 🟢 Conectar ao banco antes de qualquer operação
