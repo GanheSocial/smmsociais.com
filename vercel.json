@@ -1,6 +1,8 @@
 {
     "rewrites": [
       { "source": "/", "destination": "/index.html" },
+      { "source": "/", "destination": "/admin/index.html" },
+      { "source": "/admin/chat", "destination": "/admin/chat.html" },
       { "source": "/painel", "destination": "/painel.html" },
       { "source": "/login", "destination": "/index.html" },
       { "source": "/signup", "destination": "/signup.html" }, 
