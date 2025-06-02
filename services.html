@@ -17,6 +17,12 @@
             --container-dark: #161b22;
             --button-dark: #58a6ff;
             --border-dark: #30363d;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --label-light: #586069;
+            --label-dark: #8b949e;
+            --primary-color: #007BFF;
+            --border-light: #ddd;
         }
 
         body {
@@ -30,48 +36,81 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Estilos comuns para ambas versões */
-        .logo-container {
-            margin: 15px 0;
-            text-align: center;
-        }
-
-        .logo-container img {
-            max-width: 180px;
-            height: auto;
-        }
-
-        .nav-links {
+        .header {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            padding: 0 10px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--container-light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .nav-links a {
-            color: var(--link-color);
-            text-decoration: none;
+        .left-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .right-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            height: 32px;
+            margin-right: 29px;
+        }
+
+        /* Adicionado: Estilo do saldo */
+        .balance-container {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
             font-weight: bold;
-            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .nav-links a:hover {
-            text-decoration: underline;
+        .balance-value {
+            color: var(--success-color);
+        }
+
+        .refresh-balance {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Adicionado: Saldo para desktop */
+        .desktop-balance-container {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
         }
 
         .container {
             background: var(--container-light);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-            width: 95%;
-            max-width: 1200px;
-            margin: 15px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 700px;
+            margin: 20px auto;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
-            overflow-x: auto;
         }
 
         .category-tabs {
@@ -155,30 +194,10 @@
             transform: translateY(-1px);
         }
 
-        /* Estilos específicos para usuários logados */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            background-color: var(--container-light);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .left-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .header .logo {
-            height: 28px;
-        }
-
         /* Estilos do menu hamburguer */
         .menu-toggle {
-            width: 26px;
-            height: 26px;
+            width: 30px;
+            height: 30px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -187,10 +206,10 @@
 
         .menu-toggle span {
             display: block;
-            height: 2px;
+            height: 3px;
             width: 100%;
             background-color: var(--text-light);
-            border-radius: 2px;
+            border-radius: 3px;
             transition: all 0.3s ease;
         }
 
@@ -208,13 +227,13 @@
         .menu-content {
             position: fixed;
             top: 0;
-            left: -280px;
-            width: 240px;
+            left: -300px;
+            width: 250px;
             height: 100%;
             background: var(--container-light);
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
             transition: left 0.3s ease;
-            padding: 15px 0;
+            padding: 20px 0;
             z-index: 6;
             display: flex;
             flex-direction: column;
@@ -230,10 +249,10 @@
         }
 
         .menu-item {
-            padding: 12px 20px;
+            padding: 15px 25px;
             cursor: pointer;
             color: var(--text-light);
-            font-size: 15px;
+            font-size: 16px;
             text-decoration: none;
             transition: background-color 0.2s;
         }
@@ -244,19 +263,49 @@
 
         .menu-footer {
             margin-top: auto;
-            padding: 20px 0;
+            padding: 25px 0;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .menu-logout {
-            padding: 12px 20px;
+            padding: 15px 25px;
             cursor: pointer;
             color: #dc3545;
-            font-size: 15px;
+            font-size: 16px;
             text-decoration: none;
         }
 
-        /* Estilos para modo escuro */
+        /* Estilos para não logados */
+        .logo-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .logo-container img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+
+        .nav-links a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
@@ -266,7 +315,7 @@
             .header,
             .container {
                 background: var(--container-dark);
-                box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
                 border: 1px solid var(--border-dark);
             }
 
@@ -322,24 +371,88 @@
             .login-btn {
                 background-color: var(--button-dark);
             }
+
+            /* Adicionado: Estilo do saldo no dark mode */
+            .balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .refresh-balance {
+                color: var(--text-dark);
+            }
+
+            .desktop-balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
         }
 
-        /* Responsividade aprimorada */
+        /* Estilos para desktop */
+        @media (min-width: 992px) {
+            .desktop-header {
+                display: none;
+            }
+
+            body {
+                padding-left: 250px;
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+
+            .menu-content {
+                left: 0;
+                box-shadow: none;
+            }
+
+            .menu-overlay {
+                display: none !important;
+            }
+
+            .container {
+                margin-left: 250px;
+                width: calc(90% - 250px);
+                max-width: 1200px;
+            }
+
+            /* Esconde a logo no header na versão desktop */
+            .logo-mobile {
+                display: none;
+            }
+
+            /* Mostra o saldo desktop */
+            .desktop-balance-container {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .container {
+                width: 95%;
+                max-width: 700px;
+                padding: 15px;
+            }
+
+            /* Mostra a logo no header apenas na versão mobile */
+            .logo-mobile {
+                display: block;
+            }
+
+            /* Esconde o saldo desktop */
+            .desktop-balance-container {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
+            .container {
+                width: 380px;
+            }
+
             .logo-container img {
                 max-width: 150px;
             }
             
-            .header .logo {
-                height: 24px;
-            }
-            
-            .container {
-                width: 98%;
-                padding: 12px;
-                margin: 10px auto;
-            }
-
             th,
             td {
                 padding: 8px 10px;
@@ -364,14 +477,13 @@
             .nav-links {
                 gap: 10px;
             }
-            
-            .menu-toggle {
-                width: 24px;
-                height: 24px;
-            }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 420px) {
+            .container {
+                width: 300px;
+            }
+
             .logo-container img {
                 max-width: 130px;
             }
@@ -397,6 +509,12 @@
             .service-name {
                 font-size: 13px;
             }
+
+            /* Ajuste para o saldo mobile */
+            .balance-container {
+                font-size: 14px;
+                padding: 6px 10px;
+            }
         }
 
         body {
@@ -410,19 +528,52 @@
 </head>
 
 <body>
-    <!-- Estrutura para usuários logados (será mostrada apenas se houver token) -->
+    <!-- Logo para desktop (no menu lateral) -->
+    <div class="menu-content" id="menuContent">
+        <div style="padding: 20px; text-align: left; margin-top: -20px;" class="logo-desktop">
+            <a href="painel">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo smmsociais" class="logo" style="max-width: 80%;">
+            </a>
+        </div>
+        <a class="menu-item" href="painel">Novo Pedido</a>
+        <a class="menu-item" href="services">Serviços</a>
+        <a class="menu-item" href="orders">Ordens</a>
+        <a class="menu-item" href="massorder">Pedido em Massa</a>
+        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
+        <a class="menu-item" href="profile">Minha Conta</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()">Sair</a>
+        </div>
+    </div>
+
+    <!-- Adicionado: Saldo para desktop (fixo no topo direito) -->
+    <div class="desktop-balance-container">
+        <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
+    </div>
+
+    <!-- Estrutura para usuários logados -->
     <div id="loggedInHeader" style="display: none;">
-        <div class="header">
+        <div class="header desktop-header">
             <div class="left-header">
                 <div class="menu-toggle" id="menuToggle">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
-                <a href="painel" class="logo-container">
+                <!-- Logo para mobile (no header) -->
+                <a href="painel" class="logo-mobile">
                     <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                         alt="Logo smmsociais" class="logo">
                 </a>
+            </div>
+
+            <!-- Adicionado: Saldo para mobile -->
+            <div class="right-header">
+                <div class="balance-container">
+                    <span class="balance-value" id="userBalance">R$ 0,00</span>
+                </div>
             </div>
         </div>
     </div>
@@ -468,21 +619,42 @@
         </div>
     </div>
 
-    <!-- Menu Overlay e Conteúdo (apenas para usuários logados) -->
+    <!-- Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay"></div>
-    <div class="menu-content" id="menuContent">
-        <a class="menu-item" href="painel">Novo Pedido</a>
-        <a class="menu-item" href="orders">Histórico de Pedidos</a>
-        <a class="menu-item" href="services">Serviços</a>
-        <a class="menu-item" href="massorder">Pedido em Massa</a>
-        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-
-        <div class="menu-footer">
-            <a class="menu-logout" onclick="logout()">Sair</a>
-        </div>
-    </div>
 
     <script>
+        // Função para buscar o saldo
+        async function fetchBalance() {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await fetch('/api/get_saldo', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar saldo');
+                }
+
+                const data = await response.json();
+
+                const formattedBalance = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(data.saldo || 0);
+
+                document.getElementById('userBalance').textContent = formattedBalance;
+                document.getElementById('desktopUserBalance').textContent = formattedBalance;
+            } catch (error) {
+                console.error('Erro ao buscar saldo:', error);
+                document.getElementById('userBalance').textContent = 'R$ 0,00';
+                document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.add('loaded');
 
@@ -494,6 +666,7 @@
             if (token) {
                 loggedInHeader.style.display = 'block';
                 setupLoggedInFeatures();
+                fetchBalance(); // Carrega o saldo se estiver logado
             } else {
                 loggedOutHeader.style.display = 'block';
                 setupLoggedOutFeatures();
