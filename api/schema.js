@@ -93,8 +93,12 @@ const depositoSchema = new mongoose.Schema({
   status: String
 }, { timestamps: true });
 
-// 🔄 Previne erro em hot-reload (dev)
-mongoose.models = {};
+const messageSchema = new mongoose.Schema({
+  session_id: String,
+  from: String, // 'user' ou 'support'
+  message: String,
+  timestamp: { type: Date, default: Date.now }
+});
 
 // 🔹 Exportação dos modelos
 export const User = mongoose.model("User", userSchema);
@@ -102,3 +106,4 @@ export const Action = mongoose.model("Action", actionSchema);
 export const ActionHistory = mongoose.model("ActionHistory", actionHistorySchema);
 export const Servico = mongoose.model("Servico", ServicoSchema);
 export const Deposito = mongoose.model("Deposito", depositoSchema);
+export const Message = mongoose.models.Message || mongoose.model('Message', messageSchema);
