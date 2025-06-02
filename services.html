@@ -145,6 +145,44 @@
             opacity: 0.9;
         }
 
+        /* Estilo da barra de pesquisa */
+        .search-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--button-light);
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.2);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            font-size: 16px;
+            display: none;
+        }
+
+        .search-clear:hover {
+            color: var(--error-color);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -384,6 +422,22 @@
             .desktop-balance-container {
                 background: rgba(255, 255, 255, 0.05);
             }
+
+            /* Estilo da barra de pesquisa no dark mode */
+            .search-input {
+                background-color: var(--container-dark);
+                color: var(--text-dark);
+                border-color: var(--border-dark);
+            }
+
+            .search-input:focus {
+                border-color: var(--button-dark);
+                box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+            }
+
+            .search-clear {
+                color: var(--label-dark);
+            }
         }
 
         /* Estilos para desktop */
@@ -489,6 +543,11 @@
             .nav-links {
                 gap: 10px;
             }
+
+            .search-input {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
         }
 
         @media (max-width: 420px) {
@@ -526,6 +585,11 @@
             .balance-container {
                 font-size: 14px;
                 padding: 6px 10px;
+            }
+
+            .search-input {
+                padding: 7px 10px;
+                font-size: 12px;
             }
         }
 
@@ -607,6 +671,12 @@
     <div class="container">
         <h2 style="font-size: 1.3rem; margin-bottom: 15px;">Serviços SMM</h2>
 
+        <!-- Barra de pesquisa adicionada -->
+        <div class="search-container">
+            <input type="text" class="search-input" id="serviceSearch" placeholder="Pesquisar serviços...">
+            <button class="search-clear" id="searchClear">×</button>
+        </div>
+
         <div class="category-tabs">
             <button class="category-tab active" data-category="Todos">Todos</button>
         </div>
@@ -635,6 +705,9 @@
     <div class="menu-overlay" id="menuOverlay"></div>
 
     <script>
+        // Variável global para armazenar os serviços
+        let allServices = [];
+        
         // Função para buscar o saldo
         async function fetchBalance() {
             try {
@@ -688,7 +761,45 @@
 
             // Carrega os serviços (funciona para ambos os casos)
             loadServices('Todos');
+            
+            // Configura a barra de pesquisa
+            setupSearch();
         });
+
+        function setupSearch() {
+            const searchInput = document.getElementById('serviceSearch');
+            const searchClear = document.getElementById('searchClear');
+            
+            // Mostra/oculta o botão de limpar
+            searchInput.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    searchClear.style.display = 'block';
+                    filterServices(this.value.trim().toLowerCase());
+                } else {
+                    searchClear.style.display = 'none';
+                    filterServices('');
+                }
+            });
+            
+            // Limpa a pesquisa
+            searchClear.addEventListener('click', function() {
+                searchInput.value = '';
+                searchClear.style.display = 'none';
+                filterServices('');
+                searchInput.focus();
+            });
+        }
+        
+        function filterServices(searchTerm) {
+            const filteredServices = searchTerm === '' 
+                ? allServices 
+                : allServices.filter(service => 
+                    service.nome.toLowerCase().includes(searchTerm) || 
+                    service.id_servico.toString().includes(searchTerm) ||
+                    (service.descricao && service.descricao.toLowerCase().includes(searchTerm))
+            
+            renderServices(filteredServices, !!localStorage.getItem("token"));
+        }
 
         function setupLoggedInFeatures() {
             // Controle do menu hamburguer
@@ -750,8 +861,8 @@
                     throw new Error('Erro ao carregar serviços');
                 }
 
-                const services = await response.json();
-                renderServices(services, !!token);
+                allServices = await response.json();
+                renderServices(allServices, !!token);
             } catch (error) {
                 console.error('Erro:', error);
                 alert('Erro ao carregar serviços. Tente novamente.');
