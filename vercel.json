@@ -20,7 +20,8 @@
       { "source": "/api/incrementar-validadas", "destination": "/api/handler.js" },
       { "source": "/api/historico_pedidos", "destination": "/api/handler.js" },
       { "source": "/api/get_saldo", "destination": "/api/handler.js" },
-      { "source": "/api/listar-depositos", "destination": "/api/handler.js" }
+      { "source": "/api/listar-depositos", "destination": "/api/handler.js" },
+      { "source": "/api/gerar-pagamento", "destination": "/api/handler.js" }
       
     ]
   }
