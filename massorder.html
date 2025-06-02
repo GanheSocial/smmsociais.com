@@ -325,7 +325,7 @@
             }
 
             /* Esconde a logo no header na versão desktop */
-            .logo-container {
+            .logo-mobile {
                 display: none;
             }
         }
@@ -336,14 +336,14 @@
                 padding: 15px;
             }
             
-            /* Mostra a logo no header apenas na versão mobile */
-            .logo-container {
-                display: block;
+            /* Esconde a logo no menu na versão mobile */
+            .menu-content .logo-desktop {
+                display: none;
             }
             
-            /* Esconde o container da logo desktop */
-            .logo-desktop-container {
-                display: none;
+            /* Mostra a logo no header apenas na versão mobile */
+            .logo-mobile {
+                display: block;
             }
         }
 
@@ -360,7 +360,7 @@
 <body>
     <!-- Logo para desktop (no menu lateral) -->
     <div class="menu-content" id="menuContent">
-        <div style="padding: 20px; text-align: center;">
+        <div style="padding: 20px; text-align: center;" class="logo-desktop">
             <a href="painel">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo" style="max-width: 80%;">
@@ -386,7 +386,7 @@
                 <span></span>
             </div>
             <!-- Logo para mobile (no header) -->
-            <a href="painel" class="logo-container">
+            <a href="painel" class="logo-mobile">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo">
             </a>
