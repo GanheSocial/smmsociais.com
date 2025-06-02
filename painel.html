@@ -532,6 +532,11 @@
         </div>
     </div>
 
+    <!-- Adicionado: Saldo para desktop (fixo no topo direito) -->
+    <div class="desktop-balance-container">
+        <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
+    </div>
+
     <div class="header desktop-header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
@@ -544,6 +549,13 @@
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                     alt="Logo smmsociais" class="logo">
             </a>
+        </div>
+
+        <!-- Adicionado: Saldo para mobile -->
+        <div class="right-header">
+            <div class="balance-container">
+                <span class="balance-value" id="userBalance">R$ 0,00</span>
+            </div>
         </div>
     </div>
 
@@ -622,6 +634,37 @@
     <div class="menu-overlay" id="menuOverlay"></div>
 
     <script>
+        // Função para buscar o saldo
+        async function fetchBalance() {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await fetch('/api/get_saldo', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar saldo');
+                }
+
+                const data = await response.json();
+
+                const formattedBalance = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(data.saldo || 0);
+
+                document.getElementById('userBalance').textContent = formattedBalance;
+                document.getElementById('desktopUserBalance').textContent = formattedBalance;
+            } catch (error) {
+                console.error('Erro ao buscar saldo:', error);
+                document.getElementById('userBalance').textContent = 'R$ 0,00';
+                document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
+            }
+        }
         document.addEventListener("DOMContentLoaded", () => {
             const priceDisplay = document.getElementById("price");
             const serviceSelect = document.getElementById("service");
@@ -700,18 +743,18 @@
                 if (selectedService) {
                     const minimo = parseInt(selectedService.dataset.minimo) || 1;
                     const maximo = parseInt(selectedService.dataset.maximo) || 1000000;
-                    
+
                     // Atualiza os atributos min e max do input
                     quantityInput.min = minimo;
                     quantityInput.max = maximo;
-                    
+
                     // Ajusta o valor se estiver fora do range
                     if (parseInt(quantityInput.value) < minimo) {
                         quantityInput.value = minimo;
                     } else if (parseInt(quantityInput.value) > maximo) {
                         quantityInput.value = maximo;
                     }
-                    
+
                     // Atualiza o texto de ajuda
                     quantityRange.textContent = `Mínimo: ${minimo} - Máximo: ${maximo}`;
                     quantityRange.style.display = 'block';
@@ -724,7 +767,7 @@
             ["input", "change", "keyup"].forEach(evt =>
                 quantityInput.addEventListener(evt, atualizarPreco)
             );
-            
+
             serviceSelect.addEventListener('change', () => {
                 atualizarQuantidade();
                 atualizarDescricao();
@@ -810,7 +853,7 @@
                     const serviceToSelect = services.find(s => s.id_servico == serviceIdFromUrl);
                     if (serviceToSelect) {
                         serviceSelect.value = serviceToSelect._id;
-                        
+
                         // Atualiza a categoria para a do serviço selecionado
                         const category = serviceToSelect.categoria.toLowerCase();
                         const categoryOption = document.querySelector(`#select-options li[data-value="${category}"]`);
