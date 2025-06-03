@@ -701,7 +701,7 @@
             <!-- Seção de descrição do serviço -->
             <div class="service-description" id="serviceDescription">
                 <h3>Descrição</h3>
-                <p id="serviceDescriptionText">Selecione um serviço para ver sua descrição.</p>
+                <p id="serviceDescriptionText" style="white-space: pre-line;">Selecione um serviço para ver sua descrição.</p>
             </div>
 
             <!-- Demais campos permanecem na mesma ordem -->
@@ -826,14 +826,23 @@
                 priceDisplay.textContent = preco.toFixed(2).replace(".", ",");
             }
 
-            function atualizarDescricao() {
-                const selectedService = serviceSelect.selectedOptions[0];
-                if (selectedService && selectedService.dataset.descricao) {
-                    serviceDescription.textContent = selectedService.dataset.descricao;
-                } else {
-                    serviceDescription.textContent = "Nenhuma descrição disponível para este serviço.";
-                }
-            }
+function atualizarDescricao() {
+    const selectedService = serviceSelect.selectedOptions[0];
+    if (selectedService && selectedService.dataset.descricao) {
+        // Substitui os emojis por suas versões HTML (opcional)
+        const descricaoFormatada = selectedService.dataset.descricao
+            .replace(/⏰/g, '⏰')
+            .replace(/⚡/g, '⚡')
+            .replace(/💎/g, '💎')
+            .replace(/♻️/g, '♻️')
+            .replace(/🌍/g, '🌍')
+            .replace(/⚠️/g, '⚠️');
+        
+        serviceDescription.innerHTML = descricaoFormatada;
+    } else {
+        serviceDescription.textContent = "Nenhuma descrição disponível para este serviço.";
+    }
+}
 
             function atualizarQuantidade() {
                 const selectedService = serviceSelect.selectedOptions[0];
