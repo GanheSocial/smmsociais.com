@@ -108,8 +108,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 900px;
+            width: 700px;
             margin: 20px auto;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
@@ -154,7 +153,7 @@
         }
 
         .search-input {
-            width: 100%;
+            width: 96%;
             padding: 10px 15px;
             border: 1px solid var(--border-light);
             border-radius: 4px;
@@ -481,14 +480,9 @@
 
             /* Ajuste do container para não logados */
             body:not(.logged-in) .container {
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                width: 90%;
+                width: 98%;
                 max-width: 900px;
                 margin: 20px auto;
-                transition: background 0.3s;
-                border: 1px solid #e1e4e8;
             }
 
             /* Esconde a logo no header na versão desktop */
@@ -504,15 +498,9 @@
 
         @media (max-width: 991px) {
             .container {
-                background: var(--container-light);
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                width: 90%;
-                max-width: 500px;
-                margin: 20px auto;
-                transition: background 0.3s;
-                border: 1px solid #e1e4e8;
+                width: 95%;
+                max-width: 700px;
+                padding: 15px;
             }
 
             /* Mostra a logo no header apenas na versão mobile */
@@ -561,6 +549,7 @@
             }
 
             .search-input {
+                width: 98%;
                 padding: 8px 12px;
                 font-size: 13px;
             }
@@ -605,6 +594,7 @@
             }
 
             .search-input {
+                width: 93%;
                 padding: 7px 10px;
                 font-size: 12px;
             }
