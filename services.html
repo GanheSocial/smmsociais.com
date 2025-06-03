@@ -96,7 +96,8 @@
             padding: 8px 12px;
             border-radius: 5px;
             font-weight: bold;
-            display: none; /* Alterado: inicialmente escondido */
+            display: none;
+            /* Alterado: inicialmente escondido */
             align-items: center;
             gap: 5px;
             z-index: 10;
@@ -107,7 +108,8 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 700px;
+            width: 90%;
+            max-width: 500px;
             margin: 20px auto;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
@@ -190,7 +192,8 @@
             min-width: 600px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid #e1e4e8;
@@ -214,7 +217,8 @@
             font-size: 14px;
         }
 
-        .order-btn, .login-btn {
+        .order-btn,
+        .login-btn {
             padding: 6px 12px;
             background-color: var(--button-light);
             color: white;
@@ -227,7 +231,8 @@
             white-space: nowrap;
         }
 
-        .order-btn:hover, .login-btn:hover {
+        .order-btn:hover,
+        .login-btn:hover {
             opacity: 0.9;
             transform: translateY(-1px);
         }
@@ -459,7 +464,7 @@
                 left: 0;
                 box-shadow: none;
             }
-            
+
             /* Menu lateral escondido para não logados */
             body:not(.logged-in) .menu-content {
                 display: none;
@@ -473,7 +478,7 @@
                 width: calc(90% - 250px);
                 max-width: 1200px;
             }
-            
+
             /* Ajuste do container para não logados */
             body:not(.logged-in) .container {
                 width: 90%;
@@ -518,7 +523,7 @@
             .logo-container img {
                 max-width: 150px;
             }
-            
+
             th,
             td {
                 padding: 8px 10px;
@@ -539,7 +544,7 @@
                 padding: 5px 8px;
                 font-size: 12px;
             }
-            
+
             .nav-links {
                 gap: 10px;
             }
@@ -558,25 +563,26 @@
             .logo-container img {
                 max-width: 130px;
             }
-            
+
             .nav-links a {
                 font-size: 13px;
             }
-            
+
             .container {
                 padding: 10px;
                 border-radius: 6px;
             }
-            
+
             table {
                 min-width: 100%;
             }
-            
-            th, td {
+
+            th,
+            td {
                 padding: 6px 8px;
                 font-size: 12px;
             }
-            
+
             .service-name {
                 font-size: 13px;
             }
@@ -657,9 +663,10 @@
     <!-- Estrutura para usuários não logados -->
     <div id="loggedOutHeader" style="display: none;">
         <div class="logo-container">
-            <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png" alt="SMM Sociais Logo">
+            <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                alt="SMM Sociais Logo">
         </div>
-        
+
         <div class="nav-links">
             <a href="/">Fazer Login</a>
             <a href="services">Serviços</a>
@@ -707,7 +714,7 @@
     <script>
         // Variável global para armazenar os serviços
         let allServices = [];
-        
+
         // Função para buscar o saldo
         async function fetchBalance() {
             try {
@@ -746,7 +753,7 @@
             const token = localStorage.getItem("token");
             const loggedInHeader = document.getElementById('loggedInHeader');
             const loggedOutHeader = document.getElementById('loggedOutHeader');
-            
+
             // Mostra o cabeçalho apropriado
             if (token) {
                 loggedInHeader.style.display = 'block';
@@ -761,7 +768,7 @@
 
             // Carrega os serviços (funciona para ambos os casos)
             loadServices('Todos');
-            
+
             // Configura a barra de pesquisa
             setupSearch();
         });
@@ -769,9 +776,9 @@
         function setupSearch() {
             const searchInput = document.getElementById('serviceSearch');
             const searchClear = document.getElementById('searchClear');
-            
+
             // Mostra/oculta o botão de limpar
-            searchInput.addEventListener('input', function() {
+            searchInput.addEventListener('input', function () {
                 if (this.value.trim() !== '') {
                     searchClear.style.display = 'block';
                     filterServices(this.value.trim().toLowerCase());
@@ -780,29 +787,29 @@
                     filterServices('');
                 }
             });
-            
+
             // Limpa a pesquisa
-            searchClear.addEventListener('click', function() {
+            searchClear.addEventListener('click', function () {
                 searchInput.value = '';
                 searchClear.style.display = 'none';
                 filterServices('');
                 searchInput.focus();
             });
         }
-        
-function filterServices(searchTerm) {
-    const filteredServices = searchTerm === '' 
-        ? allServices 
-        : allServices.filter(service => {
-            return (
-                service.nome.toLowerCase().includes(searchTerm) || 
-                service.id_servico.toString().includes(searchTerm) ||
-                (service.descricao && service.descricao.toLowerCase().includes(searchTerm))
-            );
-        });
-    
-    renderServices(filteredServices, !!localStorage.getItem("token"));
-}
+
+        function filterServices(searchTerm) {
+            const filteredServices = searchTerm === ''
+                ? allServices
+                : allServices.filter(service => {
+                    return (
+                        service.nome.toLowerCase().includes(searchTerm) ||
+                        service.id_servico.toString().includes(searchTerm) ||
+                        (service.descricao && service.descricao.toLowerCase().includes(searchTerm))
+                    );
+                });
+
+            renderServices(filteredServices, !!localStorage.getItem("token"));
+        }
 
         function setupLoggedInFeatures() {
             // Controle do menu hamburguer
@@ -855,7 +862,7 @@ function filterServices(searchTerm) {
             try {
                 const token = localStorage.getItem("token");
                 const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-                
+
                 const response = await fetch(`https://smmsociais.com/api/servico`, {
                     headers: headers
                 });
@@ -920,4 +927,5 @@ function filterServices(searchTerm) {
         }
     </script>
 </body>
+
 </html>
