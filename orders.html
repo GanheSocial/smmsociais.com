@@ -256,27 +256,30 @@
             z-index: 10;
         }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    min-width: 600px;
-    table-layout: auto;
-    white-space: nowrap; /* Mantém o conteúdo em uma única linha */
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            min-width: 600px;
+            table-layout: auto;
+            white-space: nowrap; /* Mantém o conteúdo em uma única linha */
+        }
 
-th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e1e4e8;
-    white-space: nowrap; /* Mantém o conteúdo em uma única linha */
-    overflow: visible; /* Mostra todo o conteúdo */
-    text-overflow: clip; /* Remove os três pontinhos */
-}
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e4e8;
+            white-space: nowrap; /* Mantém o conteúdo em uma única linha */
+            overflow: visible; /* Mostra todo o conteúdo */
+            text-overflow: clip; /* Remove os três pontinhos */
+        }
 
-td a {
-    word-break: break-all; /* Quebra URLs longas quando necessário */
-}
+        /* Estilo específico para a célula do link */
+        td.link-cell {
+            max-width: 150px;
+            overflow: hidden;
+            word-break: break-all;
+        }
       
         @media (prefers-color-scheme: dark) {
             body {
@@ -407,8 +410,6 @@ td a {
                 padding: 10px;
             }
 
-            }
-
             .filter-buttons {
                 gap: 5px;
             }
@@ -418,20 +419,19 @@ td a {
                 font-size: 12px;
             }
         
-    th, td {
-        padding: 8px 10px;
-        font-size: 13px;
-        max-width: 100px; /* Reduz a largura máxima em dispositivos menores */
-    }
-       
+            th, td {
+                padding: 8px 10px;
+                font-size: 13px;
+                max-width: 100px; /* Reduz a largura máxima em dispositivos menores */
+            }
+        }
 
         @media (max-width: 480px) {
-
-    th, td {
-        padding: 6px 8px;
-        font-size: 12px;
-        max-width: 80px; /* Reduz ainda mais para telas muito pequenas */
-    }
+            th, td {
+                padding: 6px 8px;
+                font-size: 12px;
+                max-width: 80px; /* Reduz ainda mais para telas muito pequenas */
+            }
 
             .status {
                 font-size: 10px;
@@ -665,11 +665,17 @@ td a {
                     data.acoes.forEach((acao, index) => {
                         const tr = document.createElement("tr");
                         const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
+                        
+                        // Quebra o link após 5 caracteres
+                        let linkDisplay = acao.link;
+                        if (linkDisplay && linkDisplay.length > 5) {
+                            linkDisplay = linkDisplay.substring(0, 5) + '<wbr>' + linkDisplay.substring(5);
+                        }
 
                         tr.innerHTML = `
 <td>#${acao.id_servico || "-"}</td>
 <td>${dataCriacao}</td>
-<td>${acao.link}</td>
+<td class="link-cell">${linkDisplay}</td>
 <td>R$ ${parseFloat(acao.valor).toFixed(2)}</td>
 <td>${acao.quantidade}</td>
 <td>${acao.servicoDetalhes ? acao.servicoDetalhes.nome : acao.nome}</td>
