@@ -668,8 +668,8 @@
                         
                         // Quebra o link após 5 caracteres
                         let linkDisplay = acao.link;
-                        if (linkDisplay && linkDisplay.length > 5) {
-                            linkDisplay = linkDisplay.substring(0, 5) + '<wbr>' + linkDisplay.substring(5);
+                        if (linkDisplay && linkDisplay.length > 15) {
+                            linkDisplay = linkDisplay.substring(0, 15) + '<wbr>' + linkDisplay.substring(15);
                         }
 
                         tr.innerHTML = `
