@@ -113,14 +113,6 @@
             opacity: 0.9;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            min-width: 600px;
-            /* Garante que a tabela não fique muito estreita */
-        }
-
         tr:hover {
             background-color: rgba(0, 0, 0, 0.02);
         }
@@ -269,18 +261,19 @@ table {
     border-collapse: collapse;
     margin-top: 20px;
     min-width: 600px;
-    table-layout: fixed; /* Adicionado para controle consistente de largura */
+    table-layout: auto;
+    white-space: nowrap; /* Mantém o conteúdo em uma única linha */
 }
 
 th, td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #e1e4e8;
-    white-space: nowrap; /* Impede a quebra de linha */
-    overflow: hidden; /* Esconde conteúdo que ultrapasse */
-    text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
-    max-width: 150px; /* Define uma largura máxima para as células */
-}        
+    white-space: nowrap; /* Mantém o conteúdo em uma única linha */
+    overflow: visible; /* Mostra todo o conteúdo */
+    text-overflow: clip; /* Remove os três pontinhos */
+}
+      
 
         @media (prefers-color-scheme: dark) {
             body {
