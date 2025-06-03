@@ -273,8 +273,11 @@ th, td {
     overflow: visible; /* Mostra todo o conteúdo */
     text-overflow: clip; /* Remove os três pontinhos */
 }
-      
 
+td a {
+    word-break: break-all; /* Quebra URLs longas quando necessário */
+}
+      
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
