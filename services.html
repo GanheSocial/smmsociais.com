@@ -516,7 +516,14 @@
 
         @media (max-width: 768px) {
             .container {
-                width: 380px;
+                width: 500px;
+            }
+
+            /* Ajuste do container para não logados */
+            body:not(.logged-in) .container {
+                width: 98%;
+                max-width: 350px;
+                margin: 20px auto;
             }
 
             .logo-container img {
