@@ -108,7 +108,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 300px;
+            max-width: 500px;
             margin: 20px auto;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
@@ -544,9 +544,15 @@
             }
 
             .container {
-                margin-left: 250px;
-                width: calc(90% - 250px);
-                max-width: 300px;
+                margin: 50px auto;
+                /* Centraliza o container */
+                width: calc(100% - 270px);
+                /* Ajusta a largura considerando o menu */
+                max-width: 900px;
+                min-height: 600px;
+                /* Altura mínima para desktop */
+                padding: 30px;
+                /* Mais espaço interno */
             }
 
             /* Esconde a logo no header na versão desktop */
@@ -562,9 +568,15 @@
 
         @media (max-width: 991px) {
             .container {
-                width: 95%;
-                max-width: 300px;
-                padding: 15px;
+                margin: 50px auto;
+                /* Centraliza o container */
+                width: calc(100% - 270px);
+                /* Ajusta a largura considerando o menu */
+                max-width: 900px;
+                min-height: 600px;
+                /* Altura mínima para desktop */
+                padding: 30px;
+                /* Mais espaço interno */
             }
 
             /* Mostra a logo no header apenas na versão mobile */
@@ -705,7 +717,7 @@
             </div>
 
             <div class="price-display">
-                Preço: R$ <span id="price">0,00</span>
+                Valor: R$ <span id="price">0,00</span>
             </div>
 
             <button type="submit" class="button">Enviar</button>
