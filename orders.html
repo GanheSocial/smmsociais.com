@@ -30,6 +30,8 @@
             min-height: 100vh;
             position: relative;
             transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -68,6 +70,7 @@
             margin: 20px auto;
             transition: background 0.3s;
             border: 1px solid #e1e4e8;
+            overflow-x: auto;
         }
 
         .filter-buttons {
@@ -76,6 +79,13 @@
             margin-bottom: 20px;
             overflow-x: auto;
             padding-bottom: 10px;
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .filter-buttons::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari, Opera */
         }
 
         .filter-button {
@@ -91,6 +101,7 @@
             transition: all 0.2s;
             text-decoration: none;
             display: inline-block;
+            flex-shrink: 0;
         }
 
         .filter-button.active {
@@ -106,6 +117,8 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            min-width: 600px;
+            /* Garante que a tabela não fique muito estreita */
         }
 
         th,
@@ -113,6 +126,8 @@
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #e1e4e8;
+            word-break: break-word;
+            /* Quebra palavras longas */
         }
 
         th {
@@ -132,6 +147,7 @@
             font-size: 12px;
             font-weight: bold;
             text-align: center;
+            white-space: nowrap;
         }
 
         .status-pending {
@@ -354,8 +370,8 @@
             }
 
             .container {
-                margin-left: 250px;
-                width: calc(90% - 250px);
+                margin: 20px auto;
+                width: calc(90% - 50px);
                 max-width: 1200px;
             }
 
@@ -368,8 +384,9 @@
         @media (max-width: 991px) {
             .container {
                 width: 95%;
-                max-width: 1200px;
+                max-width: 100%;
                 padding: 15px;
+                margin: 15px auto;
             }
 
             /* Mostra a logo no header apenas na versão mobile */
@@ -380,18 +397,22 @@
             .desktop-balance-container {
                 display: none;
             }
+
+            table {
+                font-size: 14px;
+            }
         }
 
         @media (max-width: 768px) {
             .container {
-                width: 95%;
-                padding: 15px;
+                width: 98%;
+                padding: 10px;
             }
 
             th,
             td {
                 padding: 8px 10px;
-                font-size: 14px;
+                font-size: 13px;
             }
 
             .filter-buttons {
@@ -401,6 +422,25 @@
             .filter-button {
                 padding: 8px 10px;
                 font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            th,
+            td {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+
+            .status {
+                font-size: 10px;
+                padding: 3px 6px;
+            }
+
+            .filter-button {
+                padding: 6px 8px;
+                font-size: 11px;
             }
         }
 
