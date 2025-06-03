@@ -280,6 +280,24 @@
             z-index: 10;
         }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    min-width: 600px;
+    table-layout: fixed; /* Adicionado para controle consistente de largura */
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e1e4e8;
+    white-space: nowrap; /* Impede a quebra de linha */
+    overflow: hidden; /* Esconde conteúdo que ultrapasse */
+    text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
+    max-width: 150px; /* Define uma largura máxima para as células */
+}        
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
@@ -409,10 +427,6 @@
                 padding: 10px;
             }
 
-            th,
-            td {
-                padding: 8px 10px;
-                font-size: 13px;
             }
 
             .filter-buttons {
@@ -423,15 +437,21 @@
                 padding: 8px 10px;
                 font-size: 12px;
             }
-        }
+        
+    th, td {
+        padding: 8px 10px;
+        font-size: 13px;
+        max-width: 100px; /* Reduz a largura máxima em dispositivos menores */
+    }
+       
 
         @media (max-width: 480px) {
 
-            th,
-            td {
-                padding: 6px 8px;
-                font-size: 12px;
-            }
+    th, td {
+        padding: 6px 8px;
+        font-size: 12px;
+        max-width: 80px; /* Reduz ainda mais para telas muito pequenas */
+    }
 
             .status {
                 font-size: 10px;
