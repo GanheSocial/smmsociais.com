@@ -1,6 +1,5 @@
 import connectDB from "./db.js";
-import { Action } from "./Action.js";
-import { User } from "./User.js";
+import { User, Action} from './schema.js';
 import mongoose from "mongoose";
 
 const handler = async (req, res) => {
