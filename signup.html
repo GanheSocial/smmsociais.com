@@ -10,8 +10,8 @@
         :root {
             --bg-light: #f8f9fa;
             --text-light: #212529;
-            --container-light: #ffffff;
-            --button-light: #007bff;
+            --container-light: #e0e0e0;
+            --button-light: #eeeeee;
             --success-color: #28a745;
             --pending-color: #ffc107;
             --failed-color: #dc3545;
@@ -26,7 +26,7 @@
             --bg-dark: #121212;
             --text-dark: #e0e0e0;
             --container-dark: #1e1e1e;
-            --button-dark: #1a73e8;
+            --button-dark: #eeeeee;
             --success-dark: #34a853;
             --pending-dark: #f9ab00;
             --failed-dark: #ea4335;
@@ -53,72 +53,66 @@
             min-height: 100vh;
             transition: var(--transition);
             line-height: 1.6;
-        }
-
-        .header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background: linear-gradient(135deg, #007bff 0%, #1a73e8 100%);
-            color: white;
-            box-shadow: 0 2px 10px var(--shadow-light);
-            position: relative;
-            z-index: 10;
+            flex-direction: column;
         }
 
-        .left-header {
+        .logo-container {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 2px;
+        }
+
+        .logo-container img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .nav-links {
             display: flex;
-            align-items: center;
-            gap: 20px;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            padding: 0 20px;
         }
 
-        .right-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .nav-links a {
+            color: var(--button-light);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: var(--transition);
         }
 
-        .logo {
-            height: 32px;
-            margin-right: 10px;
+        .nav-links a:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            text-decoration: none;
         }
 
-        .container {
+        .login-container {
+            width: 90%;
+            max-width: 500px;
+            margin: 0 auto 40px;
             background: var(--container-light);
+            padding: 30px;
             border-radius: var(--card-radius);
             box-shadow: 0 4px 20px var(--shadow-light);
-            overflow: hidden;
             transition: var(--transition);
-            margin-bottom: 30px;
             border: 1px solid var(--border-light);
-            width: 100%;
-            max-width: 500px;
-            margin: 30px auto;
-            padding: 25px;
         }
 
-        .container-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-light);
-            background: linear-gradient(135deg, #007bff 0%, #1a73e8 100%);
-            color: white;
+        .section-title {
             text-align: center;
-        }
-
-        .container-header h2 {
-            margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--button-light);
             font-weight: 600;
-        }
-
-        .container-body {
-            padding: 20px;
         }
 
         .form-group {
             margin-bottom: 20px;
-            text-align: left;
         }
 
         .form-label {
@@ -161,6 +155,7 @@
         }
 
         .signup-button:hover {
+            background-color: var(--success-color-dark);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px var(--shadow-light);
         }
@@ -186,14 +181,6 @@
             border: 1px solid rgba(40, 167, 69, 0.2);
         }
 
-        .page-title {
-            text-align: center;
-            margin-bottom: 25px;
-            color: var(--text-light);
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
         .login-link {
             margin-top: 20px;
             display: block;
@@ -207,97 +194,38 @@
             text-decoration: underline;
         }
 
-        /* Features Section */
-        .features-section {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto 40px;
-            padding: 0 20px;
-        }
-
-        .section-title {
+        /* Footer Styles */
+        footer {
+            background-color: var(--container-light);
+            color: var(--container-light);
+            padding: 30px 20px;
             text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 40px;
-            color: var(--button-light);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-        }
-
-        .feature-card {
-            background: var(--container-light);
-            padding: 25px;
-            border-radius: var(--card-radius);
-            box-shadow: 0 4px 15px var(--shadow-light);
-            text-align: center;
+            margin-top: auto;
+            border-top: 1px solid var(--border-light);
             transition: var(--transition);
-            border: 1px solid var(--border-light);
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px var(--shadow-light);
+        footer .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 20px;
-            object-fit: contain;
+        footer h3 {
+            margin-bottom: 1px;
+            color: var(--container-light);
         }
 
-        .feature-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--button-light);
+        footer p {
+            margin: 8px 0;
         }
 
-        .feature-description {
-            font-size: 0.95rem;
-            color: var(--text-light);
-            line-height: 1.5;
+        footer a {
+            color: var(--container-light);
+            text-decoration: none;
         }
 
-        /* FAQ Section */
-        .faq-section {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto 60px;
-            padding: 0 20px;
-        }
-
-        .faq-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .faq-card {
-            background: var(--container-light);
-            padding: 25px;
-            border-radius: var(--card-radius);
-            box-shadow: 0 4px 15px var(--shadow-light);
-            transition: var(--transition);
-            border: 1px solid var(--border-light);
-            text-align: left;
-        }
-
-        .faq-question {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--button-light);
-        }
-
-        .faq-answer {
-            font-size: 0.95rem;
-            color: var(--text-light);
-            line-height: 1.5;
+        footer a:hover {
+            text-decoration: underline;
         }
 
         /* Dark Mode Styles */
@@ -307,19 +235,22 @@
                 color: var(--text-dark);
             }
 
-            .header {
-                background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            .nav-links a {
+                color: var(--button-dark);
             }
 
-            .container {
+            .nav-links a:hover {
+                background-color: rgba(26, 115, 232, 0.1);
+            }
+
+            .login-container {
                 background: var(--container-dark);
                 box-shadow: 0 4px 20px var(--shadow-dark);
                 border-color: var(--border-dark);
             }
 
-            .container-header {
-                background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-                border-color: var(--border-dark);
+            .section-title {
+                color: var(--button-dark);
             }
 
             .form-label {
@@ -337,6 +268,14 @@
                 box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
             }
 
+            .signup-button {
+                background: var(--success-dark);
+            }
+
+            .signup-button:hover {
+                background-color: var(--success-color-dark);
+            }
+
             .error-message {
                 background-color: rgba(234, 67, 53, 0.1);
                 color: var(--failed-dark);
@@ -349,38 +288,34 @@
                 border-color: rgba(52, 168, 83, 0.2);
             }
 
-            .page-title {
-                color: var(--text-dark);
-            }
-
             .login-link {
                 color: var(--button-dark);
             }
 
-            .feature-card, .faq-card {
-                background: var(--container-dark);
-                box-shadow: 0 4px 15px var(--shadow-dark);
-                border-color: var(--border-dark);
+            footer {
+                background-color: var(--container-dark);
+                color: var(--text-dark);
+                border-top-color: var(--border-dark);
             }
 
-            .feature-title, .section-title, .faq-question {
+            footer h3 {
                 color: var(--button-dark);
             }
 
-            .feature-description, .faq-answer {
-                color: var(--text-dark);
+            footer a {
+                color: var(--button-dark);
             }
         }
 
         /* Responsive Styles */
         @media (max-width: 768px) {
-            .container {
+            .login-container {
+                width: 90%;
                 padding: 20px;
-                width: calc(100% - 40px);
             }
 
-            .features-grid, .faq-grid {
-                grid-template-columns: 1fr;
+            .nav-links {
+                gap: 15px;
             }
 
             .section-title {
@@ -388,18 +323,22 @@
             }
         }
 
-        @media (max-width: 576px) {
-            .container {
-                padding: 15px;
-                width: calc(100% - 30px);
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 10px;
+                font-size: 14px;
             }
 
-            .page-title {
+            .section-title {
                 font-size: 1.3rem;
             }
 
-            .input-box {
-                padding: 10px 12px;
+            .login-container {
+                padding: 15px;
+            }
+
+            footer {
+                padding: 20px 15px;
             }
         }
 
@@ -409,6 +348,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -430,107 +370,58 @@
 </head>
 
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="left-header">
-            <a href="https://smmsociais.com">
-                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png" alt="Logo SMM Sociais" class="logo">
-            </a>
-        </div>
-        <div class="right-header">
-            <a href="https://smmsociais.com/login" style="color: white; text-decoration: none; font-weight: 600;">Fazer Login</a>
-        </div>
-    </div>
-
-    <!-- Signup Container -->
+    <!-- Conteúdo Principal -->
     <div class="main-container">
-        <div class="container fade-in">
-            <div class="container-header">
-                <h2><i class="fas fa-user-plus"></i> Criar Conta</h2>
-            </div>
-            <div class="container-body">
-                <div id="errorMessage" class="message error-message" style="display: none;"></div>
-                <div id="successMessage" class="message success-message" style="display: none;"></div>
+        <div class="logo-container fade-in">
+            <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                alt="SMM Sociais Logo">
+        </div>
 
-                <form id="cadastroForm">
-                    <div class="form-group">
-                        <label for="email" class="form-label">E-mail</label>
-                        <input type="email" id="email" class="input-box" placeholder="Seu e-mail" required>
-                    </div>
+        <div class="nav-links fade-in">
+            <a href="https://smmsociais.com/login"><i class="fas fa-sign-in-alt"></i> Fazer Login</a>
+            <a href="https://smmsociais.com/services"><i class="fas fa-list"></i> Serviços</a>
+            <a href="https://smmsociais.com/signup"><i class="fas fa-user-plus"></i> Criar Conta</a>
+            <a href="terms.html"><i class="fas fa-file-contract"></i> Termos</a>
+        </div>
 
-                    <div class="form-group">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input type="password" id="senha" class="input-box" placeholder="Sua senha (mínimo 6 caracteres)" required>
-                    </div>
+        <div class="login-container fade-in">
+            <h1 class="section-title"><i class="fas fa-user-plus"></i> Criar Conta</h1>
 
-                    <div class="form-group">
-                        <label for="confirmarSenha" class="form-label">Confirmar Senha</label>
-                        <input type="password" id="confirmarSenha" class="input-box" placeholder="Confirme sua senha" required>
-                    </div>
+            <div id="errorMessage" class="message error-message" style="display: none;"></div>
+            <div id="successMessage" class="message success-message" style="display: none;"></div>
 
-                    <button type="submit" class="signup-button"><i class="fas fa-user-plus"></i> Cadastrar</button>
-                </form>
+            <form id="cadastroForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" id="email" class="input-box" placeholder="Seu e-mail" required>
+                </div>
 
-                <a href="https://smmsociais.com/login" class="login-link">Já tem uma conta? Faça login</a>
-            </div>
+                <div class="form-group">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password" id="senha" class="input-box" placeholder="Sua senha (mínimo 6 caracteres)"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmarSenha" class="form-label">Confirmar Senha</label>
+                    <input type="password" id="confirmarSenha" class="input-box" placeholder="Confirme sua senha"
+                        required>
+                </div>
+
+                <button type="submit" class="signup-button"><i class="fas fa-user-plus"></i> Cadastrar</button>
+            </form>
+
+            <a href="https://smmsociais.com/login" class="login-link">Já tem uma conta? Faça login</a>
         </div>
     </div>
 
-    <!-- Features Section -->
-    <div class="features-section">
-        <h2 class="section-title">Por que escolher a SMM Sociais?</h2>
-        <div class="features-grid">
-            <div class="feature-card fade-in">
-                <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748744865919.png" alt="Qualidade Profissional" class="feature-icon">
-                <div class="feature-title">Qualidade Profissional</div>
-                <div class="feature-description">A qualidade dos nossos serviços irá surpreendê-lo agradavelmente com resultados excepcionais.</div>
-            </div>
-            
-            <div class="feature-card fade-in">
-                <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748745066803.png" alt="Pagamentos Seguros" class="feature-icon">
-                <div class="feature-title">Pagamentos Seguros</div>
-                <div class="feature-description">Aceitamos PIX e outros métodos de pagamento com total segurança e praticidade.</div>
-            </div>
-            
-            <div class="feature-card fade-in">
-                <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748745738322.png" alt="Soluções Acessíveis" class="feature-icon">
-                <div class="feature-title">Soluções Acessíveis</div>
-                <div class="feature-description">Oferecemos serviços de alta qualidade a preços competitivos para todos os tipos de negócio.</div>
-            </div>
-            
-            <div class="feature-card fade-in">
-                <img src="https://raw.githubusercontent.com/smmsociais/smmsociais.com/main/1748745986520.png" alt="Suporte Rápido" class="feature-icon">
-                <div class="feature-title">Suporte Rápido</div>
-                <div class="feature-description">Nossa equipe está sempre pronta para ajudar com qualquer dúvida ou necessidade.</div>
-            </div>
+    <!-- Rodapé -->
+    <footer class="fade-in">
+        <div class="footer-content">
+            <i class="fas fa-envelope"></i> contato@smmsociais.com
+            <p>© 2025, SMMSociais.</p>
         </div>
-    </div>
-
-    <!-- FAQ Section -->
-    <div class="faq-section">
-        <h2 class="section-title">Perguntas Frequentes</h2>
-        <div class="faq-grid">
-            <div class="faq-card fade-in">
-                <div class="faq-question"><i class="fas fa-question-circle"></i> O que a plataforma oferece?</div>
-                <div class="faq-answer">Fornecemos serviços profissionais de SMM para ajudar seu negócio a crescer nas redes sociais com qualidade e eficiência.</div>
-            </div>
-            
-            <div class="faq-card fade-in">
-                <div class="faq-question"><i class="fas fa-question-circle"></i> Quais serviços estão disponíveis?</div>
-                <div class="faq-answer">Oferecemos uma variedade de serviços para aumentar seguidores, curtidas, visualizações e engajamento em várias plataformas.</div>
-            </div>
-            
-            <div class="faq-card fade-in">
-                <div class="faq-question"><i class="fas fa-question-circle"></i> É seguro usar a plataforma?</div>
-                <div class="faq-answer">Sim, todos os serviços seguem as melhores práticas do mercado, garantindo segurança e qualidade para seu perfil.</div>
-            </div>
-            
-            <div class="faq-card fade-in">
-                <div class="faq-question"><i class="fas fa-question-circle"></i> Como faço um pedido?</div>
-                <div class="faq-answer">Após criar sua conta e adicionar saldo, basta escolher o serviço desejado e seguir o processo simples de pedido.</div>
-            </div>
-        </div>
-    </div>
+    </footer>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
