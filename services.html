@@ -55,6 +55,10 @@
             line-height: 1.6;
         }
 
+        body.logged-in {
+            padding-left: 280px;
+        }
+
         .menu-item[href="services"] {
             color: white;
             font-weight: bold;
@@ -125,7 +129,7 @@
             padding: 8px 12px;
             border-radius: 5px;
             font-weight: bold;
-            display: flex;
+            display: none;
             align-items: center;
             gap: 5px;
             z-index: 10;
@@ -283,14 +287,37 @@
             box-shadow: 0 4px 12px var(--shadow-light);
         }
 
-        /* Menu Styles */
+        /* Menu Styles - Apenas para logados */
+        .menu-content {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--container-light);
+            box-shadow: 2px 0 15px var(--shadow-light);
+            transition: var(--transition);
+            padding: 20px 0;
+            z-index: 1001;
+            display: none; /* Inicialmente escondido */
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        body.logged-in .menu-content {
+            display: flex; /* Mostra apenas para logados */
+            left: 0;
+        }
+
         .menu-toggle {
             width: 30px;
             height: 30px;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
+            display: none; /* Inicialmente escondido */
+        }
+
+        body.logged-in .menu-toggle {
+            display: flex; /* Mostra apenas para logados */
         }
 
         .menu-toggle span {
@@ -312,22 +339,6 @@
             z-index: 1000;
             display: none;
             backdrop-filter: blur(3px);
-        }
-
-        .menu-content {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100%;
-            background: var(--container-light);
-            box-shadow: 2px 0 15px var(--shadow-light);
-            transition: var(--transition);
-            padding: 20px 0;
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
         }
 
         .menu-content.active {
@@ -416,7 +427,7 @@
 
         /* Desktop Menu */
         @media (min-width: 992px) {
-            body {
+            body.logged-in {
                 padding-left: 280px;
             }
 
@@ -424,28 +435,15 @@
                 display: none;
             }
 
-            .menu-toggle {
-                display: none;
-            }
-
-            .menu-content {
-                left: 0;
-                box-shadow: none;
-            }
-
-            .menu-overlay {
-                display: none !important;
-            }
-
-            .logo-mobile {
-                display: none;
+            body.logged-in .desktop-header {
+                display: flex;
             }
 
             .menu-close-btn {
                 display: none !important;
             }
 
-            .desktop-balance-container {
+            body.logged-in .desktop-balance-container {
                 display: flex;
             }
         }
@@ -476,7 +474,7 @@
                 color: #dc3545;
             }
 
-            .desktop-balance-container {
+            body.logged-in .desktop-balance-container {
                 display: none;
             }
         }
@@ -621,7 +619,7 @@
 </head>
 
 <body>
-    <!-- Menu Lateral para Desktop -->
+    <!-- Menu Lateral - Apenas para logados -->
     <div class="menu-content" id="menuContent">
         <!-- Botão de fechar (visível apenas no mobile) -->
         <button class="menu-close-btn" id="menuCloseBtn">&times;</button>
@@ -644,16 +642,16 @@
         </div>
     </div>
 
-    <!-- Saldo para Desktop -->
-    <div class="desktop-balance-container">
+    <!-- Saldo para Desktop - Apenas para logados -->
+    <div class="desktop-balance-container" id="desktopBalanceContainer">
         <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
     </div>
 
-    <!-- Overlay do Menu -->
+    <!-- Overlay do Menu - Apenas para logados -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <!-- Header para Mobile -->
-    <div class="header desktop-header">
+    <!-- Header para Mobile - Apenas para logados -->
+    <div class="header desktop-header" id="mobileHeader">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
                 <span></span>
@@ -667,14 +665,14 @@
             </a>
         </div>
         <div class="right-header">
-            <div class="balance-container">
+            <div class="balance-container" id="mobileBalanceContainer">
                 <span class="balance-value" id="userBalance">R$ 0,00</span>
             </div>
         </div>
     </div>
 
     <!-- Estrutura para usuários não logados -->
-    <div id="loggedOutHeader" style="display: none;">
+    <div id="loggedOutHeader">
         <div class="logo-container">
             <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                 alt="SMM Sociais Logo">
@@ -728,10 +726,12 @@
         // Variável global para armazenar os serviços
         let allServices = [];
 
-        // Função para buscar o saldo
+        // Função para buscar o saldo (apenas para logados)
         async function fetchBalance() {
             try {
                 const token = localStorage.getItem("token");
+                if (!token) return;
+
                 const response = await fetch('/api/get_saldo', {
                     method: "GET",
                     headers: {
@@ -764,19 +764,28 @@
             document.body.classList.add('loaded');
 
             const token = localStorage.getItem("token");
-            const loggedInHeader = document.querySelector('.header');
+            const loggedInHeader = document.getElementById('mobileHeader');
             const loggedOutHeader = document.getElementById('loggedOutHeader');
+            const menuContent = document.getElementById('menuContent');
+            const desktopBalance = document.getElementById('desktopBalanceContainer');
+            const mobileBalance = document.getElementById('mobileBalanceContainer');
 
             // Mostra o cabeçalho apropriado
             if (token) {
                 loggedInHeader.style.display = 'flex';
                 loggedOutHeader.style.display = 'none';
+                menuContent.style.display = 'flex';
+                desktopBalance.style.display = 'flex';
+                mobileBalance.style.display = 'flex';
                 document.body.classList.add('logged-in');
                 setupLoggedInFeatures();
                 fetchBalance(); // Carrega o saldo se estiver logado
             } else {
                 loggedInHeader.style.display = 'none';
                 loggedOutHeader.style.display = 'block';
+                menuContent.style.display = 'none';
+                desktopBalance.style.display = 'none';
+                mobileBalance.style.display = 'none';
                 document.body.classList.remove('logged-in');
                 setupLoggedOutFeatures();
             }
@@ -861,6 +870,15 @@
             menuToggle.addEventListener('click', toggleMenu);
             menuCloseBtn.addEventListener('click', closeMenu);
             menuOverlay.addEventListener('click', closeMenu);
+
+            // Carrega o widget de chat apenas para usuários logados
+            loadChatWidget();
+        }
+
+        function loadChatWidget() {
+            const script = document.createElement('script');
+            script.src = 'https://smmsociais.com/chat-widget.js';
+            document.body.appendChild(script);
         }
 
         function setupLoggedOutFeatures() {
@@ -946,7 +964,6 @@
             window.location.href = "https://smmsociais.com/";
         }
     </script>
-    <script src="https://smmsociais.com/chat-widget.js"></script>
 </body>
 
 </html>
