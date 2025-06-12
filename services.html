@@ -245,8 +245,7 @@
             min-width: 600px;
         }
 
-        th,
-        td {
+        th, td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-light);
@@ -269,8 +268,7 @@
             color: var(--button-light);
         }
 
-        .order-btn,
-        .login-btn {
+        .order-btn, .login-btn {
             padding: 8px 12px;
             background-color: var(--button-light);
             color: white;
@@ -283,8 +281,7 @@
             white-space: nowrap;
         }
 
-        .order-btn:hover,
-        .login-btn:hover {
+        .order-btn:hover, .login-btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px var(--shadow-light);
@@ -302,15 +299,13 @@
             transition: var(--transition);
             padding: 20px 0;
             z-index: 1001;
-            display: none;
-            /* Inicialmente escondido */
+            display: none; /* Inicialmente escondido */
             flex-direction: column;
             overflow-y: auto;
         }
 
         body.logged-in .menu-content {
-            display: flex;
-            /* Mostra apenas para logados */
+            display: flex; /* Mostra apenas para logados */
             left: 0;
         }
 
@@ -318,13 +313,11 @@
             width: 30px;
             height: 30px;
             cursor: pointer;
-            display: none;
-            /* Inicialmente escondido */
+            display: none; /* Inicialmente escondido */
         }
 
         body.logged-in .menu-toggle {
-            display: flex;
-            /* Mostra apenas para logados */
+            display: flex; /* Mostra apenas para logados */
         }
 
         .menu-toggle span {
@@ -456,12 +449,37 @@
         }
 
         @media (max-width: 991px) {
+            body.logged-in {
+                padding-left: 0 !important;
+            }
+
             .logo-mobile {
                 display: block;
             }
 
-            body.menu-open .header {
-                display: none;
+            .menu-content {
+                background: #1e1e1e !important;
+                color: white !important;
+                width: 80%;
+                max-width: 300px;
+                left: -100%;
+                z-index: 1100;
+            }
+
+            .menu-content.active {
+                left: 0;
+            }
+
+            .menu-item {
+                color: white !important;
+            }
+
+            .menu-item:hover {
+                background-color: rgba(255, 255, 255, 0.1) !important;
+            }
+
+            .menu-footer {
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
             }
 
             .menu-close-btn {
@@ -471,10 +489,10 @@
                 right: 15px;
                 background: none;
                 border: none;
-                color: #afaeae;
+                color: white;
                 font-size: 1.5rem;
                 cursor: pointer;
-                z-index: 1002;
+                z-index: 1101;
             }
 
             .menu-close-btn:hover {
@@ -483,6 +501,23 @@
 
             body.logged-in .desktop-balance-container {
                 display: none;
+            }
+
+            .container {
+                margin: 15px auto !important;
+                width: calc(100% - 30px) !important;
+            }
+
+            .header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+            }
+
+            .main-container {
+                margin-top: 70px;
             }
         }
 
@@ -541,8 +576,7 @@
                 background-color: var(--bg-dark);
             }
 
-            th,
-            td {
+            th, td {
                 border-bottom: 1px solid var(--border-dark);
             }
 
@@ -554,8 +588,7 @@
                 color: var(--button-dark);
             }
 
-            .order-btn,
-            .login-btn {
+            .order-btn, .login-btn {
                 background-color: var(--button-dark);
             }
 
@@ -575,8 +608,7 @@
                 width: calc(100% - 40px);
             }
 
-            th,
-            td {
+            th, td {
                 padding: 10px 12px;
             }
         }
@@ -591,14 +623,12 @@
                 gap: 15px;
             }
 
-            th,
-            td {
+            th, td {
                 padding: 8px 10px;
                 font-size: 13px;
             }
 
-            .order-btn,
-            .login-btn {
+            .order-btn, .login-btn {
                 padding: 6px 10px;
                 font-size: 13px;
             }
@@ -610,7 +640,6 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -856,8 +885,16 @@
             const menuCloseBtn = document.getElementById('menuCloseBtn');
 
             function toggleMenu() {
+                document.body.classList.toggle('menu-open');
                 menuContent.classList.toggle('active');
                 menuOverlay.classList.toggle('active');
+                
+                // Impede a rolagem do corpo quando o menu está aberto
+                if (menuContent.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
 
                 const spans = menuToggle.querySelectorAll('span');
                 if (menuContent.classList.contains('active')) {
@@ -872,8 +909,11 @@
             }
 
             function closeMenu() {
+                document.body.classList.remove('menu-open');
                 menuContent.classList.remove('active');
                 menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                
                 const spans = menuToggle.querySelectorAll('span');
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';
@@ -883,6 +923,13 @@
             menuToggle.addEventListener('click', toggleMenu);
             menuCloseBtn.addEventListener('click', closeMenu);
             menuOverlay.addEventListener('click', closeMenu);
+
+            // Fechar menu ao clicar em um item (apenas mobile)
+            if (window.innerWidth <= 991) {
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    item.addEventListener('click', closeMenu);
+                });
+            }
 
             // Carrega o widget de chat apenas para usuários logados
             loadChatWidget();
