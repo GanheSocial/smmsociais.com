@@ -4,65 +4,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serviços SMM - GanheSocial</title>
+    <title>Serviços - SMM Sociais</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-light: #ffffff;
-            --text-light: #24292e;
-            --container-light: #f6f8fa;
-            --button-light: #0366d6;
-            --link-color: #0366d6;
-            --bg-dark: #0d1117;
-            --text-dark: #c9d1d9;
-            --container-dark: #161b22;
-            --button-dark: #58a6ff;
-            --border-dark: #30363d;
-            --error-color: #dc3545;
+            --bg-light: #f8f9fa;
+            --text-light: #212529;
+            --container-light: #ffffff;
+            --button-light: #007bff;
             --success-color: #28a745;
+            --pending-color: #ffc107;
+            --failed-color: #dc3545;
+            --border-light: #dee2e6;
+            --hover-light: #f1f1f1;
+            --shadow-light: rgba(0, 0, 0, 0.1);
             --label-light: #586069;
+            --positive-color: #2ecc71;
+            --negative-color: #e74c3c;
+            --neutral-color: #3498db;
+
+            --bg-dark: #121212;
+            --text-dark: #e0e0e0;
+            --container-dark: #1e1e1e;
+            --button-dark: #1a73e8;
+            --success-dark: #34a853;
+            --pending-dark: #f9ab00;
+            --failed-dark: #ea4335;
+            --border-dark: #333333;
+            --hover-dark: #2d2d2d;
+            --shadow-dark: rgba(0, 0, 0, 0.3);
             --label-dark: #8b949e;
-            --primary-color: #007BFF;
-            --border-light: #ddd;
+            --positive-color-dark: #27ae60;
+            --negative-color-dark: #c0392b;
+            --neutral-color-dark: #2980b9;
+            --error-color: #f85149;
+            --success-color-dark: #238636;
+
+            --card-radius: 12px;
+            --transition: all 0.3s ease;
         }
 
         body {
             background-color: var(--bg-light);
             color: var(--text-light);
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            position: relative;
-            transition: background-color 0.3s, color 0.3s;
+            transition: var(--transition);
+            line-height: 1.6;
         }
 
+        /* Header Styles */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background-color: var(--container-light);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px 25px;
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 2px 10px var(--shadow-light);
+            position: relative;
+            z-index: 10;
         }
 
         .left-header {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 20px;
         }
 
         .right-header {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
         .logo {
             height: 32px;
-            margin-right: 29px;
+            margin-right: 10px;
         }
 
-        /* Adicionado: Estilo do saldo */
+        /* Balance Styles */
         .balance-container {
             background: rgba(0, 0, 0, 0.05);
             padding: 8px 12px;
@@ -87,7 +110,6 @@
             align-items: center;
         }
 
-        /* Adicionado: Saldo para desktop */
         .desktop-balance-container {
             position: fixed;
             top: 15px;
@@ -96,8 +118,7 @@
             padding: 8px 12px;
             border-radius: 5px;
             font-weight: bold;
-            display: none;
-            /* Alterado: inicialmente escondido */
+            display: flex;
             align-items: center;
             gap: 5px;
             z-index: 10;
@@ -105,15 +126,36 @@
 
         .container {
             background: var(--container-light);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 700px;
-            margin: 20px auto;
-            transition: background 0.3s;
-            border: 1px solid #e1e4e8;
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 20px var(--shadow-light);
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-light);
+            width: 100%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 25px;
         }
 
+        .container-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .container-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .container-body {
+            padding: 20px;
+        }
+
+        /* Services Table Styles */
         .category-tabs {
             display: flex;
             gap: 8px;
@@ -131,9 +173,9 @@
             font-size: 13px;
             font-weight: bold;
             white-space: nowrap;
-            background-color: #e1e4e8;
+            background-color: var(--hover-light);
             color: var(--text-light);
-            transition: all 0.2s;
+            transition: var(--transition);
             flex-shrink: 0;
         }
 
@@ -146,25 +188,27 @@
             opacity: 0.9;
         }
 
-        /* Estilo da barra de pesquisa */
+        /* Search Styles */
         .search-container {
             margin-bottom: 20px;
             position: relative;
         }
 
         .search-input {
-            width: 96%;
-            padding: 10px 15px;
+            width: 100%;
+            padding: 12px 15px;
             border: 1px solid var(--border-light);
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 14px;
-            transition: all 0.3s;
+            transition: var(--transition);
+            background: var(--container-light);
+            color: var(--text-light);
         }
 
         .search-input:focus {
             outline: none;
             border-color: var(--button-light);
-            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
 
         .search-clear {
@@ -175,7 +219,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #999;
+            color: var(--label-light);
             font-size: 16px;
             display: none;
         }
@@ -184,6 +228,7 @@
             color: var(--error-color);
         }
 
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -191,23 +236,22 @@
             min-width: 600px;
         }
 
-        th,
-        td {
-            padding: 10px 12px;
+        th, td {
+            padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #e1e4e8;
+            border-bottom: 1px solid var(--border-light);
             font-size: 14px;
         }
 
         th {
-            background-color: #f6f8fa;
+            background-color: var(--bg-light);
             font-weight: bold;
             position: sticky;
             top: 0;
         }
 
         tr:hover {
-            background-color: rgba(0, 0, 0, 0.02);
+            background-color: var(--hover-light);
         }
 
         .service-name {
@@ -216,27 +260,33 @@
             font-size: 14px;
         }
 
-        .order-btn,
-        .login-btn {
-            padding: 6px 12px;
+        .order-btn, .login-btn {
+            padding: 8px 15px;
             background-color: var(--button-light);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 14px;
             white-space: nowrap;
         }
 
-        .order-btn:hover,
-        .login-btn:hover {
+        .order-btn:hover, .login-btn:hover {
             opacity: 0.9;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px var(--shadow-light);
         }
 
-        /* Estilos do menu hamburguer */
+        /* Menu Styles */
+        .menu-item[href="services"] {
+            color: white;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid white;
+        }
+
         .menu-toggle {
             width: 30px;
             height: 30px;
@@ -250,9 +300,9 @@
             display: block;
             height: 3px;
             width: 100%;
-            background-color: var(--text-light);
+            background-color: white;
             border-radius: 3px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .menu-overlay {
@@ -262,21 +312,22 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            z-index: 5;
+            z-index: 1000;
             display: none;
+            backdrop-filter: blur(3px);
         }
 
         .menu-content {
             position: fixed;
             top: 0;
             left: -300px;
-            width: 250px;
+            width: 280px;
             height: 100%;
             background: var(--container-light);
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-            transition: left 0.3s ease;
+            box-shadow: 2px 0 15px var(--shadow-light);
+            transition: var(--transition);
             padding: 20px 0;
-            z-index: 6;
+            z-index: 1001;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -296,17 +347,25 @@
             color: var(--text-light);
             font-size: 16px;
             text-decoration: none;
-            transition: background-color 0.2s;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
         }
 
         .menu-item:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: var(--hover-light);
         }
 
         .menu-footer {
             margin-top: auto;
             padding: 25px 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-top: 1px solid var(--border-light);
         }
 
         .menu-logout {
@@ -315,11 +374,19 @@
             color: #dc3545;
             font-size: 16px;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
         }
 
-        /* Estilos para não logados */
+        .menu-logout:hover {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        /* Not Logged In Styles */
         .logo-container {
-            margin: 20px 0;
+            margin: 30px 0;
             text-align: center;
         }
 
@@ -331,60 +398,123 @@
         .nav-links {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 20px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
-            padding: 0 10px;
+            padding: 0 20px;
         }
 
         .nav-links a {
-            color: var(--link-color);
+            color: var(--button-light);
             text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
         }
 
         .nav-links a:hover {
             text-decoration: underline;
+            opacity: 0.9;
         }
 
+        /* Desktop Menu */
+        @media (min-width: 992px) {
+            body {
+                padding-left: 280px;
+            }
+
+            .desktop-header {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+
+            .menu-content {
+                left: 0;
+                box-shadow: none;
+            }
+
+            .menu-overlay {
+                display: none !important;
+            }
+
+            .logo-mobile {
+                display: none;
+            }
+
+            .menu-close-btn {
+                display: none !important;
+            }
+
+            .desktop-balance-container {
+                display: flex;
+            }
+
+            /* Adjust container for desktop */
+            .container {
+                width: calc(100% - 300px);
+                max-width: 1200px;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .logo-mobile {
+                display: block;
+            }
+
+            body.menu-open .header {
+                display: none;
+            }
+
+            .menu-close-btn {
+                display: block;
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                color: #afaeae;
+                font-size: 1.5rem;
+                cursor: pointer;
+                z-index: 1002;
+            }
+
+            .menu-close-btn:hover {
+                color: #dc3545;
+            }
+
+            .desktop-balance-container {
+                display: none;
+            }
+        }
+
+        /* Dark Mode Styles */
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
                 color: var(--text-dark);
             }
 
-            .header,
+            .header {
+                background: var(--primary-gradient-dark);
+            }
+
             .container {
                 background: var(--container-dark);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-                border: 1px solid var(--border-dark);
+                box-shadow: 0 4px 20px var(--shadow-dark);
+                border-color: var(--border-dark);
             }
 
-            .menu-toggle span {
-                background-color: var(--text-dark);
-            }
-
-            .menu-content {
-                background: var(--container-dark);
-            }
-
-            .menu-footer {
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .menu-item {
-                color: var(--text-dark);
-            }
-
-            .menu-item:hover {
-                background-color: rgba(255, 255, 255, 0.05);
+            .container-header {
+                background: var(--primary-gradient-dark);
+                border-color: var(--border-dark);
             }
 
             .category-tab {
-                background-color: var(--container-dark);
+                background-color: var(--hover-dark);
                 color: var(--text-dark);
-                border: 1px solid var(--border-dark);
             }
 
             .category-tab.active {
@@ -392,226 +522,105 @@
                 color: white;
             }
 
-            th {
-                background-color: var(--container-dark);
+            .search-input {
+                background: var(--container-dark);
+                border-color: var(--border-dark);
+                color: var(--text-dark);
             }
 
-            th,
-            td {
-                border-bottom: 1px solid var(--border-dark);
+            .search-input:focus {
+                border-color: var(--button-dark);
+                box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+            }
+
+            .search-clear {
+                color: var(--label-dark);
+            }
+
+            th {
+                background-color: var(--bg-dark);
+            }
+
+            th, td {
+                border-bottom-color: var(--border-dark);
             }
 
             tr:hover {
-                background-color: rgba(255, 255, 255, 0.05);
+                background-color: var(--hover-dark);
             }
 
             .service-name {
                 color: var(--button-dark);
             }
 
-            .order-btn,
-            .login-btn {
+            .order-btn, .login-btn {
                 background-color: var(--button-dark);
             }
 
-            /* Adicionado: Estilo do saldo no dark mode */
-            .balance-container {
+            .nav-links a {
+                color: var(--button-dark);
+            }
+
+            .balance-container, .desktop-balance-container {
                 background: rgba(255, 255, 255, 0.05);
             }
 
             .refresh-balance {
                 color: var(--text-dark);
             }
-
-            .desktop-balance-container {
-                background: rgba(255, 255, 255, 0.05);
-            }
-
-            /* Estilo da barra de pesquisa no dark mode */
-            .search-input {
-                background-color: var(--container-dark);
-                color: var(--text-dark);
-                border-color: var(--border-dark);
-            }
-
-            .search-input:focus {
-                border-color: var(--button-dark);
-                box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
-            }
-
-            .search-clear {
-                color: var(--label-dark);
-            }
         }
 
-        /* Estilos para desktop */
-        @media (min-width: 992px) {
-            .desktop-header {
-                display: none;
-            }
-
-            body.logged-in {
-                padding-left: 250px;
-            }
-
-            .menu-toggle {
-                display: none;
-            }
-
-            /* Menu lateral só aparece para usuários logados */
-            body.logged-in .menu-content {
-                left: 0;
-                box-shadow: none;
-            }
-
-            /* Menu lateral escondido para não logados */
-            body:not(.logged-in) .menu-content {
-                display: none;
-            }
-
-            .menu-overlay {
-                display: none !important;
-            }
-
-            .container {
-                width: calc(90% - 250px);
-                max-width: 1200px;
-            }
-
-            /* Ajuste do container para não logados */
-            body:not(.logged-in) .container {
-                width: 98%;
-                max-width: 900px;
-                margin: 20px auto;
-            }
-
-            /* Esconde a logo no header na versão desktop */
-            .logo-mobile {
-                display: none;
-            }
-
-            /* Mostra o saldo desktop apenas para logados */
-            .logged-in .desktop-balance-container {
-                display: flex;
-            }
-        }
-
-        @media (max-width: 991px) {
-            .container {
-                width: 95%;
-                max-width: 700px;
-                padding: 15px;
-            }
-
-            /* Mostra a logo no header apenas na versão mobile */
-            .logo-mobile {
-                display: block;
-            }
-
-            /* Esconde o saldo desktop */
-            .desktop-balance-container {
-                display: none;
-            }
-        }
-
+        /* Responsive Styles */
         @media (max-width: 768px) {
             .container {
-                width: 500px;
+                padding: 20px;
+                width: calc(100% - 40px);
             }
 
-            /* Ajuste do container para não logados */
-            body:not(.logged-in) .container {
-                width: 98%;
-                max-width: 500px;
-                margin: 20px auto;
+            .nav-links {
+                gap: 15px;
             }
 
-            .logo-container img {
-                max-width: 150px;
+            th, td {
+                padding: 10px 12px;
             }
+        }
 
-            th,
-            td {
-                padding: 8px 10px;
-                font-size: 13px;
-            }
-
-            .category-tabs {
-                gap: 6px;
-            }
-
-            .category-tab {
-                padding: 6px 10px;
-                font-size: 12px;
-            }
-
-            .order-btn,
-            .login-btn {
-                padding: 5px 8px;
-                font-size: 12px;
+        @media (max-width: 576px) {
+            .container {
+                padding: 15px;
+                width: calc(100% - 30px);
             }
 
             .nav-links {
                 gap: 10px;
+                font-size: 14px;
             }
 
             .search-input {
-                width: 98%;
-                padding: 8px 12px;
+                padding: 10px 12px;
+            }
+
+            th, td {
+                padding: 8px 10px;
                 font-size: 13px;
             }
         }
 
-        @media (max-width: 420px) {
-            .container {
-                width: 330px;
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-            /* Ajuste do container para não logados */
-            body:not(.logged-in) .container {
-                width: 98%;
-                max-width: 350px;
-                margin: 20px auto;
-            }
-
-            .logo-container img {
-                max-width: 130px;
-            }
-
-            .nav-links a {
-                font-size: 13px;
-            }
-
-            .container {
-                padding: 10px;
-                border-radius: 6px;
-            }
-
-            table {
-                min-width: 100%;
-            }
-
-            th,
-            td {
-                padding: 6px 8px;
-                font-size: 12px;
-            }
-
-            .service-name {
-                font-size: 13px;
-            }
-
-            /* Ajuste para o saldo mobile */
-            .balance-container {
-                font-size: 14px;
-                padding: 6px 10px;
-            }
-
-            .search-input {
-                width: 93%;
-                padding: 7px 10px;
-                font-size: 12px;
-            }
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
 
         body {
@@ -625,106 +634,94 @@
 </head>
 
 <body>
-    <!-- Logo para desktop (no menu lateral) -->
+    <!-- Menu Lateral para Desktop -->
     <div class="menu-content" id="menuContent">
+        <!-- Botão de fechar (visível apenas no mobile) -->
+        <button class="menu-close-btn" id="menuCloseBtn">&times;</button>
+
         <div style="padding: 20px; text-align: left; margin-top: -20px;" class="logo-desktop">
             <a href="painel">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                    alt="Logo smmsociais" class="logo" style="max-width: 80%;">
+                    alt="Logo SMM Sociais" class="logo" style="max-width: 80%;">
             </a>
         </div>
-        <a class="menu-item" href="painel">Novo Pedido</a>
-        <a class="menu-item" href="services">Serviços</a>
-        <a class="menu-item" href="orders">Ordens</a>
-        <a class="menu-item" href="massorder">Pedido em Massa</a>
-        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-        <a class="menu-item" href="profile">Minha Conta</a>
+        <a class="menu-item" href="painel"><i class="fas fa-plus-circle"></i> Novo Pedido</a>
+        <a class="menu-item" href="services"><i class="fas fa-list"></i> Serviços</a>
+        <a class="menu-item" href="orders"><i class="fas fa-tasks"></i> Ordens</a>
+        <a class="menu-item" href="massorder"><i class="fas fa-layer-group"></i> Pedido em Massa</a>
+        <a class="menu-item" href="addfunds"><i class="fas fa-money-bill-wave"></i> Adicionar Saldo</a>
+        <a class="menu-item" href="profile"><i class="fas fa-user-cog"></i> Minha Conta</a>
 
         <div class="menu-footer">
-            <a class="menu-logout" onclick="logout()">Sair</a>
+            <a class="menu-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
         </div>
     </div>
 
-    <!-- Adicionado: Saldo para desktop (fixo no topo direito) -->
+    <!-- Saldo para Desktop -->
     <div class="desktop-balance-container">
         <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
     </div>
 
-    <!-- Estrutura para usuários logados -->
-    <div id="loggedInHeader" style="display: none;">
-        <div class="header desktop-header">
-            <div class="left-header">
-                <div class="menu-toggle" id="menuToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <!-- Logo para mobile (no header) -->
-                <a href="painel" class="logo-mobile">
-                    <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                        alt="Logo smmsociais" class="logo">
-                </a>
-            </div>
-
-            <!-- Adicionado: Saldo para mobile -->
-            <div class="right-header">
-                <div class="balance-container">
-                    <span class="balance-value" id="userBalance">R$ 0,00</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Estrutura para usuários não logados -->
-    <div id="loggedOutHeader" style="display: none;">
-        <div class="logo-container">
-            <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                alt="SMM Sociais Logo">
-        </div>
-
-        <div class="nav-links">
-            <a href="/">Fazer Login</a>
-            <a href="services">Serviços</a>
-            <a href="signup">Criar Conta</a>
-            <a href="terms">Termos</a>
-        </div>
-    </div>
-
-    <div class="container">
-        <h2 style="font-size: 1.3rem; margin-bottom: 15px;">Serviços SMM</h2>
-
-        <!-- Barra de pesquisa adicionada -->
-        <div class="search-container">
-            <input type="text" class="search-input" id="serviceSearch" placeholder="Pesquisar serviços...">
-            <button class="search-clear" id="searchClear">×</button>
-        </div>
-
-        <div class="category-tabs">
-            <button class="category-tab active" data-category="Todos">Todos</button>
-        </div>
-
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Serviço</th>
-                        <th>Preço por 1000</th>
-                        <th>Mínimo</th>
-                        <th>Máximo</th>
-                        <th>Tempo médio</th>
-                        <th>Descrição</th>
-                    </tr>
-                </thead>
-                <tbody id="servicesTableBody">
-                    <!-- Os serviços serão carregados aqui via JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Menu Overlay -->
+    <!-- Overlay do Menu -->
     <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Header para Mobile -->
+    <div class="header desktop-header">
+        <div class="left-header">
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <!-- Logo para mobile (no header) -->
+            <a href="painel" class="logo-mobile">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo SMM Sociais" class="logo">
+            </a>
+        </div>
+        <div class="right-header">
+            <div class="balance-container">
+                <span class="balance-value" id="userBalance">R$ 0,00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-container">
+        <div class="container fade-in">
+            <h2 class="page-title"><i class="fas fa-list"></i> Nossos Serviços</h2>
+
+            <!-- Barra de pesquisa -->
+            <div class="search-container">
+                <input type="text" class="search-input" id="serviceSearch" placeholder="Pesquisar serviços...">
+                <button class="search-clear" id="searchClear">×</button>
+            </div>
+
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="Todos">Todos</button>
+                <!-- Outras categorias serão adicionadas dinamicamente -->
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Serviço</th>
+                            <th>Preço por 1000</th>
+                            <th>Mínimo</th>
+                            <th>Máximo</th>
+                            <th>Tempo médio</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicesTableBody">
+                        <!-- Os serviços serão carregados aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Variável global para armazenar os serviços
@@ -772,16 +769,16 @@
             // Mostra o cabeçalho apropriado
             if (token) {
                 loggedInHeader.style.display = 'block';
-                document.body.classList.add('logged-in'); // Adiciona classe para usuário logado
+                document.body.classList.add('logged-in');
                 setupLoggedInFeatures();
-                fetchBalance(); // Carrega o saldo se estiver logado
+                fetchBalance();
             } else {
                 loggedOutHeader.style.display = 'block';
-                document.body.classList.remove('logged-in'); // Remove classe para usuário não logado
+                document.body.classList.remove('logged-in');
                 setupLoggedOutFeatures();
             }
 
-            // Carrega os serviços (funciona para ambos os casos)
+            // Carrega os serviços
             loadServices('Todos');
 
             // Configura a barra de pesquisa
@@ -792,7 +789,6 @@
             const searchInput = document.getElementById('serviceSearch');
             const searchClear = document.getElementById('searchClear');
 
-            // Mostra/oculta o botão de limpar
             searchInput.addEventListener('input', function () {
                 if (this.value.trim() !== '') {
                     searchClear.style.display = 'block';
@@ -803,7 +799,6 @@
                 }
             });
 
-            // Limpa a pesquisa
             searchClear.addEventListener('click', function () {
                 searchInput.value = '';
                 searchClear.style.display = 'none';
@@ -831,8 +826,9 @@
             const menuToggle = document.getElementById('menuToggle');
             const menuOverlay = document.getElementById('menuOverlay');
             const menuContent = document.getElementById('menuContent');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
 
-            menuToggle.addEventListener('click', function () {
+            function toggleMenu() {
                 menuContent.classList.toggle('active');
                 menuOverlay.classList.toggle('active');
 
@@ -846,16 +842,20 @@
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
                 }
-            });
+            }
 
-            menuOverlay.addEventListener('click', function () {
+            function closeMenu() {
                 menuContent.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 const spans = menuToggle.querySelectorAll('span');
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
-            });
+            }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            menuCloseBtn.addEventListener('click', closeMenu);
+            menuOverlay.addEventListener('click', closeMenu);
         }
 
         function setupLoggedOutFeatures() {
@@ -909,7 +909,7 @@
                         <td>${service.minimo}</td>
                         <td>${service.maximo || 'N/A'}</td>
                         <td>${service.tempo_medio}</td>
-                        <td><button class="order-btn" data-id="${service.id_servico}">Ver</button></td>
+                        <td><button class="order-btn" data-id="${service.id_servico}"><i class="fas fa-shopping-cart"></i> Pedir</button></td>
                     `;
                 } else {
                     row.innerHTML = `
@@ -919,7 +919,7 @@
                         <td>${service.minimo}</td>
                         <td>${service.maximo || 'N/A'}</td>
                         <td>${service.tempo_medio}</td>
-                        <td><a href="/" class="login-btn">Ver</a></td>
+                        <td><a href="/" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a></td>
                     `;
                 }
 
@@ -932,7 +932,7 @@
                         const serviceId = this.getAttribute('data-id');
                         window.location.href = `painel?service=${serviceId}`;
                     });
-                });
+                }
             }
         }
 
@@ -941,6 +941,7 @@
             window.location.href = "https://smmsociais.com/";
         }
     </script>
+    <script src="https://smmsociais.com/chat-widget.js"></script>
 </body>
 
 </html>
