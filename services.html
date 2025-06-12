@@ -926,15 +926,15 @@
                 tableBody.appendChild(row);
             });
 
-            if (isLoggedIn) {
-                document.querySelectorAll('.order-btn').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const serviceId = this.getAttribute('data-id');
-                        window.location.href = `painel?service=${serviceId}`;
-                    });
-                }
-            }
-        }
+if (isLoggedIn) {
+    document.querySelectorAll('.order-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const serviceId = this.getAttribute('data-id');
+            window.location.href = `painel?service=${serviceId}`;
+        });
+    });
+}
+      }
 
         function logout() {
             localStorage.removeItem("token");
