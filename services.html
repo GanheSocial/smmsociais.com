@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serviços - SMM Sociais</title>
+    <title>Serviços SMM - SMM Sociais</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -53,6 +53,13 @@
             min-height: 100vh;
             transition: var(--transition);
             line-height: 1.6;
+        }
+
+        .menu-item[href="services"] {
+            color: white;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid white;
         }
 
         /* Header Styles */
@@ -133,7 +140,7 @@
             margin-bottom: 30px;
             border: 1px solid var(--border-light);
             width: 100%;
-            max-width: 1200px;
+            max-width: 900px;
             margin: 30px auto;
             padding: 25px;
         }
@@ -173,7 +180,7 @@
             font-size: 13px;
             font-weight: bold;
             white-space: nowrap;
-            background-color: var(--hover-light);
+            background-color: var(--border-light);
             color: var(--text-light);
             transition: var(--transition);
             flex-shrink: 0;
@@ -188,7 +195,6 @@
             opacity: 0.9;
         }
 
-        /* Search Styles */
         .search-container {
             margin-bottom: 20px;
             position: relative;
@@ -199,15 +205,15 @@
             padding: 12px 15px;
             border: 1px solid var(--border-light);
             border-radius: 6px;
-            font-size: 14px;
-            transition: var(--transition);
             background: var(--container-light);
             color: var(--text-light);
+            font-size: 14px;
+            transition: var(--transition);
         }
 
         .search-input:focus {
-            outline: none;
             border-color: var(--button-light);
+            outline: none;
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
 
@@ -228,7 +234,6 @@
             color: var(--error-color);
         }
 
-        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -257,17 +262,16 @@
         .service-name {
             font-weight: bold;
             color: var(--button-light);
-            font-size: 14px;
         }
 
         .order-btn, .login-btn {
-            padding: 8px 15px;
+            padding: 8px 12px;
             background-color: var(--button-light);
             color: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: bold;
             transition: var(--transition);
             font-size: 14px;
             white-space: nowrap;
@@ -276,17 +280,10 @@
         .order-btn:hover, .login-btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
-            box-shadow: 0 2px 8px var(--shadow-light);
+            box-shadow: 0 4px 12px var(--shadow-light);
         }
 
         /* Menu Styles */
-        .menu-item[href="services"] {
-            color: white;
-            font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-left: 3px solid white;
-        }
-
         .menu-toggle {
             width: 30px;
             height: 30px;
@@ -391,7 +388,7 @@
         }
 
         .logo-container img {
-            max-width: 180px;
+            max-width: 200px;
             height: auto;
         }
 
@@ -407,14 +404,14 @@
         .nav-links a {
             color: var(--button-light);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: bold;
             font-size: 15px;
             transition: var(--transition);
         }
 
         .nav-links a:hover {
             text-decoration: underline;
-            opacity: 0.9;
+            color: var(--button-light);
         }
 
         /* Desktop Menu */
@@ -450,12 +447,6 @@
 
             .desktop-balance-container {
                 display: flex;
-            }
-
-            /* Adjust container for desktop */
-            .container {
-                width: calc(100% - 300px);
-                max-width: 1200px;
             }
         }
 
@@ -513,7 +504,7 @@
             }
 
             .category-tab {
-                background-color: var(--hover-dark);
+                background-color: var(--border-dark);
                 color: var(--text-dark);
             }
 
@@ -537,12 +528,16 @@
                 color: var(--label-dark);
             }
 
+            .search-clear:hover {
+                color: var(--error-color);
+            }
+
             th {
                 background-color: var(--bg-dark);
             }
 
             th, td {
-                border-bottom-color: var(--border-dark);
+                border-bottom: 1px solid var(--border-dark);
             }
 
             tr:hover {
@@ -561,12 +556,8 @@
                 color: var(--button-dark);
             }
 
-            .balance-container, .desktop-balance-container {
-                background: rgba(255, 255, 255, 0.05);
-            }
-
-            .refresh-balance {
-                color: var(--text-dark);
+            .nav-links a:hover {
+                color: var(--button-dark);
             }
         }
 
@@ -575,10 +566,6 @@
             .container {
                 padding: 20px;
                 width: calc(100% - 40px);
-            }
-
-            .nav-links {
-                gap: 15px;
             }
 
             th, td {
@@ -593,16 +580,16 @@
             }
 
             .nav-links {
-                gap: 10px;
-                font-size: 14px;
-            }
-
-            .search-input {
-                padding: 10px 12px;
+                gap: 15px;
             }
 
             th, td {
                 padding: 8px 10px;
+                font-size: 13px;
+            }
+
+            .order-btn, .login-btn {
+                padding: 6px 10px;
                 font-size: 13px;
             }
         }
@@ -686,10 +673,25 @@
         </div>
     </div>
 
+    <!-- Estrutura para usuários não logados -->
+    <div id="loggedOutHeader" style="display: none;">
+        <div class="logo-container">
+            <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                alt="SMM Sociais Logo">
+        </div>
+
+        <div class="nav-links">
+            <a href="/"><i class="fas fa-sign-in-alt"></i> Fazer Login</a>
+            <a href="services"><i class="fas fa-list"></i> Serviços</a>
+            <a href="signup"><i class="fas fa-user-plus"></i> Criar Conta</a>
+            <a href="terms"><i class="fas fa-file-alt"></i> Termos</a>
+        </div>
+    </div>
+
     <!-- Conteúdo Principal -->
     <div class="main-container">
         <div class="container fade-in">
-            <h2 class="page-title"><i class="fas fa-list"></i> Nossos Serviços</h2>
+            <h2 class="page-title"><i class="fas fa-list"></i> Serviços SMM</h2>
 
             <!-- Barra de pesquisa -->
             <div class="search-container">
@@ -699,7 +701,6 @@
 
             <div class="category-tabs">
                 <button class="category-tab active" data-category="Todos">Todos</button>
-                <!-- Outras categorias serão adicionadas dinamicamente -->
             </div>
 
             <div style="overflow-x: auto;">
@@ -763,22 +764,24 @@
             document.body.classList.add('loaded');
 
             const token = localStorage.getItem("token");
-            const loggedInHeader = document.getElementById('loggedInHeader');
+            const loggedInHeader = document.querySelector('.header');
             const loggedOutHeader = document.getElementById('loggedOutHeader');
 
             // Mostra o cabeçalho apropriado
             if (token) {
-                loggedInHeader.style.display = 'block';
+                loggedInHeader.style.display = 'flex';
+                loggedOutHeader.style.display = 'none';
                 document.body.classList.add('logged-in');
                 setupLoggedInFeatures();
-                fetchBalance();
+                fetchBalance(); // Carrega o saldo se estiver logado
             } else {
+                loggedInHeader.style.display = 'none';
                 loggedOutHeader.style.display = 'block';
                 document.body.classList.remove('logged-in');
                 setupLoggedOutFeatures();
             }
 
-            // Carrega os serviços
+            // Carrega os serviços (funciona para ambos os casos)
             loadServices('Todos');
 
             // Configura a barra de pesquisa
@@ -789,6 +792,7 @@
             const searchInput = document.getElementById('serviceSearch');
             const searchClear = document.getElementById('searchClear');
 
+            // Mostra/oculta o botão de limpar
             searchInput.addEventListener('input', function () {
                 if (this.value.trim() !== '') {
                     searchClear.style.display = 'block';
@@ -799,6 +803,7 @@
                 }
             });
 
+            // Limpa a pesquisa
             searchClear.addEventListener('click', function () {
                 searchInput.value = '';
                 searchClear.style.display = 'none';
@@ -926,15 +931,15 @@
                 tableBody.appendChild(row);
             });
 
-if (isLoggedIn) {
-    document.querySelectorAll('.order-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const serviceId = this.getAttribute('data-id');
-            window.location.href = `painel?service=${serviceId}`;
-        });
-    });
-}
-      }
+            if (isLoggedIn) {
+                document.querySelectorAll('.order-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const serviceId = this.getAttribute('data-id');
+                        window.location.href = `painel?service=${serviceId}`;
+                    });
+                });
+            }
+        }
 
         function logout() {
             localStorage.removeItem("token");
