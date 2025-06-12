@@ -4,242 +4,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ordem em Massa - SMM Sociais</title>
+    <title>Pedido em Massa - SMM Sociais</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-light: #ffffff;
-            --text-light: #24292e;
-            --container-light: #f6f8fa;
-            --button-light: #0366d6;
-            --link-color: #0366d6;
-            --bg-dark: #0d1117;
-            --text-dark: #c9d1d9;
-            --container-dark: #161b22;
-            --button-dark: #58a6ff;
-            --border-dark: #30363d;
-            --error-color: #dc3545;
+            --bg-light: #f8f9fa;
+            --text-light: #212529;
+            --container-light: #ffffff;
+            --button-light: #007bff;
             --success-color: #28a745;
+            --pending-color: #ffc107;
+            --failed-color: #dc3545;
+            --border-light: #dee2e6;
+            --hover-light: #f1f1f1;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --label-light: #586069;
+            --positive-color: #2ecc71;
+            --negative-color: #e74c3c;
+            --neutral-color: #3498db;
+
+            --bg-dark: #121212;
+            --text-dark: #e0e0e0;
+            --container-dark: #1e1e1e;
+            --button-dark: #1a73e8;
+            --success-dark: #34a853;
+            --pending-dark: #f9ab00;
+            --failed-dark: #ea4335;
+            --border-dark: #333333;
+            --hover-dark: #2d2d2d;
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --label-dark: #8b949e;
+            --positive-color-dark: #27ae60;
+            --negative-color-dark: #c0392b;
+            --neutral-color-dark: #2980b9;
+            --error-color: #f85149;
+            --success-color-dark: #238636;
+
+            --card-radius: 12px;
+            --transition: all 0.3s ease;
         }
 
         body {
             background-color: var(--bg-light);
             color: var(--text-light);
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            position: relative;
-            transition: background-color 0.3s, color 0.3s;
+            transition: var(--transition);
+            line-height: 1.6;
         }
 
+        .menu-item[href="massorder"] {
+            color: white;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid white;
+        }
+
+        /* Header Styles */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background-color: var(--container-light);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px 25px;
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 2px 10px var(--shadow-light);
+            position: relative;
+            z-index: 10;
         }
 
         .left-header {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 20px;
         }
 
         .right-header {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
         .logo {
             height: 32px;
-            margin-right: 29px;
+            margin-right: 10px;
         }
 
-        .container {
-            background: var(--container-light);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px auto;
-            transition: background 0.3s;
-            border: 1px solid #e1e4e8;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #e1e4e8;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            background-color: var(--bg-light);
-            color: var(--text-light);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--button-light);
-            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.2);
-        }
-
-        .submit-btn {
-            padding: 12px 25px;
-            background-color: var(--button-light);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
-        .submit-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .bulk-instructions {
-            background-color: rgba(3, 102, 214, 0.1);
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 25px;
-            border-left: 4px solid var(--button-light);
-        }
-
-        .bulk-instructions h4 {
-            margin-top: 0;
-            color: var(--button-light);
-        }
-
-        .bulk-instructions ol {
-            padding-left: 20px;
-        }
-
-        .bulk-instructions li {
-            margin-bottom: 8px;
-        }
-
-        .example-text {
-            font-family: monospace;
-            background-color: rgba(0, 0, 0, 0.05);
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-
-        /* Estilos do menu hamburguer */
-        .menu-toggle {
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-        }
-
-        .menu-toggle span {
-            display: block;
-            height: 3px;
-            width: 100%;
-            background-color: var(--text-light);
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 5;
-            display: none;
-        }
-
-        .menu-content {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 250px;
-            height: 100%;
-            background: var(--container-light);
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-            transition: left 0.3s ease;
-            padding: 20px 0;
-            z-index: 6;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .menu-content.active {
-            left: 0;
-        }
-
-        .menu-overlay.active {
-            display: block;
-        }
-
-        .menu-item {
-            padding: 15px 25px;
-            cursor: pointer;
-            color: var(--text-light);
-            font-size: 16px;
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-
-        .menu-item:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .menu-footer {
-            margin-top: auto;
-            padding: 25px 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .menu-logout {
-            padding: 15px 25px;
-            cursor: pointer;
-            color: #dc3545;
-            font-size: 16px;
-            text-decoration: none;
-        }
-
-        .error-message {
-            color: var(--error-color);
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .success-message {
-            color: var(--success-color);
-            font-size: 16px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-        }
-
-        /* Estilos para o saldo */
+        /* Balance Styles */
         .balance-container {
             background: rgba(0, 0, 0, 0.05);
             padding: 8px 12px;
@@ -264,7 +117,6 @@
             align-items: center;
         }
 
-        /* Saldo para desktop (fixo no topo direito) */
         .desktop-balance-container {
             position: fixed;
             top: 15px;
@@ -279,88 +131,264 @@
             z-index: 10;
         }
 
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: var(--bg-dark);
-                color: var(--text-dark);
-            }
-
-            .header,
-            .container {
-                background: var(--container-dark);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-                border: 1px solid var(--border-dark);
-            }
-
-            .menu-toggle span {
-                background-color: var(--text-dark);
-            }
-
-            .menu-content {
-                background: var(--container-dark);
-            }
-
-            .menu-footer {
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .menu-item {
-                color: var(--text-dark);
-            }
-
-            .menu-item:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-
-            .form-control {
-                background-color: var(--bg-dark);
-                color: var(--text-dark);
-                border: 1px solid var(--border-dark);
-            }
-
-            .form-control:focus {
-                border-color: var(--button-dark);
-                box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
-            }
-
-            .submit-btn {
-                background-color: var(--button-dark);
-            }
-
-            .bulk-instructions {
-                background-color: rgba(88, 166, 255, 0.1);
-                border-left: 4px solid var(--button-dark);
-            }
-
-            .bulk-instructions h4 {
-                color: var(--button-dark);
-            }
-
-            .example-text {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-
-            .balance-container {
-                background: rgba(255, 255, 255, 0.05);
-            }
-
-            .refresh-balance {
-                color: var(--text-dark);
-            }
-
-            .desktop-balance-container {
-                background: rgba(255, 255, 255, 0.05);
-            }
+        .container {
+            background: var(--container-light);
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 20px var(--shadow-light);
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-light);
+            width: 100%;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 25px;
         }
 
-        /* Estilos para desktop */
+        .container-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .container-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .container-body {
+            padding: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .input-box, .textarea-box {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+            background: var(--container-light);
+            color: var(--text-light);
+            transition: var(--transition);
+            box-sizing: border-box;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .textarea-box {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .input-box:focus, .textarea-box:focus {
+            border-color: var(--button-light);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .input-box[readonly] {
+            background-color: rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
+            cursor: not-allowed;
+        }
+
+        .save-button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            background: var(--success-color);
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-light);
+        }
+
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+            display: none;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .error-message {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--failed-color);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        .success-message {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .page-title {
+            text-align: left;
+            margin-bottom: 25px;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Instructions Styles */
+        .instructions-box {
+            background-color: rgba(0, 123, 255, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--button-light);
+        }
+
+        .instructions-box h4 {
+            margin-top: 0;
+            color: var(--button-light);
+        }
+
+        .instructions-box ol {
+            padding-left: 20px;
+        }
+
+        .instructions-box li {
+            margin-bottom: 8px;
+        }
+
+        .code-example {
+            font-family: monospace;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        /* Menu Styles */
+        .menu-toggle {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(3px);
+        }
+
+        .menu-content {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--container-light);
+            box-shadow: 2px 0 15px var(--shadow-light);
+            transition: var(--transition);
+            padding: 20px 0;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .menu-content.active {
+            left: 0;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 16px;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            background-color: var(--hover-light);
+        }
+
+        .menu-footer {
+            margin-top: auto;
+            padding: 25px 0;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .menu-logout {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .menu-logout:hover {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        /* Desktop Menu */
         @media (min-width: 992px) {
-            .desktop-header {
-                display: none;
+            body {
+                padding-left: 280px;
             }
 
-            body {
-                padding-left: 250px;
+            .desktop-header {
+                display: none;
             }
 
             .menu-toggle {
@@ -376,33 +404,43 @@
                 display: none !important;
             }
 
-            .container {
-                margin-left: 250px;
-                width: calc(90% - 250px);
-            }
-
-            /* Esconde a logo no header na versão desktop */
             .logo-mobile {
                 display: none;
+            }
+
+            .menu-close-btn {
+                display: none !important;
+            }
+
+            .desktop-balance-container {
+                display: flex;
             }
         }
 
         @media (max-width: 991px) {
-            .container {
-                width: 95%;
-                padding: 15px;
-            }
-
-            /* Esconde a logo no menu na versão mobile */
-            .menu-content .logo-desktop {
-                padding: 10px 15px;
-                text-align: left;
-                margin-top: 5px;
-            }
-
-            /* Mostra a logo no header apenas na versão mobile */
             .logo-mobile {
                 display: block;
+            }
+
+            body.menu-open .header {
+                display: none;
+            }
+
+            .menu-close-btn {
+                display: block;
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                color: #afaeae;
+                font-size: 1.5rem;
+                cursor: pointer;
+                z-index: 1002;
+            }
+
+            .menu-close-btn:hover {
+                color: #dc3545;
             }
 
             .desktop-balance-container {
@@ -410,21 +448,153 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .right-header {
-                gap: 10px;
+        /* Dark Mode Styles */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
             }
 
-            .balance-container {
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 2px;
-                padding: 4px 8px;
+            .header {
+                background: var(--primary-gradient-dark);
             }
 
-            .balance-label {
-                display: none;
+            .container {
+                background: var(--container-dark);
+                box-shadow: 0 4px 20px var(--shadow-dark);
+                border-color: var(--border-dark);
             }
+
+            .container-header {
+                background: var(--primary-gradient-dark);
+                border-color: var(--border-dark);
+            }
+
+            .form-label {
+                color: var(--text-dark);
+            }
+
+            .input-box, .textarea-box {
+                background: var(--container-dark);
+                border-color: var(--border-dark);
+                color: var(--text-dark);
+            }
+
+            .input-box[readonly] {
+                background-color: rgba(255, 255, 255, 0.05);
+                border-color: var(--border-dark);
+            }
+
+            .input-box:focus, .textarea-box:focus {
+                border-color: var(--button-dark);
+                box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+            }
+
+            .error-message {
+                background-color: rgba(234, 67, 53, 0.1);
+                color: var(--failed-dark);
+                border-color: rgba(234, 67, 53, 0.2);
+            }
+
+            .success-message {
+                background-color: rgba(52, 168, 83, 0.1);
+                color: var(--success-dark);
+                border-color: rgba(52, 168, 83, 0.2);
+            }
+
+            .page-title {
+                color: var(--text-dark);
+            }
+
+            .menu-content {
+                background: var(--container-dark);
+                box-shadow: 2px 0 15px var(--shadow-dark);
+            }
+
+            .menu-item {
+                color: var(--text-dark);
+            }
+
+            .menu-item:hover {
+                background-color: var(--hover-dark);
+            }
+
+            .menu-footer {
+                border-color: var(--border-dark);
+            }
+
+            .balance-container, .desktop-balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .refresh-balance {
+                color: var(--text-dark);
+            }
+
+            .instructions-box {
+                background-color: rgba(26, 115, 232, 0.1);
+                border-left-color: var(--button-dark);
+            }
+
+            .instructions-box h4 {
+                color: var(--button-dark);
+            }
+
+            .code-example {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px;
+            }
+
+            .container {
+                padding: 20px;
+                width: calc(100% - 40px);
+            }
+
+            .page-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-container {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 15px;
+                width: calc(100% - 30px);
+            }
+
+            .page-title {
+                font-size: 1.2rem;
+            }
+
+            .input-box, .textarea-box {
+                padding: 10px 12px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
 
         body {
@@ -438,31 +608,38 @@
 </head>
 
 <body>
-    <!-- Logo para desktop (no menu lateral) -->
+    <!-- Menu Lateral para Desktop -->
     <div class="menu-content" id="menuContent">
+        <!-- Botão de fechar (visível apenas no mobile) -->
+        <button class="menu-close-btn" id="menuCloseBtn">&times;</button>
+
         <div style="padding: 20px; text-align: left; margin-top: -20px;" class="logo-desktop">
             <a href="painel">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                    alt="Logo smmsociais" class="logo" style="max-width: 80%;">
+                    alt="Logo SMM Sociais" class="logo" style="max-width: 80%;">
             </a>
         </div>
-        <a class="menu-item" href="painel">Novo Pedido</a>
-        <a class="menu-item" href="services">Serviços</a>
-        <a class="menu-item" href="orders">Ordens</a>
-        <a class="menu-item" href="massorder">Pedido em Massa</a>
-        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-        <a class="menu-item" href="profile">Minha Conta</a>
+        <a class="menu-item" href="painel"><i class="fas fa-plus-circle"></i> Novo Pedido</a>
+        <a class="menu-item" href="services"><i class="fas fa-list"></i> Serviços</a>
+        <a class="menu-item" href="orders"><i class="fas fa-tasks"></i> Ordens</a>
+        <a class="menu-item" href="massorder"><i class="fas fa-layer-group"></i> Pedido em Massa</a>
+        <a class="menu-item" href="addfunds"><i class="fas fa-money-bill-wave"></i> Adicionar Saldo</a>
+        <a class="menu-item" href="profile"><i class="fas fa-user-cog"></i> Minha Conta</a>
 
         <div class="menu-footer">
-            <a class="menu-logout" onclick="logout()">Sair</a>
+            <a class="menu-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
         </div>
     </div>
 
-    <!-- Saldo para desktop (fixo no topo direito) -->
+    <!-- Saldo para Desktop -->
     <div class="desktop-balance-container">
         <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
     </div>
 
+    <!-- Overlay do Menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Header para Mobile -->
     <div class="header desktop-header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
@@ -473,10 +650,9 @@
             <!-- Logo para mobile (no header) -->
             <a href="painel" class="logo-mobile">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                    alt="Logo smmsociais" class="logo">
+                    alt="Logo SMM Sociais" class="logo">
             </a>
         </div>
-
         <div class="right-header">
             <div class="balance-container">
                 <span class="balance-value" id="userBalance">R$ 0,00</span>
@@ -484,25 +660,34 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="success-message" id="successMessage">
-            Pedidos enviados com sucesso! Você será redirecionado em breve.
-        </div>
+    <!-- Conteúdo Principal -->
+    <div class="main-container">
+        <div class="container fade-in">
+            <h2 class="page-title"><i class="fas fa-layer-group"></i> Pedido em Massa</h2>
 
-        <form id="bulkOrderForm">
-            <div class="form-group">
-                <label for="bulkOrders" class="form-label">Um pedido por linha, no formato:</label>
-                <textarea id="bulkOrders" class="form-control" rows="10" placeholder="ID do serviço Link Quantidade"
-                    required></textarea>
-                <div class="error-message" id="bulkOrdersError"></div>
+            <div id="errorMessage" class="message error-message"></div>
+            <div id="successMessage" class="message success-message"></div>
+
+            <div class="instructions-box">
+                <h4><i class="fas fa-info-circle"></i> Instruções para Pedido em Massa</h4>
+                <ol>
+                    <li>Insira um pedido por linha no formato: <span class="code-example">ID_do_Serviço Link Quantidade</span></li>
+                    <li>Exemplo: <span class="code-example">123 https://instagram.com/usuario 1000</span></li>
+                    <li>Máximo de 50 pedidos por envio</li>
+                    <li>Quantidade mínima: 50 por pedido</li>
+                </ol>
             </div>
 
-            <button type="submit" class="submit-btn">Enviar</button>
-        </form>
-    </div>
+            <form id="bulkOrderForm">
+                <div class="form-group">
+                    <label for="bulkOrders" class="form-label">Pedidos em Massa</label>
+                    <textarea id="bulkOrders" class="textarea-box" rows="10" placeholder="ID do serviço Link Quantidade" required></textarea>
+                </div>
 
-    <!-- Menu Overlay -->
-    <div class="menu-overlay" id="menuOverlay"></div>
+                <button type="submit" class="save-button"><i class="fas fa-paper-plane"></i> Enviar Pedidos</button>
+            </form>
+        </div>
+    </div>
 
     <script>
         let allServices = {};
@@ -541,10 +726,10 @@
 
         async function fetchServices() {
             const token = localStorage.getItem("token");
-            //if (!token) {
-            //window.location.href = "https://smmsociais.com";
-            // return;
-            //}
+            if (!token) {
+                window.location.href = "https://smmsociais.com";
+                return;
+            }
 
             const response = await fetch("https://smmsociais.com/api/servico", {
                 headers: { Authorization: `Bearer ${token}` }
@@ -556,8 +741,28 @@
                     allServices[service._id] = service;
                 });
             } else {
-                alert("Erro ao carregar lista de serviços");
+                showMessage("Erro ao carregar lista de serviços", true);
             }
+        }
+
+        function showMessage(message, isError = false) {
+            const errorElement = document.getElementById("errorMessage");
+            const successElement = document.getElementById("successMessage");
+
+            if (isError) {
+                errorElement.textContent = message;
+                errorElement.style.display = "block";
+                successElement.style.display = "none";
+            } else {
+                successElement.textContent = message;
+                successElement.style.display = "block";
+                errorElement.style.display = "none";
+            }
+
+            setTimeout(() => {
+                errorElement.style.display = "none";
+                successElement.style.display = "none";
+            }, 5000);
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -565,59 +770,59 @@
 
             // Busca o saldo quando a página carrega
             fetchBalance();
-            fetchServices(); // chama no início da página
+            fetchServices();
 
-            // Controle do menu hamburguer (só funciona em mobile)
-            if (window.innerWidth < 992) {
-                const menuToggle = document.getElementById('menuToggle');
-                const menuOverlay = document.getElementById('menuOverlay');
-                const menuContent = document.getElementById('menuContent');
+            // Controle do menu hamburguer
+            const menuToggle = document.getElementById('menuToggle');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuContent = document.getElementById('menuContent');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
 
-                menuToggle.addEventListener('click', function () {
-                    menuContent.classList.toggle('active');
-                    menuOverlay.classList.toggle('active');
+            function toggleMenu() {
+                menuContent.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
 
-                    const spans = menuToggle.querySelectorAll('span');
-                    if (menuContent.classList.contains('active')) {
-                        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                        spans[1].style.opacity = '0';
-                        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-                    } else {
-                        spans[0].style.transform = 'none';
-                        spans[1].style.opacity = '1';
-                        spans[2].style.transform = 'none';
-                    }
-                });
-
-                menuOverlay.addEventListener('click', function () {
-                    menuContent.classList.remove('active');
-                    menuOverlay.classList.remove('active');
-                    const spans = menuToggle.querySelectorAll('span');
+                const spans = menuToggle.querySelectorAll('span');
+                if (menuContent.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
                     spans[0].style.transform = 'none';
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
-                });
+                }
             }
+
+            function closeMenu() {
+                menuContent.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                const spans = menuToggle.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            menuCloseBtn.addEventListener('click', closeMenu);
+            menuOverlay.addEventListener('click', closeMenu);
 
             // Validação do formulário de ordem em massa
             const bulkOrderForm = document.getElementById('bulkOrderForm');
             const bulkOrdersTextarea = document.getElementById('bulkOrders');
-            const bulkOrdersError = document.getElementById('bulkOrdersError');
-            const successMessage = document.getElementById('successMessage');
 
             bulkOrderForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
-                bulkOrdersError.style.display = 'none';
 
                 const ordersText = bulkOrdersTextarea.value.trim();
                 if (!ordersText) {
-                    showError('Por favor, insira pelo menos um pedido.');
+                    showMessage('Por favor, insira pelo menos um pedido.', true);
                     return;
                 }
 
                 const orders = ordersText.split('\n');
                 if (orders.length > 50) {
-                    showError('Máximo de 50 pedidos por envio.');
+                    showMessage('Máximo de 50 pedidos por envio.', true);
                     return;
                 }
 
@@ -675,39 +880,38 @@
                 }
 
                 if (invalidOrders.length > 0) {
-                    showError(invalidOrders.join('<br>'));
+                    showMessage(invalidOrders.join('<br>'), true);
                     return;
                 }
 
-                fetch('https://smmsociais.com/api/massorder', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer 123456"
-                    },
-                    body: JSON.stringify({ pedidos: validOrders })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro ao enviar pedidos');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Pedidos válidos enviados:', data);
-                        successMessage.style.display = 'block';
-                        bulkOrderForm.reset();
-
-                    })
-                    .catch(error => {
-                        showError('Erro ao enviar pedidos: ' + error.message);
+                try {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch('https://smmsociais.com/api/massorder', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ pedidos: validOrders })
                     });
-            });
 
-            function showError(message) {
-                bulkOrdersError.innerHTML = message;
-                bulkOrdersError.style.display = 'block';
-            }
+                    if (!response.ok) {
+                        throw new Error('Erro ao enviar pedidos');
+                    }
+
+                    const data = await response.json();
+                    showMessage('Pedidos enviados com sucesso! Você será redirecionado em breve.');
+                    bulkOrderForm.reset();
+
+                    // Redireciona após 3 segundos
+                    setTimeout(() => {
+                        window.location.href = "orders";
+                    }, 3000);
+
+                } catch (error) {
+                    showMessage('Erro ao enviar pedidos: ' + error.message, true);
+                }
+            });
 
             function isValidUrl(url) {
                 try {
@@ -724,6 +928,7 @@
             }
         });
     </script>
+    <script src="https://smmsociais.com/chat-widget.js"></script>
 </body>
 
 </html>
