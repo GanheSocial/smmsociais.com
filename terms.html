@@ -4,38 +4,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM Sociais - Termos e Condições</title>
+    <title>Termos e Condições - SMM Sociais</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-light: #ffffff;
-            --text-light: #24292e;
-            --container-light: #f6f8fa;
-            --button-light: #0366d6;
-            --link-color: #0366d6;
-            --bg-dark: #0d1117;
-            --text-dark: #c9d1d9;
-            --container-dark: #161b22;
-            --button-dark: #58a6ff;
-            --border-dark: #30363d;
+            --bg-light: #f8f9fa;
+            --text-light: #212529;
+            --container-light: #ffffff;
+            --button-light: #007bff;
+            --success-color: #28a745;
+            --pending-color: #ffc107;
+            --failed-color: #dc3545;
+            --border-light: #dee2e6;
+            --hover-light: #f1f1f1;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --label-light: #586069;
+            --positive-color: #2ecc71;
+            --negative-color: #e74c3c;
+            --neutral-color: #3498db;
+
+            --bg-dark: #121212;
+            --text-dark: #e0e0e0;
+            --container-dark: #1e1e1e;
+            --button-dark: #1a73e8;
+            --success-dark: #34a853;
+            --pending-dark: #f9ab00;
+            --failed-dark: #ea4335;
+            --border-dark: #333333;
+            --hover-dark: #2d2d2d;
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --label-dark: #8b949e;
+            --positive-color-dark: #27ae60;
+            --negative-color-dark: #c0392b;
+            --neutral-color-dark: #2980b9;
+            --error-color: #f85149;
+            --success-color-dark: #238636;
+
+            --card-radius: 12px;
+            --transition: all 0.3s ease;
         }
 
         body {
             background-color: var(--bg-light);
             color: var(--text-light);
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            position: relative;
-            transition: background-color 0.3s, color 0.3s;
+            transition: var(--transition);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
+            padding: 15px 25px;
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 2px 10px var(--shadow-light);
+            position: relative;
+            z-index: 10;
+        }
+
+        .left-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .right-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 32px;
+            margin-right: 10px;
         }
 
         .logo-container {
-            margin: 20px 0;
             text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
         }
 
         .logo-container img {
@@ -46,73 +99,196 @@
         .nav-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
             margin-bottom: 30px;
             flex-wrap: wrap;
+            padding: 0 20px;
         }
 
         .nav-links a {
-            color: var(--link-color);
+            color: var(--button-light);
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: var(--transition);
         }
 
         .nav-links a:hover {
-            text-decoration: underline;
+            background-color: rgba(0, 123, 255, 0.1);
+            text-decoration: none;
         }
 
         .terms-container {
             width: 90%;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto 40px;
             background: var(--container-light);
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            transition: background 0.3s;
-            border: 1px solid #e1e4e8;
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 20px var(--shadow-light);
+            transition: var(--transition);
+            border: 1px solid var(--border-light);
         }
 
         .section-title {
             text-align: center;
-            font-size: 24px;
+            font-size: 1.8rem;
             margin-bottom: 30px;
             color: var(--button-light);
+            font-weight: 600;
         }
 
         .subtitle {
-            font-size: 20px;
-            margin: 25px 0 15px;
+            font-size: 1.3rem;
+            margin: 30px 0 15px;
             color: var(--button-light);
+            font-weight: 600;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-light);
         }
 
         .term-item {
             margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.02);
+            padding: 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .term-item:hover {
+            background: rgba(0, 0, 0, 0.05);
         }
 
         .term-title {
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
         }
 
         .term-content {
-            margin-left: 20px;
-            font-size: 14px;
+            margin-left: 5px;
+            font-size: 0.95rem;
+            color: var(--text-light);
         }
 
         .contact-info {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
             font-style: italic;
+            padding: 15px;
+            background: rgba(0, 123, 255, 0.05);
+            border-radius: 8px;
+            color: var(--text-light);
         }
 
         .update-date {
             text-align: right;
             margin-top: 30px;
-            font-size: 12px;
-            color: #666;
+            font-size: 0.85rem;
+            color: var(--label-light);
         }
 
+        /* Menu Styles */
+        .menu-toggle {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(3px);
+        }
+
+        .menu-content {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--container-light);
+            box-shadow: 2px 0 15px var(--shadow-light);
+            transition: var(--transition);
+            padding: 20px 0;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .menu-content.active {
+            left: 0;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 16px;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            background-color: var(--hover-light);
+        }
+
+        .menu-footer {
+            margin-top: auto;
+            padding: 25px 0;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .menu-logout {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .menu-logout:hover {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        /* Dark Mode Styles */
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: var(--bg-dark);
@@ -121,31 +297,61 @@
 
             .terms-container {
                 background: var(--container-dark);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-                border: 1px solid var(--border-dark);
+                box-shadow: 0 4px 20px var(--shadow-dark);
+                border-color: var(--border-dark);
             }
 
             .nav-links a {
                 color: var(--button-dark);
             }
 
+            .nav-links a:hover {
+                background-color: rgba(26, 115, 232, 0.1);
+            }
+
             .section-title, .subtitle {
                 color: var(--button-dark);
             }
 
+            .term-title, .term-content {
+                color: var(--text-dark);
+            }
+
+            .term-item {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .term-item:hover {
+                background: rgba(255, 255, 255, 0.08);
+            }
+
+            .contact-info {
+                background: rgba(26, 115, 232, 0.05);
+                color: var(--text-dark);
+            }
+
             .update-date {
-                color: #aaa;
+                color: var(--label-dark);
             }
         }
 
+        /* Responsive Styles */
         @media (max-width: 768px) {
             .terms-container {
-                width: 88%;
+                width: 90%;
                 padding: 20px;
             }
             
             .nav-links {
                 gap: 15px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
             }
         }
 
@@ -156,12 +362,33 @@
             }
             
             .section-title {
-                font-size: 20px;
+                font-size: 1.3rem;
             }
             
             .subtitle {
-                font-size: 18px;
+                font-size: 1.1rem;
             }
+
+            .terms-container {
+                padding: 15px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
 
         body {
@@ -175,160 +402,251 @@
 </head>
 
 <body>
-    <div class="logo-container">
-        <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png" alt="SMM Sociais Logo">
-    </div>
-    
-    <div class="nav-links">
-        <a href="index.html">Fazer Login</a>
-        <a href="https://smmsociais.com/services">Serviços</a>
-        <a href="https://smmsociais.com/signup">Criar Conta</a>
-        <a href="terms.html">Termos</a>
+    <!-- Menu Lateral para Desktop -->
+    <div class="menu-content" id="menuContent">
+        <!-- Botão de fechar (visível apenas no mobile) -->
+        <button class="menu-close-btn" id="menuCloseBtn">&times;</button>
+
+        <div style="padding: 20px; text-align: left; margin-top: -20px;" class="logo-desktop">
+            <a href="painel">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo SMM Sociais" class="logo" style="max-width: 80%;">
+            </a>
+        </div>
+        <a class="menu-item" href="painel"><i class="fas fa-plus-circle"></i> Novo Pedido</a>
+        <a class="menu-item" href="services"><i class="fas fa-list"></i> Serviços</a>
+        <a class="menu-item" href="orders"><i class="fas fa-tasks"></i> Ordens</a>
+        <a class="menu-item" href="massorder"><i class="fas fa-layer-group"></i> Pedido em Massa</a>
+        <a class="menu-item" href="addfunds"><i class="fas fa-money-bill-wave"></i> Adicionar Saldo</a>
+        <a class="menu-item" href="profile"><i class="fas fa-user-cog"></i> Minha Conta</a>
+
+        <div class="menu-footer">
+            <a class="menu-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
     </div>
 
-    <div class="terms-container">
-        <h1 class="section-title">Termos & Condições</h1>
-        
-        <h2 class="subtitle">1. Geral</h2>
-        <div class="term-item">
-            <div class="term-title">1.1</div>
-            <div class="term-content">Ao usar este site, você concorda com estes Termos & Condições.</div>
+    <!-- Overlay do Menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Header para Mobile -->
+    <div class="header desktop-header">
+        <div class="left-header">
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <!-- Logo para mobile (no header) -->
+            <a href="painel" class="logo-mobile">
+                <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
+                    alt="Logo SMM Sociais" class="logo">
+            </a>
         </div>
-        <div class="term-item">
-            <div class="term-title">1.2</div>
-            <div class="term-content">Podemos atualizar estes termos a qualquer momento, sem aviso prévio. Consulte-os regularmente.</div>
+        <div class="right-header">
+            <div class="balance-container">
+                <span class="balance-value" id="userBalance">R$ 0,00</span>
+            </div>
         </div>
-        <div class="term-item">
-            <div class="term-title">1.3</div>
-            <div class="term-content">Você deve usar o site conforme as leis aplicáveis e as diretrizes do Google.</div>
-        </div>
-        
-        <h2 class="subtitle">2. Serviços Pagos</h2>
-        <div class="term-item">
-            <div class="term-title">2.1</div>
-            <div class="term-content">Todos os serviços são exclusivamente pagos, sem opções gratuitas ou promocionais.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">2.2</div>
-            <div class="term-content">Oferecemos serviços de marketing pago para ampliar a visibilidade digital mediante investimento financeiro.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">2.3</div>
-            <div class="term-content">Valores, condições de pagamento e prazos são informados antes da contratação.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">2.4</div>
-            <div class="term-content">Não garantimos resultados específicos, pois dependem de fatores externos não controláveis.</div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-container">
+        <div class="logo-container fade-in">
+            <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png" alt="SMM Sociais Logo">
         </div>
         
-        <h2 class="subtitle">3. Transparência</h2>
-        <div class="term-item">
-            <div class="term-title">3.1</div>
-            <div class="term-content">Informamos claramente os custos e condições de cada serviço, conforme o CDC.</div>
+        <div class="nav-links fade-in">
+            <a href="index.html"><i class="fas fa-sign-in-alt"></i> Fazer Login</a>
+            <a href="https://smmsociais.com/services"><i class="fas fa-list"></i> Serviços</a>
+            <a href="https://smmsociais.com/signup"><i class="fas fa-user-plus"></i> Criar Conta</a>
+            <a href="terms.html"><i class="fas fa-file-contract"></i> Termos</a>
         </div>
-        <div class="term-item">
-            <div class="term-title">3.2</div>
-            <div class="term-content">Não realizamos práticas enganosas, fraudulentas ou contrárias às políticas do Google.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">3.3</div>
-            <div class="term-content">Você é responsável por fornecer informações corretas e atualizadas para a execução dos serviços.</div>
-        </div>
-        
-        <h2 class="subtitle">4. Pagamento e Reembolso</h2>
-        <div class="term-item">
-            <div class="term-title">4.1</div>
-            <div class="term-content">Os preços podem ser alterados sem aviso prévio.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">4.2</div>
-            <div class="term-content">Reembolsos podem ser solicitados em até 14 dias após a conclusão do serviço, se comprovado que não foi prestado adequadamente.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">4.3</div>
-            <div class="term-content">Evite disputas ou chargebacks arbitrários; contate nosso suporte para soluções.</div>
-        </div>
-        
-        <h2 class="subtitle">5. Responsabilidade</h2>
-        <div class="term-item">
-            <div class="term-title">5.1</div>
-            <div class="term-content">Não nos responsabilizamos por prejuízos decorrentes do uso dos serviços ou por ações de plataformas.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">5.2</div>
-            <div class="term-content">Você deve cumprir as políticas das plataformas utilizadas.</div>
-        </div>
-        
-        <h1 class="section-title">Política de Privacidade</h1>
-        
-        <h2 class="subtitle">1. Geral</h2>
-        <div class="term-item">
-            <div class="term-title">1.1</div>
-            <div class="term-content">Protegemos seus dados pessoais conforme a LGPD, sem compartilhá-los com terceiros, exceto para executar os serviços.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">1.2</div>
-            <div class="term-content">Adotamos medidas para evitar acesso não autorizado, perda ou alteração indevida de dados.</div>
-        </div>
-        
-        <h2 class="subtitle">2. Dados Coletados</h2>
-        <div class="term-item">
-            <div class="term-title">2.1</div>
-            <div class="term-content">Coletamos informações necessárias para cadastro e prestação de serviços (ex.: nome, e-mail, telefone).</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">2.2</div>
-            <div class="term-content">Mensagens enviadas ao suporte podem ser armazenadas para melhorar o atendimento.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">2.3</div>
-            <div class="term-content">O tratamento de dados segue o consentimento do usuário ou outras bases legais da LGPD.</div>
-        </div>
-        
-        <h2 class="subtitle">3. Cookies</h2>
-        <div class="term-item">
-            <div class="term-title">3.1</div>
-            <div class="term-content">Usamos cookies para melhorar a experiência no site (ex.: preferências de idioma).</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">3.2</div>
-            <div class="term-content">Parceiros publicitários, como o Google, podem usar cookies para anúncios, conforme suas políticas.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">3.3</div>
-            <div class="term-content">Você pode desativar cookies nas configurações do navegador ou com ferramentas como o Add-on de Desativação do Google Analytics.</div>
-        </div>
-        
-        <h2 class="subtitle">4. Direitos do Usuário</h2>
-        <div class="term-item">
-            <div class="term-title">4.1</div>
-            <div class="term-content">Você pode acessar, corrigir ou solicitar a exclusão de seus dados, contatando nosso suporte.</div>
-        </div>
-        <div class="term-item">
-            <div class="term-title">4.2</div>
-            <div class="term-content">Podemos exigir verificação de identidade para atender solicitações.</div>
-        </div>
-        
-        <h2 class="subtitle">5. Parceiros Publicitários</h2>
-        <div class="term-item">
-            <div class="term-title">5.1</div>
-            <div class="term-content">Anúncios podem usar cookies de terceiros para personalização. Consulte as políticas de privacidade dos parceiros (ex.: Google).</div>
-        </div>
-        
-        <div class="contact-info">
-            Dúvidas sobre os Termos & Condições ou Política de Privacidade? Contate nosso suporte pelo site.
-        </div>
-        
-        <div class="update-date">
-            Atualizado em: 31/05/2025
+
+        <div class="terms-container fade-in">
+            <h1 class="section-title"><i class="fas fa-file-contract"></i> Termos & Condições</h1>
+            
+            <h2 class="subtitle">1. Geral</h2>
+            <div class="term-item">
+                <div class="term-title">1.1</div>
+                <div class="term-content">Ao usar este site, você concorda com estes Termos & Condições.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">1.2</div>
+                <div class="term-content">Podemos atualizar estes termos a qualquer momento, sem aviso prévio. Consulte-os regularmente.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">1.3</div>
+                <div class="term-content">Você deve usar o site conforme as leis aplicáveis e as diretrizes do Google.</div>
+            </div>
+            
+            <h2 class="subtitle">2. Serviços Pagos</h2>
+            <div class="term-item">
+                <div class="term-title">2.1</div>
+                <div class="term-content">Todos os serviços são exclusivamente pagos, sem opções gratuitas ou promocionais.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">2.2</div>
+                <div class="term-content">Oferecemos serviços de marketing pago para ampliar a visibilidade digital mediante investimento financeiro.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">2.3</div>
+                <div class="term-content">Valores, condições de pagamento e prazos são informados antes da contratação.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">2.4</div>
+                <div class="term-content">Não garantimos resultados específicos, pois dependem de fatores externos não controláveis.</div>
+            </div>
+            
+            <h2 class="subtitle">3. Transparência</h2>
+            <div class="term-item">
+                <div class="term-title">3.1</div>
+                <div class="term-content">Informamos claramente os custos e condições de cada serviço, conforme o CDC.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">3.2</div>
+                <div class="term-content">Não realizamos práticas enganosas, fraudulentas ou contrárias às políticas do Google.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">3.3</div>
+                <div class="term-content">Você é responsável por fornecer informações corretas e atualizadas para a execução dos serviços.</div>
+            </div>
+            
+            <h2 class="subtitle">4. Pagamento e Reembolso</h2>
+            <div class="term-item">
+                <div class="term-title">4.1</div>
+                <div class="term-content">Os preços podem ser alterados sem aviso prévio.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">4.2</div>
+                <div class="term-content">Reembolsos podem ser solicitados em até 14 dias após a conclusão do serviço, se comprovado que não foi prestado adequadamente.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">4.3</div>
+                <div class="term-content">Evite disputas ou chargebacks arbitrários; contate nosso suporte para soluções.</div>
+            </div>
+            
+            <h2 class="subtitle">5. Responsabilidade</h2>
+            <div class="term-item">
+                <div class="term-title">5.1</div>
+                <div class="term-content">Não nos responsabilizamos por prejuízos decorrentes do uso dos serviços ou por ações de plataformas.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">5.2</div>
+                <div class="term-content">Você deve cumprir as políticas das plataformas utilizadas.</div>
+            </div>
+            
+            <h1 class="section-title"><i class="fas fa-shield-alt"></i> Política de Privacidade</h1>
+            
+            <h2 class="subtitle">1. Geral</h2>
+            <div class="term-item">
+                <div class="term-title">1.1</div>
+                <div class="term-content">Protegemos seus dados pessoais conforme a LGPD, sem compartilhá-los com terceiros, exceto para executar os serviços.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">1.2</div>
+                <div class="term-content">Adotamos medidas para evitar acesso não autorizado, perda ou alteração indevida de dados.</div>
+            </div>
+            
+            <h2 class="subtitle">2. Dados Coletados</h2>
+            <div class="term-item">
+                <div class="term-title">2.1</div>
+                <div class="term-content">Coletamos informações necessárias para cadastro e prestação de serviços (ex.: nome, e-mail, telefone).</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">2.2</div>
+                <div class="term-content">Mensagens enviadas ao suporte podem ser armazenadas para melhorar o atendimento.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">2.3</div>
+                <div class="term-content">O tratamento de dados segue o consentimento do usuário ou outras bases legais da LGPD.</div>
+            </div>
+            
+            <h2 class="subtitle">3. Cookies</h2>
+            <div class="term-item">
+                <div class="term-title">3.1</div>
+                <div class="term-content">Usamos cookies para melhorar a experiência no site (ex.: preferências de idioma).</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">3.2</div>
+                <div class="term-content">Parceiros publicitários, como o Google, podem usar cookies para anúncios, conforme suas políticas.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">3.3</div>
+                <div class="term-content">Você pode desativar cookies nas configurações do navegador ou com ferramentas como o Add-on de Desativação do Google Analytics.</div>
+            </div>
+            
+            <h2 class="subtitle">4. Direitos do Usuário</h2>
+            <div class="term-item">
+                <div class="term-title">4.1</div>
+                <div class="term-content">Você pode acessar, corrigir ou solicitar a exclusão de seus dados, contatando nosso suporte.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-title">4.2</div>
+                <div class="term-content">Podemos exigir verificação de identidade para atender solicitações.</div>
+            </div>
+            
+            <h2 class="subtitle">5. Parceiros Publicitários</h2>
+            <div class="term-item">
+                <div class="term-title">5.1</div>
+                <div class="term-content">Anúncios podem usar cookies de terceiros para personalização. Consulte as políticas de privacidade dos parceiros (ex.: Google).</div>
+            </div>
+            
+            <div class="contact-info">
+                <i class="fas fa-question-circle"></i> Dúvidas sobre os Termos & Condições ou Política de Privacidade? Contate nosso suporte pelo site.
+            </div>
+            
+            <div class="update-date">
+                <i class="far fa-calendar-alt"></i> Atualizado em: 31/05/2025
+            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Controle do menu hamburguer
+            const menuToggle = document.getElementById('menuToggle');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuContent = document.getElementById('menuContent');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
+
+            function toggleMenu() {
+                menuContent.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+
+                const spans = menuToggle.querySelectorAll('span');
+                if (menuContent.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                }
+            }
+
+            function closeMenu() {
+                menuContent.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                const spans = menuToggle.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            menuCloseBtn.addEventListener('click', closeMenu);
+            menuOverlay.addEventListener('click', closeMenu);
+
             document.body.classList.add('loaded');
         });
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "https://smmsociais.com";
+        }
     </script>
+    <script src="https://smmsociais.com/chat-widget.js"></script>
 </body>
 
 </html>
