@@ -5,74 +5,157 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histórico de Pedidos - SMM Sociais</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-light: #ffffff;
-            --text-light: #24292e;
-            --container-light: #f6f8fa;
-            --button-light: #0366d6;
-            --link-color: #0366d6;
-            --bg-dark: #0d1117;
-            --text-dark: #c9d1d9;
-            --container-dark: #161b22;
-            --button-dark: #58a6ff;
-            --border-dark: #30363d;
-            --error-color: #dc3545;
+            --bg-light: #f8f9fa;
+            --text-light: #212529;
+            --container-light: #ffffff;
+            --button-light: #007bff;
             --success-color: #28a745;
+            --pending-color: #ffc107;
+            --failed-color: #dc3545;
+            --border-light: #dee2e6;
+            --hover-light: #f1f1f1;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --label-light: #586069;
+            --positive-color: #2ecc71;
+            --negative-color: #e74c3c;
+            --neutral-color: #3498db;
+
+            --bg-dark: #121212;
+            --text-dark: #e0e0e0;
+            --container-dark: #1e1e1e;
+            --button-dark: #1a73e8;
+            --success-dark: #34a853;
+            --pending-dark: #f9ab00;
+            --failed-dark: #ea4335;
+            --border-dark: #333333;
+            --hover-dark: #2d2d2d;
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --label-dark: #8b949e;
+            --positive-color-dark: #27ae60;
+            --negative-color-dark: #c0392b;
+            --neutral-color-dark: #2980b9;
+            --error-color: #f85149;
+            --success-color-dark: #238636;
+
+            --card-radius: 12px;
+            --transition: all 0.3s ease;
         }
 
         body {
             background-color: var(--bg-light);
             color: var(--text-light);
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            position: relative;
-            transition: background-color 0.3s, color 0.3s;
-            display: flex;
-            flex-direction: column;
+            transition: var(--transition);
+            line-height: 1.6;
         }
 
+        /* Header Styles */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background-color: var(--container-light);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px 25px;
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 2px 10px var(--shadow-light);
+            position: relative;
+            z-index: 10;
         }
 
         .left-header {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 20px;
         }
 
         .right-header {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
         .logo {
             height: 32px;
-            margin-right: 29px;
+            margin-right: 10px;
+        }
+
+        /* Balance Styles */
+        .balance-container {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .balance-value {
+            color: var(--success-color);
+        }
+
+        .refresh-balance {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .desktop-balance-container {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
         }
 
         .container {
             background: var(--container-light);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 20px var(--shadow-light);
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-light);
+            width: 100%;
             max-width: 1200px;
-            margin: 20px auto;
-            transition: background 0.3s;
-            border: 1px solid #e1e4e8;
-            overflow-x: auto;
+            margin: 30px auto;
+            padding: 25px;
         }
 
+        .container-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .container-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .container-body {
+            padding: 20px;
+        }
+
+        /* Filter Buttons */
         .filter-buttons {
             display: flex;
             gap: 10px;
@@ -80,25 +163,23 @@
             overflow-x: auto;
             padding-bottom: 10px;
             scrollbar-width: none;
-            /* Firefox */
         }
 
         .filter-buttons::-webkit-scrollbar {
             display: none;
-            /* Chrome, Safari, Opera */
         }
 
         .filter-button {
             padding: 10px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 600;
             white-space: nowrap;
-            background-color: #e1e4e8;
+            background-color: var(--hover-light);
             color: var(--text-light);
-            transition: all 0.2s;
+            transition: var(--transition);
             text-decoration: none;
             display: inline-block;
             flex-shrink: 0;
@@ -110,13 +191,45 @@
         }
 
         .filter-button:hover {
-            opacity: 0.9;
+            background-color: var(--button-light);
+            color: white;
         }
 
-        tr:hover {
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            min-width: 600px;
+            table-layout: auto;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        th {
+            font-weight: 600;
             background-color: rgba(0, 0, 0, 0.02);
         }
 
+        tr:hover {
+            background-color: var(--hover-light);
+        }
+
+        .link-cell {
+            max-width: 150px;
+            overflow: hidden;
+            word-break: break-all;
+        }
+
+        /* Status Badges */
         .status {
             padding: 5px 10px;
             border-radius: 20px;
@@ -146,7 +259,14 @@
             color: #721c24;
         }
 
-        /* Estilos do menu hamburguer */
+        /* Menu Styles */
+        .menu-item[href="orders"] {
+            color: white;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid white;
+        }
+
         .menu-toggle {
             width: 30px;
             height: 30px;
@@ -160,9 +280,9 @@
             display: block;
             height: 3px;
             width: 100%;
-            background-color: var(--text-light);
+            background-color: white;
             border-radius: 3px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .menu-overlay {
@@ -172,21 +292,22 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            z-index: 5;
+            z-index: 1000;
             display: none;
+            backdrop-filter: blur(3px);
         }
 
         .menu-content {
             position: fixed;
             top: 0;
             left: -300px;
-            width: 250px;
+            width: 280px;
             height: 100%;
             background: var(--container-light);
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-            transition: left 0.3s ease;
+            box-shadow: 2px 0 15px var(--shadow-light);
+            transition: var(--transition);
             padding: 20px 0;
-            z-index: 6;
+            z-index: 1001;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -206,17 +327,25 @@
             color: var(--text-light);
             font-size: 16px;
             text-decoration: none;
-            transition: background-color 0.2s;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
         }
 
         .menu-item:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: var(--hover-light);
         }
 
         .menu-footer {
             margin-top: auto;
             padding: 25px 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-top: 1px solid var(--border-light);
         }
 
         .menu-logout {
@@ -225,136 +354,24 @@
             color: #dc3545;
             font-size: 16px;
             text-decoration: none;
-        }
-
-        /* Estilos para o saldo */
-        .balance-container {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 12px;
+            transition: var(--transition);
         }
 
-        .balance-value {
-            color: var(--success-color);
+        .menu-logout:hover {
+            background-color: rgba(220, 53, 69, 0.1);
         }
 
-        .desktop-balance-container {
-            position: fixed;
-            top: 15px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.05);
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            z-index: 10;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            min-width: 600px;
-            table-layout: auto;
-            white-space: nowrap; /* Mantém o conteúdo em uma única linha */
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e1e4e8;
-            white-space: nowrap; /* Mantém o conteúdo em uma única linha */
-            overflow: visible; /* Mostra todo o conteúdo */
-            text-overflow: clip; /* Remove os três pontinhos */
-        }
-
-        /* Estilo específico para a célula do link */
-        td.link-cell {
-            max-width: 150px;
-            overflow: hidden;
-            word-break: break-all;
-        }
-      
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: var(--bg-dark);
-                color: var(--text-dark);
-            }
-
-            .header,
-            .container {
-                background: var(--container-dark);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-                border: 1px solid var(--border-dark);
-            }
-
-            .menu-toggle span {
-                background-color: var(--text-dark);
-            }
-
-            .menu-content {
-                background: var(--container-dark);
-            }
-
-            .menu-footer {
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .menu-item {
-                color: var(--text-dark);
-            }
-
-            .menu-item:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-
-            .filter-button {
-                background-color: var(--container-dark);
-                color: var(--text-dark);
-                border: 1px solid var(--border-dark);
-            }
-
-            .filter-button.active {
-                background-color: var(--button-dark);
-                color: white;
-            }
-
-            th {
-                background-color: var(--container-dark);
-            }
-
-            th,
-            td {
-                border-bottom: 1px solid var(--border-dark);
-            }
-
-            tr:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-
-            .balance-container {
-                background: rgba(255, 255, 255, 0.05);
-            }
-
-            .desktop-balance-container {
-                background: rgba(255, 255, 255, 0.05);
-            }
-        }
-
-        /* Estilos para desktop */
+        /* Desktop Menu */
         @media (min-width: 992px) {
+            body {
+                padding-left: 280px;
+            }
+
             .desktop-header {
                 display: none;
-            }
-
-            body {
-                padding-left: 250px;
             }
 
             .menu-toggle {
@@ -370,44 +387,130 @@
                 display: none !important;
             }
 
-            .container {
-                margin: 20px auto;
-                width: calc(90% - 50px);
-                max-width: 1200px;
-            }
-
-            /* Esconde a logo no header na versão desktop */
             .logo-mobile {
                 display: none;
+            }
+
+            .menu-close-btn {
+                display: none !important;
+            }
+
+            .desktop-balance-container {
+                display: flex;
             }
         }
 
         @media (max-width: 991px) {
-            .container {
-                width: 95%;
-                max-width: 100%;
-                padding: 15px;
-                margin: 15px auto;
-            }
-
-            /* Mostra a logo no header apenas na versão mobile */
             .logo-mobile {
                 display: block;
+            }
+
+            body.menu-open .header {
+                display: none;
+            }
+
+            .menu-close-btn {
+                display: block;
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                color: #afaeae;
+                font-size: 1.5rem;
+                cursor: pointer;
+                z-index: 1002;
+            }
+
+            .menu-close-btn:hover {
+                color: #dc3545;
             }
 
             .desktop-balance-container {
                 display: none;
             }
+        }
 
-            table {
-                font-size: 14px;
+        /* Dark Mode Styles */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--bg-dark);
+                color: var(--text-dark);
+            }
+
+            .header {
+                background: var(--primary-gradient-dark);
+            }
+
+            .container {
+                background: var(--container-dark);
+                box-shadow: 0 4px 20px var(--shadow-dark);
+                border-color: var(--border-dark);
+            }
+
+            .container-header {
+                background: var(--primary-gradient-dark);
+                border-color: var(--border-dark);
+            }
+
+            .filter-button {
+                background-color: var(--hover-dark);
+                color: var(--text-dark);
+            }
+
+            .filter-button.active {
+                background-color: var(--button-dark);
+                color: white;
+            }
+
+            .filter-button:hover {
+                background-color: var(--button-dark);
+                color: white;
+            }
+
+            th, td {
+                border-bottom: 1px solid var(--border-dark);
+            }
+
+            th {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            tr:hover {
+                background-color: var(--hover-dark);
+            }
+
+            .menu-content {
+                background: var(--container-dark);
+                box-shadow: 2px 0 15px var(--shadow-dark);
+            }
+
+            .menu-item {
+                color: var(--text-dark);
+            }
+
+            .menu-item:hover {
+                background-color: var(--hover-dark);
+            }
+
+            .menu-footer {
+                border-color: var(--border-dark);
+            }
+
+            .balance-container, .desktop-balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .refresh-balance {
+                color: var(--text-dark);
             }
         }
 
+        /* Responsive Styles */
         @media (max-width: 768px) {
             .container {
-                width: 98%;
-                padding: 10px;
+                padding: 20px;
+                width: calc(100% - 40px);
             }
 
             .filter-buttons {
@@ -422,7 +525,7 @@
             th, td {
                 padding: 8px 10px;
                 font-size: 13px;
-                max-width: 100px; /* Reduz a largura máxima em dispositivos menores */
+                max-width: 100px;
             }
         }
 
@@ -430,7 +533,7 @@
             th, td {
                 padding: 6px 8px;
                 font-size: 12px;
-                max-width: 80px; /* Reduz ainda mais para telas muito pequenas */
+                max-width: 80px;
             }
 
             .status {
@@ -444,6 +547,23 @@
             }
         }
 
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
         body {
             visibility: hidden;
         }
@@ -455,31 +575,38 @@
 </head>
 
 <body>
-    <!-- Logo para desktop (no menu lateral) -->
+    <!-- Menu Lateral para Desktop -->
     <div class="menu-content" id="menuContent">
+        <!-- Botão de fechar (visível apenas no mobile) -->
+        <button class="menu-close-btn" id="menuCloseBtn">&times;</button>
+
         <div style="padding: 20px; text-align: left; margin-top: -20px;" class="logo-desktop">
             <a href="painel">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                    alt="Logo smmsociais" class="logo" style="max-width: 80%;">
+                    alt="Logo SMM Sociais" class="logo" style="max-width: 80%;">
             </a>
         </div>
-        <a class="menu-item" href="painel">Novo Pedido</a>
-        <a class="menu-item" href="services">Serviços</a>
-        <a class="menu-item" href="orders">Ordens</a>
-        <a class="menu-item" href="massorder">Pedido em Massa</a>
-        <a class="menu-item" href="addfunds">Adicionar Saldo</a>
-        <a class="menu-item" href="profile">Minha Conta</a>
+        <a class="menu-item" href="painel"><i class="fas fa-plus-circle"></i> Novo Pedido</a>
+        <a class="menu-item" href="services"><i class="fas fa-list"></i> Serviços</a>
+        <a class="menu-item" href="orders"><i class="fas fa-tasks"></i> Ordens</a>
+        <a class="menu-item" href="massorder"><i class="fas fa-layer-group"></i> Pedido em Massa</a>
+        <a class="menu-item" href="addfunds"><i class="fas fa-money-bill-wave"></i> Adicionar Saldo</a>
+        <a class="menu-item" href="profile"><i class="fas fa-user-cog"></i> Minha Conta</a>
 
         <div class="menu-footer">
-            <a class="menu-logout" onclick="logout()">Sair</a>
+            <a class="menu-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
         </div>
     </div>
 
-    <!-- Saldo para desktop (fixo no topo direito) -->
+    <!-- Saldo para Desktop -->
     <div class="desktop-balance-container">
         <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
     </div>
 
+    <!-- Overlay do Menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Header para Mobile -->
     <div class="header desktop-header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
@@ -490,10 +617,9 @@
             <!-- Logo para mobile (no header) -->
             <a href="painel" class="logo-mobile">
                 <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
-                    alt="Logo smmsociais" class="logo">
+                    alt="Logo SMM Sociais" class="logo">
             </a>
         </div>
-
         <div class="right-header">
             <div class="balance-container">
                 <span class="balance-value" id="userBalance">R$ 0,00</span>
@@ -501,37 +627,38 @@
         </div>
     </div>
 
-    <div class="container">
-        <h2>Histórico de Pedidos</h2>
+    <!-- Conteúdo Principal -->
+    <div class="main-container">
+        <div class="container fade-in">
+            <h2 class="page-title"><i class="fas fa-history"></i> Histórico de Pedidos</h2>
 
-        <div class="filter-buttons">
-            <a href="orders" class="filter-button active">Tudo</a>
-            <a href="orders?status=pending" class="filter-button">Pendente</a>
-            <a href="orders?status=progress" class="filter-button">Em Progresso</a>
-            <a href="orders?status=completed" class="filter-button">Concluído</a>
-            <a href="orders?status=cancelled" class="filter-button">Cancelado</a>
+            <div class="filter-buttons">
+                <a href="orders" class="filter-button active"><i class="fas fa-list"></i> Tudo</a>
+                <a href="orders?status=pending" class="filter-button"><i class="fas fa-clock"></i> Pendente</a>
+                <a href="orders?status=progress" class="filter-button"><i class="fas fa-spinner"></i> Em Progresso</a>
+                <a href="orders?status=completed" class="filter-button"><i class="fas fa-check-circle"></i> Concluído</a>
+                <a href="orders?status=cancelled" class="filter-button"><i class="fas fa-times-circle"></i> Cancelado</a>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>Link</th>
+                        <th>Valor</th>
+                        <th>Quantidade</th>
+                        <th>Serviço</th>
+                        <th>Status</th>
+                        <th>Restam</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Os pedidos serão carregados aqui via JavaScript -->
+                </tbody>
+            </table>
         </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Data</th>
-                    <th>Link</th>
-                    <th>Valor</th>
-                    <th>Quantidade</th>
-                    <th>Serviço</th>
-                    <th>Status</th>
-                    <th>Restam</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
     </div>
-
-    <!-- Menu Overlay -->
-    <div class="menu-overlay" id="menuOverlay"></div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -571,37 +698,43 @@
                 }
             }
 
-            // Controle do menu hamburguer (só funciona em mobile)
-            if (window.innerWidth < 992) {
-                const menuToggle = document.getElementById('menuToggle');
-                const menuOverlay = document.getElementById('menuOverlay');
-                const menuContent = document.getElementById('menuContent');
+            // Controle do menu hamburguer
+            const menuToggle = document.getElementById('menuToggle');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuContent = document.getElementById('menuContent');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
 
-                menuToggle.addEventListener('click', function () {
-                    menuContent.classList.toggle('active');
-                    menuOverlay.classList.toggle('active');
+            function toggleMenu() {
+                menuContent.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
 
-                    const spans = menuToggle.querySelectorAll('span');
-                    if (menuContent.classList.contains('active')) {
-                        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                        spans[1].style.opacity = '0';
-                        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-                    } else {
-                        spans[0].style.transform = 'none';
-                        spans[1].style.opacity = '1';
-                        spans[2].style.transform = 'none';
-                    }
-                });
-
-                menuOverlay.addEventListener('click', function () {
-                    menuContent.classList.remove('active');
-                    menuOverlay.classList.remove('active');
-                    const spans = menuToggle.querySelectorAll('span');
+                const spans = menuToggle.querySelectorAll('span');
+                if (menuContent.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
                     spans[0].style.transform = 'none';
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
-                });
+                }
             }
+
+            function closeMenu() {
+                menuContent.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                const spans = menuToggle.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            menuCloseBtn.addEventListener('click', closeMenu);
+            menuOverlay.addEventListener('click', closeMenu);
+
+            // Carrega histórico de pedidos
+            carregarHistoricoPedidos();
         });
 
         // Função para buscar o saldo
@@ -660,13 +793,13 @@
 
                     if (data.acoes.length === 0) {
                         tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Nenhum pedido encontrado.</td></tr>`;
+                        return;
                     }
 
-                    data.acoes.forEach((acao, index) => {
+                    data.acoes.forEach((acao) => {
                         const tr = document.createElement("tr");
                         const dataCriacao = new Date(acao.dataCriacao).toLocaleString("pt-BR");
                         
-                        // Quebra o link após 5 caracteres
                         let linkDisplay = acao.link;
                         if (linkDisplay && linkDisplay.length > 20) {
                             linkDisplay = linkDisplay.substring(0, 20) + '<wbr>' + linkDisplay.substring(20);
@@ -687,16 +820,14 @@
                     });
 
                 } else {
-                    alert(data.error || "Erro ao carregar histórico.");
+                    console.error(data.error || "Erro ao carregar histórico.");
                 }
             } catch (error) {
-                console.error("Erro:", error);
-                alert("Erro ao carregar pedidos.");
+                console.error("Erro ao carregar pedidos:", error);
             }
         }
-
-        document.addEventListener("DOMContentLoaded", carregarHistoricoPedidos);
     </script>
+    <script src="https://smmsociais.com/chat-widget.js"></script>
 </body>
 
 </html>
