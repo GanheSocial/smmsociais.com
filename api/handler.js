@@ -1,6 +1,7 @@
 import axios from "axios";
 import connectDB from "./db.js";
 import mongoose from "mongoose";
+import { sendRecoveryEmail } from "./mailer.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { User, Deposito, Action, ActionHistory, Servico } from "./schema.js";
