@@ -238,7 +238,8 @@
             min-width: 600px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-light);
@@ -261,7 +262,8 @@
             color: var(--button-light);
         }
 
-        .order-btn, .login-btn {
+        .order-btn,
+        .login-btn {
             padding: 8px 15px;
             background-color: var(--button-light);
             color: white;
@@ -274,7 +276,8 @@
             white-space: nowrap;
         }
 
-        .order-btn:hover, .login-btn:hover {
+        .order-btn:hover,
+        .login-btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
             box-shadow: 0 2px 8px var(--shadow-light);
@@ -534,7 +537,8 @@
                 background-color: var(--bg-dark);
             }
 
-            th, td {
+            th,
+            td {
                 border-bottom-color: var(--border-dark);
             }
 
@@ -546,7 +550,8 @@
                 color: var(--button-dark);
             }
 
-            .order-btn, .login-btn {
+            .order-btn,
+            .login-btn {
                 background-color: var(--button-dark);
             }
 
@@ -571,7 +576,8 @@
                 background-color: rgba(234, 67, 53, 0.1);
             }
 
-            .balance-container, .desktop-balance-container {
+            .balance-container,
+            .desktop-balance-container {
                 background: rgba(255, 255, 255, 0.05);
             }
 
@@ -599,7 +605,8 @@
                 gap: 15px;
             }
 
-            th, td {
+            th,
+            td {
                 padding: 10px 12px;
             }
         }
@@ -620,7 +627,8 @@
                 font-size: 13px;
             }
 
-            .order-btn, .login-btn {
+            .order-btn,
+            .login-btn {
                 padding: 6px 12px;
                 font-size: 13px;
             }
@@ -636,6 +644,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -680,10 +689,7 @@
         </div>
     </div>
 
-    <!-- Saldo para Desktop (apenas para usuários logados) -->
-    <div class="desktop-balance-container" id="desktopBalanceContainer" style="display: none;">
-        <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
-    </div>
+
 
     <!-- Overlay do Menu -->
     <div class="menu-overlay" id="menuOverlay"></div>
@@ -817,7 +823,7 @@
                 document.body.classList.add('logged-in');
                 setupLoggedInFeatures();
                 fetchBalance();
-                
+
                 // Carrega o chat widget apenas para usuários logados
                 const script = document.createElement('script');
                 script.src = 'https://smmsociais.com/chat-widget.js';
@@ -914,12 +920,12 @@
         const categoryTabs = document.querySelector('.category-tabs');
         function updateCategoryTabs(categories) {
             categoryTabs.innerHTML = '';
-            
+
             const allTab = document.createElement('button');
             allTab.className = 'category-tab active';
             allTab.setAttribute('data-category', 'Todos');
             allTab.textContent = 'Todos';
-            allTab.addEventListener('click', function() {
+            allTab.addEventListener('click', function () {
                 document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
                 loadServices('Todos');
@@ -931,7 +937,7 @@
                 tab.className = 'category-tab';
                 tab.setAttribute('data-category', category);
                 tab.textContent = category;
-                tab.addEventListener('click', function() {
+                tab.addEventListener('click', function () {
                     document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     loadServices(category);
@@ -954,16 +960,16 @@
                 }
 
                 allServices = await response.json();
-                
+
                 // Extrai categorias únicas
                 const categories = [...new Set(allServices.map(s => s.categoria))].filter(Boolean);
                 updateCategoryTabs(categories);
-                
+
                 // Filtra por categoria se necessário
-                const filteredServices = category === 'Todos' 
-                    ? allServices 
+                const filteredServices = category === 'Todos'
+                    ? allServices
                     : allServices.filter(s => s.categoria === category);
-                
+
                 renderServices(filteredServices, !!token);
             } catch (error) {
                 console.error('Erro:', error);
@@ -1005,7 +1011,7 @@
 
             if (isLoggedIn) {
                 document.querySelectorAll('.order-btn').forEach(button => {
-                    button.addEventListener('click', function() {
+                    button.addEventListener('click', function () {
                         const serviceId = this.getAttribute('data-id');
                         window.location.href = `painel?service=${serviceId}`;
                     });
