@@ -55,17 +55,6 @@
             line-height: 1.6;
         }
 
-        body.logged-in {
-            padding-left: 280px;
-        }
-
-        .menu-item[href="services"] {
-            color: white;
-            font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-left: 3px solid white;
-        }
-
         /* Header Styles */
         .header {
             display: flex;
@@ -129,7 +118,7 @@
             padding: 8px 12px;
             border-radius: 5px;
             font-weight: bold;
-            display: none;
+            display: flex;
             align-items: center;
             gap: 5px;
             z-index: 10;
@@ -170,21 +159,21 @@
         .category-tabs {
             display: flex;
             gap: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             overflow-x: auto;
             padding-bottom: 8px;
             -webkit-overflow-scrolling: touch;
         }
 
         .category-tab {
-            padding: 8px 12px;
+            padding: 10px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 600;
             white-space: nowrap;
-            background-color: var(--border-light);
+            background-color: var(--hover-light);
             color: var(--text-light);
             transition: var(--transition);
             flex-shrink: 0;
@@ -196,9 +185,12 @@
         }
 
         .category-tab:hover {
+            background-color: var(--button-light);
+            color: white;
             opacity: 0.9;
         }
 
+        /* Search Styles */
         .search-container {
             margin-bottom: 20px;
             position: relative;
@@ -209,15 +201,15 @@
             padding: 12px 15px;
             border: 1px solid var(--border-light);
             border-radius: 6px;
-            background: var(--container-light);
-            color: var(--text-light);
             font-size: 14px;
             transition: var(--transition);
+            background: var(--container-light);
+            color: var(--text-light);
         }
 
         .search-input:focus {
-            border-color: var(--button-light);
             outline: none;
+            border-color: var(--button-light);
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
 
@@ -238,6 +230,7 @@
             color: var(--error-color);
         }
 
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -254,7 +247,7 @@
 
         th {
             background-color: var(--bg-light);
-            font-weight: bold;
+            font-weight: 600;
             position: sticky;
             top: 0;
         }
@@ -264,18 +257,18 @@
         }
 
         .service-name {
-            font-weight: bold;
+            font-weight: 600;
             color: var(--button-light);
         }
 
         .order-btn, .login-btn {
-            padding: 8px 12px;
+            padding: 8px 15px;
             background-color: var(--button-light);
             color: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
             transition: var(--transition);
             font-size: 14px;
             white-space: nowrap;
@@ -284,42 +277,17 @@
         .order-btn:hover, .login-btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow-light);
+            box-shadow: 0 2px 8px var(--shadow-light);
         }
 
-        /* Menu Styles - Apenas para logados */
-        .menu-content {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100%;
-            background: var(--container-light);
-            box-shadow: 2px 0 15px var(--shadow-light);
-            transition: var(--transition);
-            padding: 20px 0;
-            z-index: 1001;
-            display: none; /* Inicialmente escondido */
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        body.logged-in .menu-content {
-            display: flex; /* Mostra apenas para logados */
-            left: -300px; /* Mantém oculto por padrão */
-        }
-
+        /* Menu Styles */
         .menu-toggle {
             width: 30px;
             height: 30px;
             cursor: pointer;
-            display: none; /* Inicialmente escondido */
+            display: flex;
             flex-direction: column;
             justify-content: space-around;
-        }
-
-        body.logged-in .menu-toggle {
-            display: flex; /* Mostra apenas para logados */
         }
 
         .menu-toggle span {
@@ -341,6 +309,22 @@
             z-index: 1000;
             display: none;
             backdrop-filter: blur(3px);
+        }
+
+        .menu-content {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--container-light);
+            box-shadow: 2px 0 15px var(--shadow-light);
+            transition: var(--transition);
+            padding: 20px 0;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
         }
 
         .menu-content.active {
@@ -417,14 +401,14 @@
         .nav-links a {
             color: var(--button-light);
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 15px;
             transition: var(--transition);
         }
 
         .nav-links a:hover {
+            color: var(--text-light);
             text-decoration: underline;
-            color: var(--button-light);
         }
 
         /* Desktop Menu */
@@ -433,59 +417,48 @@
                 padding-left: 280px;
             }
 
-            body.logged-in .menu-content {
-                left: 0; /* Mostra o menu por padrão no desktop */
-            }
-
             .desktop-header {
                 display: none;
             }
 
-            body.logged-in .desktop-header {
-                display: flex;
+            .menu-toggle {
+                display: none;
+            }
+
+            .menu-content {
+                left: 0;
+                box-shadow: none;
+            }
+
+            .menu-overlay {
+                display: none !important;
+            }
+
+            .logo-mobile {
+                display: none;
             }
 
             .menu-close-btn {
                 display: none !important;
             }
 
-            body.logged-in .desktop-balance-container {
+            .desktop-balance-container {
                 display: flex;
+            }
+
+            body:not(.logged-in) .container {
+                width: 90%;
+                max-width: 900px;
             }
         }
 
         @media (max-width: 991px) {
-            body.logged-in {
-                padding-left: 0 !important;
-            }
-
             .logo-mobile {
                 display: block;
             }
 
-            .menu-content {
-                background: #1e1e1e !important;
-                color: white !important;
-                width: 80%;
-                max-width: 300px;
-                left: -100%;
-                z-index: 1100;
-            }
-
-            .menu-content.active {
-                left: 0;
-            }
-
-            .menu-item {
-                color: white !important;
-            }
-
-            .menu-item:hover {
-                background-color: rgba(255, 255, 255, 0.1) !important;
-            }
-
-            .menu-footer {
-                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            body.menu-open .header {
+                display: none;
             }
 
             .menu-close-btn {
@@ -495,35 +468,18 @@
                 right: 15px;
                 background: none;
                 border: none;
-                color: white;
+                color: #afaeae;
                 font-size: 1.5rem;
                 cursor: pointer;
-                z-index: 1101;
+                z-index: 1002;
             }
 
             .menu-close-btn:hover {
                 color: #dc3545;
             }
 
-            body.logged-in .desktop-balance-container {
+            .desktop-balance-container {
                 display: none;
-            }
-
-            .container {
-                margin: 15px auto !important;
-                width: calc(100% - 30px) !important;
-            }
-
-            .header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 1000;
-            }
-
-            .main-container {
-                margin-top: 70px;
             }
         }
 
@@ -550,7 +506,7 @@
             }
 
             .category-tab {
-                background-color: var(--border-dark);
+                background-color: var(--hover-dark);
                 color: var(--text-dark);
             }
 
@@ -574,16 +530,12 @@
                 color: var(--label-dark);
             }
 
-            .search-clear:hover {
-                color: var(--error-color);
-            }
-
             th {
                 background-color: var(--bg-dark);
             }
 
             th, td {
-                border-bottom: 1px solid var(--border-dark);
+                border-bottom-color: var(--border-dark);
             }
 
             tr:hover {
@@ -598,12 +550,41 @@
                 background-color: var(--button-dark);
             }
 
+            .menu-content {
+                background: var(--container-dark);
+                box-shadow: 2px 0 15px var(--shadow-dark);
+            }
+
+            .menu-item {
+                color: var(--text-dark);
+            }
+
+            .menu-item:hover {
+                background-color: var(--hover-dark);
+            }
+
+            .menu-footer {
+                border-color: var(--border-dark);
+            }
+
+            .menu-logout:hover {
+                background-color: rgba(234, 67, 53, 0.1);
+            }
+
+            .balance-container, .desktop-balance-container {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .refresh-balance {
+                color: var(--text-dark);
+            }
+
             .nav-links a {
                 color: var(--button-dark);
             }
 
             .nav-links a:hover {
-                color: var(--button-dark);
+                color: var(--text-dark);
             }
         }
 
@@ -612,6 +593,10 @@
             .container {
                 padding: 20px;
                 width: calc(100% - 40px);
+            }
+
+            .nav-links {
+                gap: 15px;
             }
 
             th, td {
@@ -626,17 +611,22 @@
             }
 
             .nav-links {
-                gap: 15px;
+                gap: 10px;
+                font-size: 14px;
             }
 
-            th, td {
-                padding: 8px 10px;
+            .category-tab {
+                padding: 8px 12px;
                 font-size: 13px;
             }
 
             .order-btn, .login-btn {
-                padding: 6px 10px;
+                padding: 6px 12px;
                 font-size: 13px;
+            }
+
+            .search-input {
+                padding: 10px 12px;
             }
         }
 
@@ -667,7 +657,7 @@
 </head>
 
 <body>
-    <!-- Menu Lateral - Apenas para logados -->
+    <!-- Menu Lateral para Desktop -->
     <div class="menu-content" id="menuContent">
         <!-- Botão de fechar (visível apenas no mobile) -->
         <button class="menu-close-btn" id="menuCloseBtn">&times;</button>
@@ -690,16 +680,16 @@
         </div>
     </div>
 
-    <!-- Saldo para Desktop - Apenas para logados -->
-    <div class="desktop-balance-container" id="desktopBalanceContainer">
+    <!-- Saldo para Desktop -->
+    <div class="desktop-balance-container">
         <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
     </div>
 
-    <!-- Overlay do Menu - Apenas para logados -->
+    <!-- Overlay do Menu -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <!-- Header para Mobile - Apenas para logados -->
-    <div class="header desktop-header" id="mobileHeader">
+    <!-- Header para Mobile -->
+    <div class="header desktop-header">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
                 <span></span>
@@ -713,14 +703,14 @@
             </a>
         </div>
         <div class="right-header">
-            <div class="balance-container" id="mobileBalanceContainer">
+            <div class="balance-container">
                 <span class="balance-value" id="userBalance">R$ 0,00</span>
             </div>
         </div>
     </div>
 
     <!-- Estrutura para usuários não logados -->
-    <div id="loggedOutHeader">
+    <div id="loggedOutHeader" style="display: none;">
         <div class="logo-container">
             <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                 alt="SMM Sociais Logo">
@@ -747,6 +737,7 @@
 
             <div class="category-tabs">
                 <button class="category-tab active" data-category="Todos">Todos</button>
+                <!-- Categorias serão adicionadas dinamicamente -->
             </div>
 
             <div style="overflow-x: auto;">
@@ -773,14 +764,11 @@
     <script>
         // Variável global para armazenar os serviços
         let allServices = [];
-        let menuOpen = false;
 
-        // Função para buscar o saldo (apenas para logados)
+        // Função para buscar o saldo
         async function fetchBalance() {
             try {
                 const token = localStorage.getItem("token");
-                if (!token) return;
-
                 const response = await fetch('/api/get_saldo', {
                     method: "GET",
                     headers: {
@@ -813,41 +801,21 @@
             document.body.classList.add('loaded');
 
             const token = localStorage.getItem("token");
-            const loggedInHeader = document.getElementById('mobileHeader');
+            const loggedInHeader = document.querySelector('.desktop-header');
             const loggedOutHeader = document.getElementById('loggedOutHeader');
-            const menuContent = document.getElementById('menuContent');
-            const desktopBalance = document.getElementById('desktopBalanceContainer');
-            const mobileBalance = document.getElementById('mobileBalanceContainer');
 
             // Mostra o cabeçalho apropriado
             if (token) {
                 loggedInHeader.style.display = 'flex';
-                loggedOutHeader.style.display = 'none';
-                menuContent.style.display = 'flex';
-                desktopBalance.style.display = 'flex';
-                mobileBalance.style.display = 'flex';
                 document.body.classList.add('logged-in');
-                
-                // Verifica se é desktop para mostrar o menu
-                if (window.innerWidth >= 992) {
-                    menuContent.style.left = '0';
-                } else {
-                    menuContent.style.left = '-100%';
-                }
-                
                 setupLoggedInFeatures();
-                fetchBalance(); // Carrega o saldo se estiver logado
+                fetchBalance();
             } else {
-                loggedInHeader.style.display = 'none';
                 loggedOutHeader.style.display = 'block';
-                menuContent.style.display = 'none';
-                desktopBalance.style.display = 'none';
-                mobileBalance.style.display = 'none';
                 document.body.classList.remove('logged-in');
-                setupLoggedOutFeatures();
             }
 
-            // Carrega os serviços (funciona para ambos os casos)
+            // Carrega os serviços
             loadServices('Todos');
 
             // Configura a barra de pesquisa
@@ -858,7 +826,6 @@
             const searchInput = document.getElementById('serviceSearch');
             const searchClear = document.getElementById('searchClear');
 
-            // Mostra/oculta o botão de limpar
             searchInput.addEventListener('input', function () {
                 if (this.value.trim() !== '') {
                     searchClear.style.display = 'block';
@@ -869,7 +836,6 @@
                 }
             });
 
-            // Limpa a pesquisa
             searchClear.addEventListener('click', function () {
                 searchInput.value = '';
                 searchClear.style.display = 'none';
@@ -893,37 +859,30 @@
         }
 
         function setupLoggedInFeatures() {
-            // Controle do menu hamburguer
             const menuToggle = document.getElementById('menuToggle');
             const menuOverlay = document.getElementById('menuOverlay');
             const menuContent = document.getElementById('menuContent');
             const menuCloseBtn = document.getElementById('menuCloseBtn');
 
             function toggleMenu() {
-                menuOpen = !menuOpen;
-                
-                if (menuOpen) {
-                    menuContent.classList.add('active');
-                    menuOverlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                    
-                    // Animações do ícone do menu
-                    const spans = menuToggle.querySelectorAll('span');
+                menuContent.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+
+                const spans = menuToggle.querySelectorAll('span');
+                if (menuContent.classList.contains('active')) {
                     spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
                     spans[1].style.opacity = '0';
                     spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
                 } else {
-                    closeMenu();
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
                 }
             }
 
             function closeMenu() {
-                menuOpen = false;
                 menuContent.classList.remove('active');
                 menuOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-                
-                // Reseta as animações do ícone do menu
                 const spans = menuToggle.querySelectorAll('span');
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';
@@ -933,48 +892,37 @@
             menuToggle.addEventListener('click', toggleMenu);
             menuCloseBtn.addEventListener('click', closeMenu);
             menuOverlay.addEventListener('click', closeMenu);
-
-            // Fechar menu ao clicar em um item (apenas mobile)
-            if (window.innerWidth <= 991) {
-                document.querySelectorAll('.menu-item').forEach(item => {
-                    item.addEventListener('click', closeMenu);
-                });
-            }
-
-            // Fechar menu quando a janela for redimensionada para desktop
-            window.addEventListener('resize', function() {
-                if (window.innerWidth >= 992) {
-                    closeMenu();
-                    menuContent.style.left = '0';
-                } else {
-                    menuContent.style.left = '-100%';
-                }
-            });
-
-            // Carrega o widget de chat apenas para usuários logados
-            loadChatWidget();
-        }
-
-        function loadChatWidget() {
-            const script = document.createElement('script');
-            script.src = 'https://smmsociais.com/chat-widget.js';
-            document.body.appendChild(script);
-        }
-
-        function setupLoggedOutFeatures() {
-            // Nada especial necessário além de mostrar os links de navegação
         }
 
         // Controle das abas de categoria
-        const categoryTabs = document.querySelectorAll('.category-tab');
-        categoryTabs.forEach(tab => {
-            tab.addEventListener('click', function () {
-                categoryTabs.forEach(t => t.classList.remove('active'));
+        const categoryTabs = document.querySelector('.category-tabs');
+        function updateCategoryTabs(categories) {
+            categoryTabs.innerHTML = '';
+            
+            const allTab = document.createElement('button');
+            allTab.className = 'category-tab active';
+            allTab.setAttribute('data-category', 'Todos');
+            allTab.textContent = 'Todos';
+            allTab.addEventListener('click', function() {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                const category = this.getAttribute('data-category');
-                loadServices(category);
+                loadServices('Todos');
             });
-        });
+            categoryTabs.appendChild(allTab);
+
+            categories.forEach(category => {
+                const tab = document.createElement('button');
+                tab.className = 'category-tab';
+                tab.setAttribute('data-category', category);
+                tab.textContent = category;
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    loadServices(category);
+                });
+                categoryTabs.appendChild(tab);
+            });
+        }
 
         async function loadServices(category) {
             try {
@@ -990,7 +938,17 @@
                 }
 
                 allServices = await response.json();
-                renderServices(allServices, !!token);
+                
+                // Extrai categorias únicas
+                const categories = [...new Set(allServices.map(s => s.categoria))].filter(Boolean);
+                updateCategoryTabs(categories);
+                
+                // Filtra por categoria se necessário
+                const filteredServices = category === 'Todos' 
+                    ? allServices 
+                    : allServices.filter(s => s.categoria === category);
+                
+                renderServices(filteredServices, !!token);
             } catch (error) {
                 console.error('Erro:', error);
                 alert('Erro ao carregar serviços. Tente novamente.');
@@ -1031,7 +989,7 @@
 
             if (isLoggedIn) {
                 document.querySelectorAll('.order-btn').forEach(button => {
-                    button.addEventListener('click', function () {
+                    button.addEventListener('click', function() {
                         const serviceId = this.getAttribute('data-id');
                         window.location.href = `painel?service=${serviceId}`;
                     });
@@ -1044,6 +1002,7 @@
             window.location.href = "https://smmsociais.com/";
         }
     </script>
+    <script src="https://smmsociais.com/chat-widget.js"></script>
 </body>
 
 </html>
