@@ -682,7 +682,7 @@
 
     <!-- Saldo para Desktop (apenas para usuários logados) -->
     <div class="desktop-balance-container" id="desktopBalanceContainer" style="display: none;">
-        <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
+        <span class="balance-value" id="userBalance">R$ 0,00</span>
     </div>
 
     <!-- Overlay do Menu -->
@@ -704,7 +704,7 @@
         </div>
         <div class="right-header">
             <div class="balance-container">
-                <span class="balance-value" id="userBalance">R$ 0,00</span>
+                <span class="balance-value" id="mobileUserBalance">R$ 0,00</span>
             </div>
         </div>
     </div>
@@ -789,11 +789,11 @@
                 }).format(data.saldo || 0);
 
                 document.getElementById('userBalance').textContent = formattedBalance;
-                document.getElementById('desktopUserBalance').textContent = formattedBalance;
+                document.getElementById('mobileUserBalance').textContent = formattedBalance;
             } catch (error) {
                 console.error('Erro ao buscar saldo:', error);
                 document.getElementById('userBalance').textContent = 'R$ 0,00';
-                document.getElementById('desktopUserBalance').textContent = 'R$ 0,00';
+                document.getElementById('mobileUserBalance').textContent = 'R$ 0,00';
             }
         }
 
