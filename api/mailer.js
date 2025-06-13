@@ -6,7 +6,7 @@ export async function sendRecoveryEmail(email, link) {
         port: 465,
         secure: true, // Porta 465 exige SSL
         auth: {
-          user: 'contato@smmsocias.com',
+          user: 'contato@smmsociais.com',
           pass: 'reno4769!', // sua senha real
         },
       });
