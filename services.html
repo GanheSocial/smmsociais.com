@@ -110,20 +110,6 @@
             align-items: center;
         }
 
-        .desktop-balance-container {
-            position: fixed;
-            top: 15px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.05);
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            z-index: 10;
-        }
-
         .container {
             background: var(--container-light);
             border-radius: var(--card-radius);
@@ -442,10 +428,6 @@
                 display: none !important;
             }
 
-            .desktop-balance-container {
-                display: flex;
-            }
-
             body:not(.logged-in) .container {
                 width: 90%;
                 max-width: 900px;
@@ -476,10 +458,6 @@
 
             .menu-close-btn:hover {
                 color: #dc3545;
-            }
-
-            .desktop-balance-container {
-                display: none;
             }
         }
 
@@ -571,7 +549,7 @@
                 background-color: rgba(234, 67, 53, 0.1);
             }
 
-            .balance-container, .desktop-balance-container {
+            .balance-container {
                 background: rgba(255, 255, 255, 0.05);
             }
 
@@ -680,8 +658,6 @@
         </div>
     </div>
 
-
-
     <!-- Overlay do Menu -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
@@ -701,7 +677,7 @@
         </div>
         <div class="right-header">
             <div class="balance-container">
-                <span class="balance-value" id="mobileUserBalance">R$ 0,00</span>
+                <span class="balance-value" id="userBalance">R$ 0,00</span>
             </div>
         </div>
     </div>
@@ -786,11 +762,9 @@
                 }).format(data.saldo || 0);
 
                 document.getElementById('userBalance').textContent = formattedBalance;
-                document.getElementById('mobileUserBalance').textContent = formattedBalance;
             } catch (error) {
                 console.error('Erro ao buscar saldo:', error);
                 document.getElementById('userBalance').textContent = 'R$ 0,00';
-                document.getElementById('mobileUserBalance').textContent = 'R$ 0,00';
             }
         }
 
@@ -801,7 +775,6 @@
             const loggedInHeader = document.querySelector('.desktop-header');
             const loggedOutHeader = document.getElementById('loggedOutHeader');
             const menuContent = document.getElementById('menuContent');
-            const desktopBalanceContainer = document.getElementById('desktopBalanceContainer');
             const mobileHeader = document.getElementById('mobileHeader');
 
             // Mostra o cabeçalho apropriado e elementos apenas para usuários logados
@@ -809,7 +782,6 @@
                 loggedInHeader.style.display = 'flex';
                 mobileHeader.style.display = 'flex';
                 menuContent.style.display = 'block';
-                desktopBalanceContainer.style.display = 'flex';
                 loggedOutHeader.style.display = 'none';
                 document.body.classList.add('logged-in');
                 setupLoggedInFeatures();
@@ -824,7 +796,6 @@
                 loggedInHeader.style.display = 'none';
                 mobileHeader.style.display = 'none';
                 menuContent.style.display = 'none';
-                desktopBalanceContainer.style.display = 'none';
                 document.body.classList.remove('logged-in');
             }
 
