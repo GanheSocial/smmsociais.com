@@ -657,8 +657,8 @@
 </head>
 
 <body>
-    <!-- Menu Lateral para Desktop -->
-    <div class="menu-content" id="menuContent">
+    <!-- Menu Lateral para Desktop (apenas para usuários logados) -->
+    <div class="menu-content" id="menuContent" style="display: none;">
         <!-- Botão de fechar (visível apenas no mobile) -->
         <button class="menu-close-btn" id="menuCloseBtn">&times;</button>
 
@@ -680,16 +680,16 @@
         </div>
     </div>
 
-    <!-- Saldo para Desktop -->
-    <div class="desktop-balance-container">
+    <!-- Saldo para Desktop (apenas para usuários logados) -->
+    <div class="desktop-balance-container" id="desktopBalanceContainer" style="display: none;">
         <span class="balance-value" id="desktopUserBalance">R$ 0,00</span>
     </div>
 
     <!-- Overlay do Menu -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <!-- Header para Mobile -->
-    <div class="header desktop-header">
+    <!-- Header para Mobile (apenas para usuários logados) -->
+    <div class="header desktop-header" id="mobileHeader" style="display: none;">
         <div class="left-header">
             <div class="menu-toggle" id="menuToggle">
                 <span></span>
@@ -710,7 +710,7 @@
     </div>
 
     <!-- Estrutura para usuários não logados -->
-    <div id="loggedOutHeader" style="display: none;">
+    <div id="loggedOutHeader">
         <div class="logo-container">
             <img src="https://raw.githubusercontent.com/GanheSocial/smmsociais.com/main/1746491608201.png"
                 alt="SMM Sociais Logo">
@@ -803,15 +803,31 @@
             const token = localStorage.getItem("token");
             const loggedInHeader = document.querySelector('.desktop-header');
             const loggedOutHeader = document.getElementById('loggedOutHeader');
+            const menuContent = document.getElementById('menuContent');
+            const desktopBalanceContainer = document.getElementById('desktopBalanceContainer');
+            const mobileHeader = document.getElementById('mobileHeader');
 
-            // Mostra o cabeçalho apropriado
+            // Mostra o cabeçalho apropriado e elementos apenas para usuários logados
             if (token) {
                 loggedInHeader.style.display = 'flex';
+                mobileHeader.style.display = 'flex';
+                menuContent.style.display = 'block';
+                desktopBalanceContainer.style.display = 'flex';
+                loggedOutHeader.style.display = 'none';
                 document.body.classList.add('logged-in');
                 setupLoggedInFeatures();
                 fetchBalance();
+                
+                // Carrega o chat widget apenas para usuários logados
+                const script = document.createElement('script');
+                script.src = 'https://smmsociais.com/chat-widget.js';
+                document.body.appendChild(script);
             } else {
                 loggedOutHeader.style.display = 'block';
+                loggedInHeader.style.display = 'none';
+                mobileHeader.style.display = 'none';
+                menuContent.style.display = 'none';
+                desktopBalanceContainer.style.display = 'none';
                 document.body.classList.remove('logged-in');
             }
 
@@ -1002,7 +1018,6 @@
             window.location.href = "https://smmsociais.com/";
         }
     </script>
-    <script src="https://smmsociais.com/chat-widget.js"></script>
 </body>
 
 </html>
