@@ -27,7 +27,7 @@
       { "source": "/api/get_saldo", "destination": "/api/handler.js" },
       { "source": "/api/listar-depositos", "destination": "/api/handler.js" },
       { "source": "/api/gerar-pagamento", "destination": "/api/handler.js" },
-      { "source": "/api/getMessages", "destination": "/api/handler.js" }
+      { "source": "/api/supportMessages", "destination": "/api/handler.js" }
       
     ]
   }
