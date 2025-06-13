@@ -306,7 +306,7 @@
 
         body.logged-in .menu-content {
             display: flex; /* Mostra apenas para logados */
-            left: 0;
+            left: -300px; /* Mantém oculto por padrão */
         }
 
         .menu-toggle {
@@ -314,6 +314,8 @@
             height: 30px;
             cursor: pointer;
             display: none; /* Inicialmente escondido */
+            flex-direction: column;
+            justify-content: space-around;
         }
 
         body.logged-in .menu-toggle {
@@ -429,6 +431,10 @@
         @media (min-width: 992px) {
             body.logged-in {
                 padding-left: 280px;
+            }
+
+            body.logged-in .menu-content {
+                left: 0; /* Mostra o menu por padrão no desktop */
             }
 
             .desktop-header {
@@ -767,6 +773,7 @@
     <script>
         // Variável global para armazenar os serviços
         let allServices = [];
+        let menuOpen = false;
 
         // Função para buscar o saldo (apenas para logados)
         async function fetchBalance() {
@@ -820,6 +827,14 @@
                 desktopBalance.style.display = 'flex';
                 mobileBalance.style.display = 'flex';
                 document.body.classList.add('logged-in');
+                
+                // Verifica se é desktop para mostrar o menu
+                if (window.innerWidth >= 992) {
+                    menuContent.style.left = '0';
+                } else {
+                    menuContent.style.left = '-100%';
+                }
+                
                 setupLoggedInFeatures();
                 fetchBalance(); // Carrega o saldo se estiver logado
             } else {
@@ -885,35 +900,30 @@
             const menuCloseBtn = document.getElementById('menuCloseBtn');
 
             function toggleMenu() {
-                document.body.classList.toggle('menu-open');
-                menuContent.classList.toggle('active');
-                menuOverlay.classList.toggle('active');
+                menuOpen = !menuOpen;
                 
-                // Impede a rolagem do corpo quando o menu está aberto
-                if (menuContent.classList.contains('active')) {
+                if (menuOpen) {
+                    menuContent.classList.add('active');
+                    menuOverlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = '';
-                }
-
-                const spans = menuToggle.querySelectorAll('span');
-                if (menuContent.classList.contains('active')) {
+                    
+                    // Animações do ícone do menu
+                    const spans = menuToggle.querySelectorAll('span');
                     spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
                     spans[1].style.opacity = '0';
                     spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
                 } else {
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
+                    closeMenu();
                 }
             }
 
             function closeMenu() {
-                document.body.classList.remove('menu-open');
+                menuOpen = false;
                 menuContent.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 document.body.style.overflow = '';
                 
+                // Reseta as animações do ícone do menu
                 const spans = menuToggle.querySelectorAll('span');
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';
@@ -930,6 +940,16 @@
                     item.addEventListener('click', closeMenu);
                 });
             }
+
+            // Fechar menu quando a janela for redimensionada para desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 992) {
+                    closeMenu();
+                    menuContent.style.left = '0';
+                } else {
+                    menuContent.style.left = '-100%';
+                }
+            });
 
             // Carrega o widget de chat apenas para usuários logados
             loadChatWidget();
